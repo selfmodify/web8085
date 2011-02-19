@@ -6,20 +6,20 @@ import java.util.logging.Logger;
 
 public class Parser {
 
-    private static HashMap<String, Instruction> instructions = loadInstructions();
+    private static HashMap<String, InstructionParser> instructions = loadInstructions();
     
     private static Logger logger = Logger.getLogger(Parser.class.getName());
     
-    private static HashMap<String, Instruction> loadInstructions() {
-        HashMap<String, Instruction> map = new HashMap<String, Instruction>();
-        map.put("add", new Instruction(Instruction.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
-        map.put("mov", new Instruction(Instruction.Mnemonic.MOV, 0x40,  new OperandParser() {
+    private static HashMap<String, InstructionParser> loadInstructions() {
+        HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
+        map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
+        map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {
             @Override
-            public void parse(Instruction i,String operands) throws Exception {
+            public void parse(InstructionParser i,String operands) throws Exception {
                 parseMovOperands(i, operands);
             }
         }));
-        map.put("sub", new Instruction(Instruction.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
+        map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
         return map;
     }
 
@@ -37,7 +37,7 @@ public class Parser {
             line = line.substring(0, commentStart);
         }
         String[] parts = line.split("[\t ]",2);
-        Instruction ix = instructions.get(parts[0]);
+        InstructionParser ix = instructions.get(parts[0]);
         if(ix == null) {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }

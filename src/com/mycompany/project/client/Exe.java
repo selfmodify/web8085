@@ -20,7 +20,7 @@ public class Exe {
     }
     
     public void insert(ParseToken token) {
-        Instruction i = token.getIx();
+        InstructionParser i = token.getIx();
         insert(i.code);
     }
 

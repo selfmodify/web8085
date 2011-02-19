@@ -2,37 +2,309 @@ package com.mycompany.project.client;
 
 
 public class Instruction {
-    public enum Mnemonic {
-        NONE,
-        MOV,
-        ADD,
-        SUB,
-    }
-    
-    public enum Operand {
-        B,C,D,E,H,L,M,A,PSW,SP
-    }
-    
-    public Operand op1 = null;
-    public Operand op2 = null;
-    public Mnemonic type = Mnemonic.NONE;
-    public int baseCode = -1;
-    public int code = -1;
-    public String name;
-    private OperandParser oparser;
-    
-    public Instruction(Mnemonic type, int code, OperandParser oparser) {
-        this.type = type;
-        this.name = type.name().toLowerCase();
-        this.baseCode = code;
-        this.oparser = oparser;
+    public static interface InstructionToString {
+        public String toString(String name, int op1);
     }
 
-    public Mnemonic getType() {
-        return type;
+    public static class NoOperand implements InstructionToString {
+        @Override
+        public String toString(String name, int op1) {
+            return name;
+        }
     }
-    
-    public void parseOperands(String line) throws Exception {
-        oparser.parse(this, line);
+
+    public static class WithOperand implements InstructionToString {
+        @Override
+        public String toString(String name, int op1) {
+            return String.format("%s %d", name, op1);
+        }
+    }
+
+    private static NoOperand noOperand = new NoOperand();
+
+    private static WithOperand withOperand = new WithOperand();
+
+    public static class OneInstruction {
+        public String shortName;
+        public String longName;
+        public int opcode;
+        public int length;
+        private InstructionToString toStr;
+
+        public OneInstruction(String shortName, String longName, int length,
+                InstructionToString toStr) {
+            this.shortName = shortName;
+            this.longName = longName;
+            this.length = length;
+            this.toStr = toStr;
+        }
+    }
+
+    private OneInstruction[] oi = new OneInstruction[] {
+            new OneInstruction("", "", 1, noOperand),
+            new OneInstruction("lxi", "lxi b", 3, withOperand),
+            new OneInstruction("stax", "stax b", 1, noOperand),
+            new OneInstruction("inx", "inx b", 1, noOperand),
+            new OneInstruction("inr", "inr b", 1, noOperand),
+            new OneInstruction("dcr", "dcr b", 1, noOperand),
+            new OneInstruction("mvi", "mvi b", 1, noOperand),
+            new OneInstruction("rlc", "rlc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("dad", "dad b", 1, noOperand),
+            new OneInstruction("ldax", "ldax b", 1, noOperand),
+            new OneInstruction("dcx", "dcx b", 1, noOperand),
+            new OneInstruction("inr", "inr c", 1, noOperand),
+            new OneInstruction("dcr", "dcr c", 1, noOperand),
+            new OneInstruction("mvi", "mvi c", 1, noOperand),
+            new OneInstruction("rrc", "rrc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("lxi", "lxi d", 1, noOperand),
+            new OneInstruction("stax", "stax d", 1, noOperand),
+            new OneInstruction("inx", "inx d", 1, noOperand),
+            new OneInstruction("inr", "inr d", 1, noOperand),
+            new OneInstruction("dcr", "dcr c", 1, noOperand),
+            new OneInstruction("mvi", "mvi c", 1, noOperand),
+            new OneInstruction("rrc", "rrc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("lxi", "lxi d", 1, noOperand),
+            new OneInstruction("stax", "stax d", 1, noOperand),
+            new OneInstruction("inx", "inx d", 1, noOperand),
+            new OneInstruction("inr", "inr d", 1, noOperand),
+            new OneInstruction("dcr", "dcr d", 1, noOperand),
+            new OneInstruction("mvi", "mvi d", 1, noOperand),
+            new OneInstruction("ral", "ral", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("dad", "dad d", 1, noOperand),
+            new OneInstruction("ldax", "ldax d", 1, noOperand),
+            new OneInstruction("dcx", "dcx d", 1, noOperand),
+            new OneInstruction("inr", "inr e", 1, noOperand),
+            new OneInstruction("dcr", "dcr e", 1, noOperand),
+            new OneInstruction("mvi", "mvi e", 1, noOperand),
+            new OneInstruction("rar", "rar", 1, noOperand),
+            new OneInstruction("rim", "rim", 1, noOperand),
+            new OneInstruction("lxi", "lxi h", 1, noOperand),
+            new OneInstruction("shld", "shld", 1, noOperand),
+            new OneInstruction("inx", "inx h", 1, noOperand),
+            new OneInstruction("inr", "inr h", 1, noOperand),
+            new OneInstruction("dcr", "dcr h", 1, noOperand),
+            new OneInstruction("mvi", "mvi h", 1, noOperand),
+            new OneInstruction("daa", "daa", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("dad", "dad h", 1, noOperand),
+            new OneInstruction("lhld", "lhld", 1, noOperand),
+            new OneInstruction("dcx", "dcx h", 1, noOperand),
+            new OneInstruction("inr", "inr l", 1, noOperand),
+            new OneInstruction("dcr", "dcr l", 1, noOperand),
+            new OneInstruction("mvi", "mvi l", 1, noOperand),
+            new OneInstruction("cma", "cma", 1, noOperand),
+            new OneInstruction("sim", "sim", 1, noOperand),
+            new OneInstruction("lxi", "lxi sp", 1, noOperand),
+            new OneInstruction("sta", "sta", 1, noOperand),
+            new OneInstruction("inx", "inx sp", 1, noOperand),
+            new OneInstruction("inr", "inr m", 1, noOperand),
+            new OneInstruction("dcr", "dcr m", 1, noOperand),
+            new OneInstruction("mvi", "mvi m", 1, noOperand),
+            new OneInstruction("stc", "stc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("dad", "dad sp", 1, noOperand),
+            new OneInstruction("lda", "lda", 1, noOperand),
+            new OneInstruction("dcx", "dcx sp", 1, noOperand),
+            new OneInstruction("inr", "inr a", 1, noOperand),
+            new OneInstruction("dcr", "dcr a", 1, noOperand),
+            new OneInstruction("mvi", "mvi a", 1, noOperand),
+            new OneInstruction("cmd", "cmd", 1, noOperand),
+            new OneInstruction("mov", "mov b,b", 1, noOperand),
+            new OneInstruction("mov", "mov b,c", 1, noOperand),
+            new OneInstruction("mov", "mov b,d", 1, noOperand),
+            new OneInstruction("mov", "mov b,e", 1, noOperand),
+            new OneInstruction("mov", "mov b,h", 1, noOperand),
+            new OneInstruction("mov", "mov b,l", 1, noOperand),
+            new OneInstruction("mov", "mov b,m", 1, noOperand),
+            new OneInstruction("mov", "mov b,a", 1, noOperand),
+            new OneInstruction("mov", "mov c,b", 1, noOperand),
+            new OneInstruction("mov", "mov c,c", 1, noOperand),
+            new OneInstruction("mov", "mov c,d", 1, noOperand),
+            new OneInstruction("mov", "mov c,e", 1, noOperand),
+            new OneInstruction("mov", "mov c,h", 1, noOperand),
+            new OneInstruction("mov", "mov c,l", 1, noOperand),
+            new OneInstruction("mov", "mov c,m", 1, noOperand),
+            new OneInstruction("mov", "mov c,a", 1, noOperand),
+            new OneInstruction("mov", "mov d,b", 1, noOperand),
+            new OneInstruction("mov", "mov d,c", 1, noOperand),
+            new OneInstruction("mov", "mov d,d", 1, noOperand),
+            new OneInstruction("mov", "mov d,e", 1, noOperand),
+            new OneInstruction("mov", "mov d,h", 1, noOperand),
+            new OneInstruction("mov", "mov d,l", 1, noOperand),
+            new OneInstruction("mov", "mov d,m", 1, noOperand),
+            new OneInstruction("mov", "mov d,a", 1, noOperand),
+            new OneInstruction("mov", "mov e,b", 1, noOperand),
+            new OneInstruction("mov", "mov e,c", 1, noOperand),
+            new OneInstruction("mov", "mov e,d", 1, noOperand),
+            new OneInstruction("mov", "mov e,h", 1, noOperand),
+            new OneInstruction("mov", "mov e,l", 1, noOperand),
+            new OneInstruction("mov", "mov e,m", 1, noOperand),
+            new OneInstruction("mov", "mov e,a", 1, noOperand),
+            new OneInstruction("mov", "mov h,b", 1, noOperand),
+            new OneInstruction("mov", "mov h,c", 1, noOperand),
+            new OneInstruction("mov", "mov h,d", 1, noOperand),
+            new OneInstruction("mov", "mov h,e", 1, noOperand),
+            new OneInstruction("mov", "mov h,h", 1, noOperand),
+            new OneInstruction("mov", "mov h,l", 1, noOperand),
+            new OneInstruction("mov", "mov h,m", 1, noOperand),
+            new OneInstruction("mov", "mov h,a", 1, noOperand),
+            new OneInstruction("mov", "mov l,b", 1, noOperand),
+            new OneInstruction("mov", "mov l,c", 1, noOperand),
+            new OneInstruction("mov", "mov l,d", 1, noOperand),
+            new OneInstruction("mov", "mov l,e", 1, noOperand),
+
+            new OneInstruction("mov", "mov m,a", 1, noOperand),
+            new OneInstruction("mov", "mov a,b", 1, noOperand),
+            new OneInstruction("mov", "mov a,c", 1, noOperand),
+            new OneInstruction("mov", "mov a,d", 1, noOperand),
+            new OneInstruction("mov", "mov a,e", 1, noOperand),
+            new OneInstruction("mov", "mov a,h", 1, noOperand),
+            new OneInstruction("mov", "mov a,l", 1, noOperand),
+            new OneInstruction("mov", "mov a,m", 1, noOperand),
+            new OneInstruction("mov", "mov a,a", 1, noOperand),
+
+            new OneInstruction("add", "add b", 1, noOperand),
+            new OneInstruction("add", "add c", 1, noOperand),
+            new OneInstruction("add", "add d", 1, noOperand),
+            new OneInstruction("add", "add e", 1, noOperand),
+            new OneInstruction("add", "add h", 1, noOperand),
+            new OneInstruction("add", "add l", 1, noOperand),
+            new OneInstruction("add", "add m", 1, noOperand),
+            new OneInstruction("add", "add a", 1, noOperand),
+
+            new OneInstruction("adc", "adc b", 1, noOperand),
+            new OneInstruction("adc", "adc c", 1, noOperand),
+            new OneInstruction("adc", "adc d", 1, noOperand),
+            new OneInstruction("adc", "adc e", 1, noOperand),
+            new OneInstruction("adc", "adc h", 1, noOperand),
+            new OneInstruction("adc", "adc l", 1, noOperand),
+            new OneInstruction("adc", "adc m", 1, noOperand),
+            new OneInstruction("adc", "adc a", 1, noOperand),
+
+            new OneInstruction("sub", "sub b", 1, noOperand),
+            new OneInstruction("sub", "sub c", 1, noOperand),
+            new OneInstruction("sub", "sub d", 1, noOperand),
+            new OneInstruction("sub", "sub e", 1, noOperand),
+            new OneInstruction("sub", "sub h", 1, noOperand),
+            new OneInstruction("sub", "sub l", 1, noOperand),
+            new OneInstruction("sub", "sub m", 1, noOperand),
+            new OneInstruction("sub", "sub a", 1, noOperand),
+
+            new OneInstruction("sbb", "sbb b", 1, noOperand),
+            new OneInstruction("sbb", "sbb c", 1, noOperand),
+            new OneInstruction("sbb", "sbb d", 1, noOperand),
+            new OneInstruction("sbb", "sbb e", 1, noOperand),
+            new OneInstruction("sbb", "sbb h", 1, noOperand),
+            new OneInstruction("sbb", "sbb l", 1, noOperand),
+            new OneInstruction("sbb", "sbb m", 1, noOperand),
+            new OneInstruction("sbb", "sbb a", 1, noOperand),
+
+            new OneInstruction("ana", "ana b", 1, noOperand),
+            new OneInstruction("ana", "ana c", 1, noOperand),
+            new OneInstruction("ana", "ana d", 1, noOperand),
+            new OneInstruction("ana", "ana d", 1, noOperand),
+            new OneInstruction("ana", "ana h", 1, noOperand),
+            new OneInstruction("ana", "ana l", 1, noOperand),
+            new OneInstruction("ana", "ana m", 1, noOperand),
+            new OneInstruction("ana", "ana a", 1, noOperand),
+
+            new OneInstruction("xra", "xra b", 1, noOperand),
+            new OneInstruction("xra", "xra c", 1, noOperand),
+            new OneInstruction("xra", "xra d", 1, noOperand),
+            new OneInstruction("xra", "xra d", 1, noOperand),
+            new OneInstruction("xra", "xra h", 1, noOperand),
+            new OneInstruction("xra", "xra l", 1, noOperand),
+            new OneInstruction("xra", "xra m", 1, noOperand),
+            new OneInstruction("xra", "xra a", 1, noOperand),
+
+            new OneInstruction("ora", "ora b", 1, noOperand),
+            new OneInstruction("ora", "ora c", 1, noOperand),
+            new OneInstruction("ora", "ora d", 1, noOperand),
+            new OneInstruction("ora", "ora d", 1, noOperand),
+            new OneInstruction("ora", "ora h", 1, noOperand),
+            new OneInstruction("ora", "ora l", 1, noOperand),
+            new OneInstruction("ora", "ora m", 1, noOperand),
+            new OneInstruction("ora", "ora a", 1, noOperand),
+
+            new OneInstruction("cmp", "cmp b", 1, noOperand),
+            new OneInstruction("cmp", "cmp c", 1, noOperand),
+            new OneInstruction("cmp", "cmp d", 1, noOperand),
+            new OneInstruction("cmp", "cmp d", 1, noOperand),
+            new OneInstruction("cmp", "cmp h", 1, noOperand),
+            new OneInstruction("cmp", "cmp l", 1, noOperand),
+            new OneInstruction("cmp", "cmp m", 1, noOperand),
+            new OneInstruction("cmp", "cmp a", 1, noOperand),
+
+            new OneInstruction("rnz", "rnz", 1, noOperand),
+            new OneInstruction("pop", "pop b", 1, noOperand),
+            new OneInstruction("jnz", "jnz", 1, noOperand),
+            new OneInstruction("jmp", "jmp", 1, noOperand),
+            new OneInstruction("cnz", "cnz", 1, noOperand),
+            new OneInstruction("push", "push b", 1, noOperand),
+            new OneInstruction("adi", "adi", 1, noOperand),
+            new OneInstruction("rst", "rst 0", 1, noOperand),
+            new OneInstruction("rz", "rz", 1, noOperand),
+            new OneInstruction("ret", "ret", 1, noOperand),
+            new OneInstruction("jz", "jz", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("cz", "cz", 1, noOperand),
+            new OneInstruction("call", "call", 1, noOperand),
+            new OneInstruction("aci", "aci", 1, noOperand),
+            new OneInstruction("rst", "rst 1", 1, noOperand),
+            new OneInstruction("rnc", "rnc", 1, noOperand),
+            new OneInstruction("pop", "pop d", 1, noOperand),
+            new OneInstruction("jnc", "jnc", 1, noOperand),
+            new OneInstruction("out", "out", 1, noOperand),
+            new OneInstruction("cnc", "cnc", 1, noOperand),
+            new OneInstruction("push", "push", 1, noOperand),
+            new OneInstruction("sui", "sui", 1, noOperand),
+            new OneInstruction("rst", "rst 2", 1, noOperand),
+            new OneInstruction("rc", "rc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("jc", "jc", 1, noOperand),
+            new OneInstruction("in", "in", 1, noOperand),
+            new OneInstruction("cc", "cc", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("sbi", "sbi", 1, noOperand),
+            new OneInstruction("rst", "rst 3", 1, noOperand),
+            new OneInstruction("rpo", "rpo", 1, noOperand),
+            new OneInstruction("pop", "pop h", 1, noOperand),
+            new OneInstruction("jpo", "jpo", 1, noOperand),
+            new OneInstruction("xthl", "xthl", 1, noOperand),
+            new OneInstruction("cpo", "cpo", 1, noOperand),
+            new OneInstruction("push", "push h", 1, noOperand),
+            new OneInstruction("ani", "ani", 1, noOperand),
+            new OneInstruction("rst", "rst 4", 1, noOperand),
+            new OneInstruction("rep", "rep", 1, noOperand),
+            new OneInstruction("pchl", "pchl", 1, noOperand),
+            new OneInstruction("jpe", "jpe", 1, noOperand),
+            new OneInstruction("xchg", "xchg", 1, noOperand),
+            new OneInstruction("cpe", "cpe", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("xri", "xri", 1, noOperand),
+            new OneInstruction("rst", "rst 5", 1, noOperand),
+            new OneInstruction("rp", "rp", 1, noOperand),
+            new OneInstruction("pop", "pop psw", 1, noOperand),
+            new OneInstruction("jp", "jp", 1, noOperand),
+            new OneInstruction("di", "di", 1, noOperand),
+            new OneInstruction("cp", "cp", 1, noOperand),
+            new OneInstruction("push", "push psw", 1, noOperand),
+            new OneInstruction("ori", "ori", 1, noOperand),
+            new OneInstruction("rst", "rst 6", 1, noOperand),
+            new OneInstruction("rm", "rm", 1, noOperand),
+            new OneInstruction("sphl", "sphl", 1, noOperand),
+            new OneInstruction("jm", "jm", 1, noOperand),
+            new OneInstruction("ei", "ei", 1, noOperand),
+            new OneInstruction("cm", "cm", 1, noOperand),
+            new OneInstruction("", "invalid", 1, noOperand),
+            new OneInstruction("cpi", "cpi", 1, noOperand),
+            new OneInstruction("rst", "rst 7", 1, noOperand), };
+
+    public static String toString(int opcode, int op1, int op2) {
+        return "";
     }
 }
