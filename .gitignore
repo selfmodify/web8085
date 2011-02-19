@@ -1,0 +1,6 @@
+war/WEB-INF/classes/
+*.gwt.rpc
+war/WEB-INF/appengine-generated
+war/com.mycompany.project.Simulator
+war/WEB-INF/deploy
+war/WEB-INF/lib/
