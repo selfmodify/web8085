@@ -34,7 +34,7 @@ public abstract class OperandParser {
         if(i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
             throw new Exception("Mov operand cannot have both operand set to memory");
         }
-        i.code = 0x40 + i.op2.ordinal() * 8 + i.op1.ordinal();
+        i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
     }
     
     public abstract void parse(InstructionParser i,String line) throws Exception;

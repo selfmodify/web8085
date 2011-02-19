@@ -42,15 +42,22 @@ public class Instruction {
         public OneInstruction(String shortName, String longName, InstructionToString toStr) {
             this.shortName = shortName;
             this.longName = longName;
-            if(toStr == byteOperand) {
+            this.toStr = toStr;
+            if(toStr == wordOperand) {
+                this.length = 3;
+            } else if(toStr == byteOperand){
                 this.length = 2;
             } else {
                 this.length = 1;
             }
         }
+
+        public String toString(int op1) {
+            return toStr.toString(longName, op1);
+        }
     }
 
-    private OneInstruction[] oi = new OneInstruction[] {
+    private static OneInstruction[] allInstructions = new OneInstruction[] {
             new OneInstruction("nop", "nop",  noOperand),
             new OneInstruction("lxi", "lxi b", wordOperand),
             new OneInstruction("stax", "stax b",  noOperand),
@@ -121,6 +128,7 @@ public class Instruction {
             new OneInstruction("dcr", "dcr a",  noOperand),
             new OneInstruction("mvi", "mvi a",  byteOperand),
             new OneInstruction("cmd", "cmd",  noOperand),
+            
             new OneInstruction("mov", "mov b,b",  noOperand),
             new OneInstruction("mov", "mov b,c",  noOperand),
             new OneInstruction("mov", "mov b,d",  noOperand),
@@ -129,6 +137,7 @@ public class Instruction {
             new OneInstruction("mov", "mov b,l",  noOperand),
             new OneInstruction("mov", "mov b,m",  noOperand),
             new OneInstruction("mov", "mov b,a",  noOperand),
+            
             new OneInstruction("mov", "mov c,b",  noOperand),
             new OneInstruction("mov", "mov c,c",  noOperand),
             new OneInstruction("mov", "mov c,d",  noOperand),
@@ -137,6 +146,7 @@ public class Instruction {
             new OneInstruction("mov", "mov c,l",  noOperand),
             new OneInstruction("mov", "mov c,m",  noOperand),
             new OneInstruction("mov", "mov c,a",  noOperand),
+            
             new OneInstruction("mov", "mov d,b",  noOperand),
             new OneInstruction("mov", "mov d,c",  noOperand),
             new OneInstruction("mov", "mov d,d",  noOperand),
@@ -145,13 +155,16 @@ public class Instruction {
             new OneInstruction("mov", "mov d,l",  noOperand),
             new OneInstruction("mov", "mov d,m",  noOperand),
             new OneInstruction("mov", "mov d,a",  noOperand),
+
             new OneInstruction("mov", "mov e,b",  noOperand),
             new OneInstruction("mov", "mov e,c",  noOperand),
             new OneInstruction("mov", "mov e,d",  noOperand),
+            new OneInstruction("mov", "mov e,e",  noOperand),
             new OneInstruction("mov", "mov e,h",  noOperand),
             new OneInstruction("mov", "mov e,l",  noOperand),
             new OneInstruction("mov", "mov e,m",  noOperand),
             new OneInstruction("mov", "mov e,a",  noOperand),
+            
             new OneInstruction("mov", "mov h,b",  noOperand),
             new OneInstruction("mov", "mov h,c",  noOperand),
             new OneInstruction("mov", "mov h,d",  noOperand),
@@ -160,12 +173,25 @@ public class Instruction {
             new OneInstruction("mov", "mov h,l",  noOperand),
             new OneInstruction("mov", "mov h,m",  noOperand),
             new OneInstruction("mov", "mov h,a",  noOperand),
+
             new OneInstruction("mov", "mov l,b",  noOperand),
             new OneInstruction("mov", "mov l,c",  noOperand),
             new OneInstruction("mov", "mov l,d",  noOperand),
             new OneInstruction("mov", "mov l,e",  noOperand),
+            new OneInstruction("mov", "mov l,h",  noOperand),
+            new OneInstruction("mov", "mov l,l",  noOperand),
+            new OneInstruction("mov", "mov l,m",  noOperand),
+            new OneInstruction("mov", "mov l,a",  noOperand),
 
+            new OneInstruction("mov", "mov m,b",  noOperand),
+            new OneInstruction("mov", "mov m,c",  noOperand),
+            new OneInstruction("mov", "mov m,d",  noOperand),
+            new OneInstruction("mov", "mov m,e",  noOperand),
+            new OneInstruction("mov", "mov m,h",  noOperand),
+            new OneInstruction("mov", "mov m,l",  noOperand),
+            new OneInstruction("mov", "mov m,m",  noOperand),
             new OneInstruction("mov", "mov m,a",  noOperand),
+
             new OneInstruction("mov", "mov a,b",  noOperand),
             new OneInstruction("mov", "mov a,c",  noOperand),
             new OneInstruction("mov", "mov a,d",  noOperand),
@@ -313,7 +339,8 @@ public class Instruction {
             new OneInstruction("rst", "rst 7",  noOperand), 
     };
 
-    public static String toString(int opcode, int op1, int op2) {
-        return "";
+    public static String toString(int opcode, int op1) {
+        String str = opcode >= 0 && opcode < allInstructions.length ? allInstructions[opcode].toString(op1) : "";
+        return str;
     }
 }

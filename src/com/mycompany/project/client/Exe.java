@@ -34,7 +34,7 @@ public class Exe {
             ix = 256 + ix;
         }
         counter++;
-        String str = "0x" + Integer.toHexString(ix);
+        String str = Instruction.toString(ix, 0);
         return str;
     }
 }
