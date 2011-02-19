@@ -37,4 +37,12 @@ public class Exe {
         String str = Instruction.toString(ix, 0);
         return str;
     }
+
+    public void nextIp2(int len) {
+        ip += len;
+    }
+
+    public void nextIp() {
+        ++ip;
+    }
 }
