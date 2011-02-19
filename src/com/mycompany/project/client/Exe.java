@@ -1,9 +1,18 @@
 package com.mycompany.project.client;
 
 public class Exe {
-    private int ip = 0;
+    public int ip = 0;
     private byte memory[] = new byte[64 * 1024];
     private int counter = 0;
+    
+    public int a;
+    public int b;
+    public int c;
+    public int d;
+    public int e;
+    public int h;
+    public int l;
+
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)op1;
@@ -44,5 +53,31 @@ public class Exe {
 
     public void nextIp() {
         ++ip;
+    }
+
+    public void step() throws Exception {
+        Instruction.execute(this);
+    }
+
+    public int getOpcode() {
+        int opcode = (int)memory[counter];
+        if(opcode < 0) {
+            opcode = 256 + opcode;
+        }
+        return opcode;
+    }
+
+    public int getIp() {
+        return ip;
+    }
+    
+    public void reset() {
+        resetRegisters();
+    }
+
+    public void resetRegisters() {
+        ip = 0;
+        a = b = c = d = e = h = l = 0;
+        counter = 0;
     }
 }

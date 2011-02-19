@@ -345,4 +345,13 @@ public class Instruction {
         String str = opcode >= 0 && opcode < allInstructions.length ? allInstructions[opcode].toString(op1) : "";
         return str;
     }
+    
+    public static void execute(Exe exe) throws Exception {
+        int opcode = exe.getOpcode();
+        if(opcode < 0 || opcode >=allInstructions.length) {
+            throw new Exception("Invalid opcode " + opcode + " at ip " + exe.getIp());
+        }
+        OneInstruction ix = allInstructions[opcode];
+        ix.microCode.execute(exe, ix);
+    }
 }

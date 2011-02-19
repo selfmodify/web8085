@@ -31,17 +31,26 @@ public class MainWindow extends Composite {
     @UiField
     ListBox exeWindow;
     
+    @UiField
+    Button stepButton;
+
+    @UiField
+    ListBox registerWindow;
+    
+    private Exe exe = new Exe();
+    
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         sourceCode.setHTML("mov a,b</br>sub b</br>add c");
+        refreshRegisters();
     }
 
     @UiHandler("compile")
     public void compileHandler(ClickEvent e) {
         Parser p = new Parser();
-        Exe exe = new Exe();
         ParsingContext ctx = new ParsingContext(sourceCode.getText());
         exeWindow.clear();
+        exe.reset();
         try {
             while(ctx.hasNext()){
                 ParseToken token = p.parseLine(ctx.nextLine());
@@ -51,8 +60,32 @@ public class MainWindow extends Composite {
             while(exe.hasNext()) {
                 this.exeWindow.addItem(exe.next());
             }
+            exe.resetRegisters();
         } catch(Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
+    }
+    
+    @UiHandler("stepButton")
+    public void stepButtonHandler(ClickEvent e) {
+        try {
+            exe.step();
+        } catch (Exception e1) {
+            errorWindow.setText(e1.getMessage());
+        } finally {
+            refreshRegisters();
+        }
+    }
+    
+    public void refreshRegisters( ) {
+        registerWindow.clear();
+        registerWindow.addItem("a = " + exe.a);
+        registerWindow.addItem("b = " + exe.b);
+        registerWindow.addItem("c = " + exe.c);
+        registerWindow.addItem("d = " + exe.d);
+        registerWindow.addItem("e = " + exe.e);
+        registerWindow.addItem("h = " + exe.h);
+        registerWindow.addItem("l = " + exe.l);
+        registerWindow.addItem("ip = " + exe.ip);
     }
 }

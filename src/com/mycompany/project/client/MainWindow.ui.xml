@@ -1,5 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+>
   <ui:style>
     .important {
     	font-weight: bold;
@@ -14,14 +16,18 @@
     <g:south size='10'><g:VerticalPanel></g:VerticalPanel></g:south>
   
     <g:center>
-        <g:VerticalPanel>
+        <g:HorizontalPanel>
+            <g:VerticalPanel  spacing="10">
+                <g:RichTextArea ui:field="sourceCode" width="350px" height="200px"></g:RichTextArea>
+                <g:TextBox ui:field="errorWindow" width="300px"></g:TextBox>
+                <g:Button ui:field="compile">Compile</g:Button>
+            </g:VerticalPanel>
             <g:HorizontalPanel spacing="10">
-                <g:RichTextArea ui:field="sourceCode" width="450px" height="300px"></g:RichTextArea>
                 <g:ListBox ui:field="exeWindow" width="100px" visibleItemCount="20"></g:ListBox>
+                <g:Button ui:field="stepButton">Step</g:Button>
+                <g:ListBox ui:field="registerWindow" visibleItemCount="12"></g:ListBox>
             </g:HorizontalPanel>
-            <g:TextBox ui:field="errorWindow" width="300px"></g:TextBox>
-            <g:Button ui:field="compile">Compile</g:Button>
-        </g:VerticalPanel>
+        </g:HorizontalPanel>
     </g:center>
   </g:DockLayoutPanel>
 </ui:UiBinder> 
