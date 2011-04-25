@@ -352,6 +352,7 @@ public class Instruction {
             throw new Exception("Invalid opcode " + opcode + " at ip " + exe.getIp());
         }
         OneInstruction ix = allInstructions[opcode];
-        ix.microCode.execute(exe, ix);
+        MicroCode m = ix.microCode;
+        m.execute(exe, ix);
     }
 }

@@ -13,6 +13,10 @@ public class Exe {
     public int h;
     public int l;
 
+    public boolean sign;
+    public boolean carry;
+    public boolean zero;
+
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)op1;
@@ -86,11 +90,11 @@ public class Exe {
 
 
     public void nextIp2(int len) {
-        ip += len;
+        incrIp(len);
     }
 
     public void nextIp() {
-        ++ip;
+        incrIp(1);
     }
 
     public void step() throws Exception {
@@ -111,11 +115,80 @@ public class Exe {
 
     public void reset() {
         resetRegisters();
+        clearFlags();
     }
 
     public void resetRegisters() {
         ip = 0;
         a = b = c = d = e = h = l = 0;
         counter = 0;
+    }
+
+    public void clearFlags() {
+        sign = false;
+        zero = false;
+        carry = false;
+    }
+
+    private void incrIp(int i) {
+        ip += i;
+        ip = ip % 65536;
+    }
+
+    public void setZero() {
+        zero = true;
+    }
+
+    public void resetZero() {
+        zero = false;
+    }
+
+    public boolean isZero() {
+        return zero;
+    }
+
+    public void setSign() {
+        sign = true;
+    }
+
+    public void resetSign() {
+        sign = false;
+    }
+
+    public boolean isSign() {
+        return sign;
+    }
+
+    public void setCarry() {
+        carry = true;
+    }
+
+    public void resetCarry() {
+        carry = false;
+    }
+
+    public boolean isCarry() {
+        return carry;
+    }
+
+    public void setZSFlags() {
+        // set the zero bit
+        if(a == 0) {
+            setZero();
+        } else {
+            resetZero();
+        }
+
+        // set the sign bit
+        if( (a & 0x80) == 0x80) {
+            setSign();
+        } else {
+            resetSign();
+        }
+
+    }
+
+    public byte getMemAtIp() {
+        return memory[ip];
     }
 }
