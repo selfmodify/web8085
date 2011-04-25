@@ -6,8 +6,8 @@ import com.mycompany.project.client.InstructionParser.Operand;
 
 public abstract class OperandParser {
     private static HashMap<String, InstructionParser.Operand> map = createOperandMap();
-    
-    
+
+
     private static HashMap<String, Operand> createOperandMap() {
         HashMap<String, Operand> map = new HashMap<String, Operand>();
         map.put("a", InstructionParser.Operand.A);
@@ -19,7 +19,7 @@ public abstract class OperandParser {
         map.put("l", InstructionParser.Operand.L);
         return map;
     }
-    
+
     public static void parseTwoOperands(InstructionParser i,String operands) throws Exception {
         String[] parts = operands.split(",", 2);
         if(parts.length < 2) {
@@ -28,7 +28,7 @@ public abstract class OperandParser {
         i.op1 = map.get(parts[0]);
         i.op2 = map.get(parts[1]);
     }
-    
+
     public static void parseMovOperands(InstructionParser i,String operands) throws Exception {
         parseTwoOperands(i, operands);
         if(i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
@@ -36,9 +36,16 @@ public abstract class OperandParser {
         }
         i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
     }
-    
+
     public abstract void parse(InstructionParser i,String line) throws Exception;
-    
+
+    public static OperandParser zeroOperand = new OperandParser() {
+        @Override
+        public void parse(InstructionParser i, String line) throws Exception {
+            i.code = i.baseCode;
+        }
+    };
+
     public static OperandParser oneOperand = new OperandParser() {
         @Override
         public void parse(InstructionParser i, String operands) throws Exception {

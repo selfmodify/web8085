@@ -26,7 +26,7 @@ public class Instruction {
             return name + " " + op1;
         }
     }
-    
+
     private static NoOperand noOperand = new NoOperand();
 
     private static ByteOperand byteOperand = new ByteOperand();
@@ -71,7 +71,7 @@ public class Instruction {
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("dad", "dad b",  noOperand ,MicroCode.nop),
             new OneInstruction("ldax", "ldax b",  noOperand ,MicroCode.nop),
-            
+
             new OneInstruction("dcx", "dcx b",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr c",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr c",  noOperand ,MicroCode.nop),
@@ -130,78 +130,78 @@ public class Instruction {
             new OneInstruction("dcr", "dcr a",  noOperand ,MicroCode.nop),
             new OneInstruction("mvi", "mvi a",  byteOperand ,MicroCode.nop),
             new OneInstruction("cmd", "cmd",  noOperand ,MicroCode.nop),
-            
-            new OneInstruction("mov", "mov b,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov b,a",  noOperand ,MicroCode.nop),
-            
-            new OneInstruction("mov", "mov c,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov c,a",  noOperand ,MicroCode.nop),
-            
-            new OneInstruction("mov", "mov d,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov d,a",  noOperand ,MicroCode.nop),
 
-            new OneInstruction("mov", "mov e,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov e,a",  noOperand ,MicroCode.nop),
-            
-            new OneInstruction("mov", "mov h,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov h,a",  noOperand ,MicroCode.nop),
+            new OneInstruction("mov", "mov b,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov b,a",  noOperand ,MicroCode.move),
 
-            new OneInstruction("mov", "mov l,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov l,a",  noOperand ,MicroCode.nop),
+            new OneInstruction("mov", "mov c,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov c,a",  noOperand ,MicroCode.move),
 
-            new OneInstruction("mov", "mov m,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov m,a",  noOperand ,MicroCode.nop),
+            new OneInstruction("mov", "mov d,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov d,a",  noOperand ,MicroCode.move),
 
-            new OneInstruction("mov", "mov a,b",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,c",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,d",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,h",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,l",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,m",  noOperand ,MicroCode.nop),
-            new OneInstruction("mov", "mov a,a",  noOperand ,MicroCode.nop),
+            new OneInstruction("mov", "mov e,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov e,a",  noOperand ,MicroCode.move),
+
+            new OneInstruction("mov", "mov h,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov h,a",  noOperand ,MicroCode.move),
+
+            new OneInstruction("mov", "mov l,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov l,a",  noOperand ,MicroCode.move),
+
+            new OneInstruction("mov", "mov m,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov m,a",  noOperand ,MicroCode.move),
+
+            new OneInstruction("mov", "mov a,b",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,c",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,d",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,e",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,h",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,l",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,m",  noOperand ,MicroCode.move),
+            new OneInstruction("mov", "mov a,a",  noOperand ,MicroCode.move),
 
             new OneInstruction("add", "add b",  noOperand ,MicroCode.nop),
             new OneInstruction("add", "add c",  noOperand ,MicroCode.nop),
@@ -338,14 +338,14 @@ public class Instruction {
             new OneInstruction("cm", "cm",  wordOperand ,MicroCode.nop),
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("cpi", "cpi",  byteOperand ,MicroCode.nop),
-            new OneInstruction("rst", "rst 7",  noOperand ,MicroCode.nop), 
+            new OneInstruction("rst", "rst 7",  noOperand ,MicroCode.nop),
     };
 
     public static String toString(int opcode, int op1) {
         String str = opcode >= 0 && opcode < allInstructions.length ? allInstructions[opcode].toString(op1) : "";
         return str;
     }
-    
+
     public static void execute(Exe exe) throws Exception {
         int opcode = exe.getOpcode();
         if(opcode < 0 || opcode >=allInstructions.length) {
