@@ -39,9 +39,8 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x80;
-            int op1 = code % 8;
-            int r = exe.a + exe.getRegOrMem(op1);
-            endAdd(exe, r);
+            int op1 = exe.getRegOrMem(code % 8);
+            endAdd(exe, op1);
         }
     };
 
@@ -49,21 +48,59 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             assert(exe.getOpcode() == 0xC6);
-            exe.nextIp();
+            exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
-            int r = exe.a + op1;
-            endAdd(exe, r);
+            endAdd(exe, op1);
         }
     };
 
-    private static void endAdd(Exe exe, int r) {
+    public static MicroCode inra = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            assert(exe.getOpcode() == 0x3C);
+            endAdd(exe, 1, false);
+        }
+    };
+
+    /**
+     * helper add function.
+     * @param exe
+     * @param r
+     */
+    private static void endAdd(Exe exe, int v) {
+        endAdd(exe, v, true);
+    }
+
+    /**
+     * Do a = a+v, set Zero, Sign, set carry optionally and
+     * increment the ip.
+     * @param exe
+     * @param v
+     * @param setCarry
+     */
+    private static void endAdd(Exe exe, int v, boolean setCarry) {
+        int r = exe.a + v;
         exe.a = (0xff & r);
-        if(r > 0xff) {
-            exe.setCarry();
-        } else {
-            exe.resetCarry();
+        if(setCarry) {
+            if(r > 0xff) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
         }
         exe.setZSFlags();
         exe.nextIp();
     }
+
+    /**
+     * Subtract instruction family.
+     */
+    public static MicroCode sub = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x80;
+            int op1 = exe.getRegOrMem(code % 8);
+            endAdd(exe, op1);
+        }
+    };
 }
