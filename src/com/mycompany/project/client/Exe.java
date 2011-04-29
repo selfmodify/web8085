@@ -14,8 +14,10 @@ public class Exe {
     public int l;
 
     public boolean sign;
-    public boolean carry;
     public boolean zero;
+    public boolean auxCarry;
+    public boolean parity;
+    public boolean carry;
 
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
@@ -190,5 +192,23 @@ public class Exe {
 
     public byte getMemAtIp() {
         return memory[ip];
+    }
+
+    /**
+     * @return 1 if the carry is set else return 0
+     */
+    public short getCarry() {
+        return (short) (carry ? 1 :0);
+    }
+
+    public void compileCode(String text) throws Exception {
+        Parser p = new Parser();
+        ParsingContext ctx = new ParsingContext(text);
+        reset();
+        while(ctx.hasNext()){
+            String line = ctx.nextLine();
+            ParseToken token = p.parseLine(line);
+            insert(token);
+        }
     }
 }

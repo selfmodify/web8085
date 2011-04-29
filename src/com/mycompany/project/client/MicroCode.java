@@ -40,9 +40,13 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x80;
             int op1 = exe.getRegOrMem(code % 8);
-            endAdd(exe, op1);
+            addWithoutCarry(exe, op1);
         }
     };
+
+    protected static void addWithoutCarry(Exe exe, int op1) {
+        endAdd(exe, op1, (short) 0);
+    }
 
     public static MicroCode adi = new MicroCode() {
         @Override
@@ -50,7 +54,21 @@ public abstract class MicroCode {
             assert(exe.getOpcode() == 0xC6);
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
-            endAdd(exe, op1);
+            addWithCarry(exe, op1);
+        }
+    };
+
+    public void addWithCarry(Exe exe, int op1) {
+        endAdd(exe, op1, exe.getCarry(), true);
+    }
+
+    public static MicroCode aci = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            assert(exe.getOpcode() == 0xce);
+            exe.nextIp(); // one for the immediate operand
+            int op1 = exe.getMemAtIp();
+            addWithCarry(exe, op1);
         }
     };
 
@@ -58,7 +76,7 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             assert(exe.getOpcode() == 0x3C);
-            endAdd(exe, 1, false);
+            endAdd(exe, 1, (short)0, false);
         }
     };
 
@@ -67,8 +85,8 @@ public abstract class MicroCode {
      * @param exe
      * @param r
      */
-    private static void endAdd(Exe exe, int v) {
-        endAdd(exe, v, true);
+    private static void endAdd(Exe exe, int v, short carry) {
+        endAdd(exe, v, carry, true);
     }
 
     /**
@@ -78,7 +96,7 @@ public abstract class MicroCode {
      * @param v
      * @param setCarry
      */
-    private static void endAdd(Exe exe, int v, boolean setCarry) {
+    private static void endAdd(Exe exe, int v, short carry, boolean setCarry) {
         int r = exe.a + v;
         exe.a = (0xff & r);
         if(setCarry) {
@@ -91,16 +109,4 @@ public abstract class MicroCode {
         exe.setZSFlags();
         exe.nextIp();
     }
-
-    /**
-     * Subtract instruction family.
-     */
-    public static MicroCode sub = new MicroCode() {
-        @Override
-        public void execute(Exe exe, OneInstruction i) throws Exception {
-            int code = exe.getOpcode() - 0x80;
-            int op1 = exe.getRegOrMem(code % 8);
-            endAdd(exe, op1);
-        }
-    };
 }

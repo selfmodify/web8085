@@ -21,24 +21,24 @@ public class MainWindow extends Composite {
 
     @UiField
     Button compile;
-    
+
     @UiField
     RichTextArea sourceCode;
-    
+
     @UiField
     TextBox errorWindow;
-    
+
     @UiField
     ListBox exeWindow;
-    
+
     @UiField
     Button stepButton;
 
     @UiField
     ListBox registerWindow;
-    
+
     private Exe exe = new Exe();
-    
+
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         sourceCode.setHTML("mov a,b</br>sub b</br>add c");
@@ -47,15 +47,10 @@ public class MainWindow extends Composite {
 
     @UiHandler("compile")
     public void compileHandler(ClickEvent e) {
-        Parser p = new Parser();
-        ParsingContext ctx = new ParsingContext(sourceCode.getText());
-        exeWindow.clear();
-        exe.reset();
+        String text = sourceCode.getText();
         try {
-            while(ctx.hasNext()){
-                ParseToken token = p.parseLine(ctx.nextLine());
-                exe.insert(token);
-            }
+            exeWindow.clear();
+            exe.compileCode(text);
             errorWindow.setText("Finished parsing");
             while(exe.hasNext()) {
                 this.exeWindow.addItem(exe.next());
@@ -65,7 +60,7 @@ public class MainWindow extends Composite {
             errorWindow.setText(ex.getMessage());
         }
     }
-    
+
     @UiHandler("stepButton")
     public void stepButtonHandler(ClickEvent e) {
         try {
@@ -76,7 +71,7 @@ public class MainWindow extends Composite {
             refreshRegisters();
         }
     }
-    
+
     public void refreshRegisters( ) {
         registerWindow.clear();
         registerWindow.addItem("a = " + exe.a);

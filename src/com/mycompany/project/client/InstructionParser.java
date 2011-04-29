@@ -3,6 +3,7 @@ package com.mycompany.project.client;
 
 public class InstructionParser {
     public enum Mnemonic {
+        ACI,
         NONE,
         MOV,
         ADD,
