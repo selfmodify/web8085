@@ -1,8 +1,8 @@
-package com.mycompany.project.client;
+package com.shastram.web8085.client;
 
 import java.util.HashMap;
 
-import com.mycompany.project.client.InstructionParser.Operand;
+import com.shastram.web8085.client.InstructionParser.Operand;
 
 public abstract class OperandParser {
     private static HashMap<String, InstructionParser.Operand> map = createOperandMap();

@@ -1,6 +1,6 @@
-package com.mycompany.project.client;
+package com.shastram.web8085.client;
 
-import com.mycompany.project.client.Instruction.OneInstruction;
+import com.shastram.web8085.client.Instruction.OneInstruction;
 
 /**
  *

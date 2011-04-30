@@ -1,9 +1,9 @@
-package com.mycompany.project.client.test;
+package com.shastram.web8085.client.test;
 
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.mycompany.project.client.Exe;
+import com.shastram.web8085.client.Exe;
 
 
 public class InstructionTests extends GWTTestCase {

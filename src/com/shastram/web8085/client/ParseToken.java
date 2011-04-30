@@ -1,4 +1,4 @@
-package com.mycompany.project.client;
+package com.shastram.web8085.client;
 
 public class ParseToken {
     private InstructionParser ix;

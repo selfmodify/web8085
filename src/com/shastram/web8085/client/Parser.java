@@ -1,4 +1,4 @@
-package com.mycompany.project.client;
+package com.shastram.web8085.client;
 
 import java.util.HashMap;
 import java.util.logging.Level;

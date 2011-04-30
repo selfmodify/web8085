@@ -1,4 +1,4 @@
-package com.mycompany.project.client;
+package com.shastram.web8085.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
