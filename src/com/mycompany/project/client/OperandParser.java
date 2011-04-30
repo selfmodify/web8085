@@ -7,6 +7,10 @@ import com.mycompany.project.client.InstructionParser.Operand;
 public abstract class OperandParser {
     private static HashMap<String, InstructionParser.Operand> map = createOperandMap();
 
+    /**
+     * map containing the ip address to the assert instruction.
+     */
+    private static HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
 
     private static HashMap<String, Operand> createOperandMap() {
         HashMap<String, Operand> map = new HashMap<String, Operand>();
@@ -55,11 +59,31 @@ public abstract class OperandParser {
 
     };
 
+    public static OperandParser remainingLine = new OperandParser() {
+        @Override
+        public void parse(InstructionParser i, String line) throws Exception {
+            String[] parts = line.split("[ \t]+");
+            insertAssertion(i.ip, line);
+        }
+    };
+
     private static Operand getOperand(String operands) throws Exception {
         Operand operand = map.get(operands.trim());
         if(operand == null) {
             throw new Exception("Operand expected. " + operands);
         }
         return operand;
+    }
+
+    public void reset() {
+        assertOperation.clear();
+    }
+
+    public void insertAssertion(int ip, String assertion) {
+        assertOperation.put(ip, assertion);
+    }
+
+    public String getAssertion(int ip) {
+        return assertOperation.get(ip);
     }
 }

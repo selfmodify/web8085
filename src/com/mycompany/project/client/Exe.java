@@ -35,8 +35,14 @@ public class Exe {
     }
 
     public void insert(ParseToken token) {
-        InstructionParser i = token.getIx();
-        insert(i.code);
+        switch(token.getType()) {
+        case INSTRUCTION:
+                InstructionParser i = token.getIx();
+                insert(i.code);
+                break;
+        case ASSERT:
+
+        }
     }
 
     public boolean hasNext() {
@@ -202,12 +208,10 @@ public class Exe {
     }
 
     public void compileCode(String text) throws Exception {
-        Parser p = new Parser();
-        ParsingContext ctx = new ParsingContext(text);
+        Parser p = new Parser(text);
         reset();
-        while(ctx.hasNext()){
-            String line = ctx.nextLine();
-            ParseToken token = p.parseLine(line);
+        while(p.hasNext()){
+            ParseToken token = p.parseNextLine();
             insert(token);
         }
     }

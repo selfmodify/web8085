@@ -8,6 +8,7 @@ public class InstructionParser {
         MOV,
         ADD,
         SUB,
+        ASSERT,
     }
 
     public enum Operand {
@@ -21,6 +22,7 @@ public class InstructionParser {
     public int code = -1;
     public String name;
     private OperandParser oparser;
+    public int ip;
 
     public InstructionParser(Mnemonic type, int code, OperandParser oparser) {
         this.mnemonic = type;
@@ -36,5 +38,4 @@ public class InstructionParser {
     public void parseOperands(String operands) throws Exception {
         oparser.parse(this, operands);
     }
-
 }

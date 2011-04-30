@@ -10,10 +10,15 @@ public class Parser {
 
     private static Logger logger = Logger.getLogger(Parser.class.getName());
 
+    private String[] source;
+    private int line;
+    private int ip;
+
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
         map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xC3, OperandParser.oneOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
+        map.put(".assert",new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {
             @Override
             public void parse(InstructionParser i,String operands) throws Exception {
@@ -24,8 +29,15 @@ public class Parser {
         return map;
     }
 
-    public Parser( ){
+    public Parser(String text ){
+        this.source = text.split("\n");
+    }
 
+    public String nextLine() throws Exception {
+        if(line > source.length) {
+            throw new Exception("Reached end of source code");
+        }
+        return source[line++];
     }
 
     public ParseToken parseLine(String line) throws Exception {
@@ -49,14 +61,25 @@ public class Parser {
 
     public static void test( ) {
         String sourceCode = "mov a,b\n sub b\nadd c";
-        String[] lines = sourceCode.split("\n");
-        Parser p = new Parser();
+        Parser p = new Parser(sourceCode);
         try {
-            for(String l: lines) {
-                p.parseLine(lines[0]);
+            while(p.hasNext()) {
+                p.parseNextLine();
             }
         } catch(Exception ex) {
             logger.log(Level.WARNING,"Error parsing",ex);
         }
     }
+
+    public ParseToken parseNextLine() throws Exception {
+        String l = nextLine();
+        ParseToken token = parseLine(l);
+        ip++;
+        return token;
+    }
+
+    public boolean hasNext() {
+        return line < source.length;
+    }
+
 }
