@@ -22,7 +22,31 @@ public abstract class MicroCode {
     public static MicroCode assertRunner = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
+            String line = exe.getAsertionAt(exe.getIp());
+            // split the assertions into its parts
+            String[] parts = line.split("[ \t]+");
+            for(String s: parts) {
+                // get the first assertion
+                String assertion1 = s.trim().toLowerCase().replaceAll(",", "");
+                // get the expression
+                String[] p = assertion1.split("=",2);
+                if(p.length < 2) {
+                    exe.showDialog("Invalid assertion " + assertion1);
+                    continue;
+                }
+                int num = 0;
+                try {
+                    num = Integer.parseInt(p[1].trim());
+                } catch(NumberFormatException e) {
+                    exe.showDialog("Invalid number in expression " + assertion1);
+                }
 
+                if("s".equalsIgnoreCase(p[0].trim())) {
+                    if(exe.getSign() != num) {
+                        exe.assertionFailed("Expected Sign=" + exe.getSign() + " Got="+num);
+                    }
+                }
+            }
         }
     };
 

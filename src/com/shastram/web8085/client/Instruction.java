@@ -68,7 +68,7 @@ public class Instruction {
             new OneInstruction("dcr", "dcr b",  noOperand ,MicroCode.nop),
             new OneInstruction("mvi", "mvi b", byteOperand ,MicroCode.nop),
             new OneInstruction("rlc", "rlc",  noOperand ,MicroCode.nop),
-            new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
+            new OneInstruction("", "assert",  noOperand ,MicroCode.assertRunner),
             new OneInstruction("dad", "dad b",  noOperand ,MicroCode.nop),
             new OneInstruction("ldax", "ldax b",  noOperand ,MicroCode.nop),
 

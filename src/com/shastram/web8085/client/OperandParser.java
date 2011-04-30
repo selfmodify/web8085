@@ -58,6 +58,7 @@ public abstract class OperandParser {
         @Override
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {
             parser.insertAssertion(i.ip, line);
+            i.code = i.baseCode;
         }
     };
 

@@ -200,7 +200,6 @@ public class Exe {
         } else {
             resetSign();
         }
-
     }
 
     public byte getMemAtIp() {
@@ -214,6 +213,31 @@ public class Exe {
         return (short) (carry ? 1 :0);
     }
 
+    /**
+     * @return 1 if the sign is set else return 0
+     */
+    public short getSign() {
+        return (short) (sign ? 1 :0);
+    }
+    /**
+     * @return 1 if the zero is set else return 0
+     */
+    public short getZero() {
+        return (short) (zero ? 1 :0);
+    }
+    /**
+     * @return 1 if the parity is set else return 0
+     */
+    public short getParity() {
+        return (short) (parity ? 1 :0);
+    }
+    /**
+     * @return 1 if the aux carry is set else return 0
+     */
+    public short getAuxCarry() {
+        return (short) (auxCarry ? 1 :0);
+    }
+
     public void compileCode(String text) throws Exception {
         Parser p = new Parser(text);
         reset();
@@ -223,5 +247,18 @@ public class Exe {
         }
         // copy the assertion map from the parser
         assertOperation = p.getAssertionMap();
+        reset();
+    }
+
+    public String getAsertionAt(int ip) {
+        return assertOperation.get(ip);
+    }
+
+    public void showDialog(String string) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void assertionFailed(String string) {
     }
 }
