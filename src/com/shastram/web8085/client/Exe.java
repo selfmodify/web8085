@@ -1,5 +1,7 @@
 package com.shastram.web8085.client;
 
+import java.util.HashMap;
+
 public class Exe {
     public int ip = 0;
     private byte memory[] = new byte[64 * 1024];
@@ -18,6 +20,11 @@ public class Exe {
     public boolean auxCarry;
     public boolean parity;
     public boolean carry;
+
+    /**
+     * map containing the ip address to the assert instruction.
+     */
+    public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
 
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
@@ -214,5 +221,7 @@ public class Exe {
             ParseToken token = p.parseNextLine();
             insert(token);
         }
+        // copy the assertion map from the parser
+        assertOperation = p.getAssertionMap();
     }
 }

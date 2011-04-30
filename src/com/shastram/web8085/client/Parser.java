@@ -10,6 +10,8 @@ public class Parser {
 
     private static Logger logger = Logger.getLogger(Parser.class.getName());
 
+    private static HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+
     private String[] source;
     private int line;
     private int ip;
@@ -21,7 +23,7 @@ public class Parser {
         map.put(".assert",new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {
             @Override
-            public void parse(InstructionParser i,String operands) throws Exception {
+            public void parse(Parser parser, InstructionParser i,String operands) throws Exception {
                 parseMovOperands(i, operands);
             }
         }));
@@ -40,6 +42,24 @@ public class Parser {
         return source[line++];
     }
 
+    public void reset() {
+        line = 0;
+        source = new String[]{};
+        assertOperation.clear();
+    }
+
+    public void insertAssertion(int ip, String assertion) {
+        assertOperation.put(ip, assertion);
+    }
+
+    public String getAssertion(int ip) {
+        return assertOperation.get(ip);
+    }
+
+    public HashMap<Integer, String> getAssertionMap() {
+        return assertOperation;
+    }
+
     public ParseToken parseLine(String line) throws Exception {
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
@@ -54,7 +74,7 @@ public class Parser {
         if(ix == null) {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
-        ix.parseOperands(parts.length > 1 ? parts[1] : null);
+        ix.parseOperands(this, parts.length > 1 ? parts[1] : null);
         ParseToken t = new ParseToken(ix, line);
         return t;
     }

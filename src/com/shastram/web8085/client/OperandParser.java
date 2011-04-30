@@ -7,10 +7,7 @@ import com.shastram.web8085.client.InstructionParser.Operand;
 public abstract class OperandParser {
     private static HashMap<String, InstructionParser.Operand> map = createOperandMap();
 
-    /**
-     * map containing the ip address to the assert instruction.
-     */
-    private static HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+    public abstract void parse(Parser parser, InstructionParser i,String line) throws Exception;
 
     private static HashMap<String, Operand> createOperandMap() {
         HashMap<String, Operand> map = new HashMap<String, Operand>();
@@ -41,18 +38,16 @@ public abstract class OperandParser {
         i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
     }
 
-    public abstract void parse(InstructionParser i,String line) throws Exception;
-
     public static OperandParser zeroOperand = new OperandParser() {
         @Override
-        public void parse(InstructionParser i, String line) throws Exception {
+        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
             i.code = i.baseCode;
         }
     };
 
     public static OperandParser oneOperand = new OperandParser() {
         @Override
-        public void parse(InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
             i.op1 = getOperand(operands);
             i.code = i.baseCode + i.op1.ordinal();
         }
@@ -61,9 +56,8 @@ public abstract class OperandParser {
 
     public static OperandParser remainingLine = new OperandParser() {
         @Override
-        public void parse(InstructionParser i, String line) throws Exception {
-            String[] parts = line.split("[ \t]+");
-            insertAssertion(i.ip, line);
+        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+            parser.insertAssertion(i.ip, line);
         }
     };
 
@@ -73,17 +67,5 @@ public abstract class OperandParser {
             throw new Exception("Operand expected. " + operands);
         }
         return operand;
-    }
-
-    public void reset() {
-        assertOperation.clear();
-    }
-
-    public void insertAssertion(int ip, String assertion) {
-        assertOperation.put(ip, assertion);
-    }
-
-    public String getAssertion(int ip) {
-        return assertOperation.get(ip);
     }
 }

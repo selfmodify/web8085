@@ -11,8 +11,6 @@ public class Test {
 
     @org.junit.Test
     public void testeArithmetic( ) throws Exception {
-        File f = new File(".");
-        String p = f.getCanonicalPath();
         BufferedReader in = new BufferedReader(new FileReader("test_cases/arithmetic_tests.85"));
         String line;
         StringBuffer buffer = new StringBuffer();

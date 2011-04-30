@@ -1,5 +1,7 @@
 package com.shastram.web8085.client;
 
+import java.util.HashMap;
+
 import com.shastram.web8085.client.Instruction.OneInstruction;
 
 /**
@@ -14,6 +16,13 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
+        }
+    };
+
+    public static MicroCode assertRunner = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+
         }
     };
 

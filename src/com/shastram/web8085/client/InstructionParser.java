@@ -35,7 +35,7 @@ public class InstructionParser {
         return mnemonic;
     }
 
-    public void parseOperands(String operands) throws Exception {
-        oparser.parse(this, operands);
+    public void parseOperands(Parser parser, String operands) throws Exception {
+        oparser.parse(parser, this, operands);
     }
 }
