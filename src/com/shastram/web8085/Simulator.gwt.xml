@@ -3,6 +3,5 @@
 	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
 	<entry-point class="com.mycompany.project.client.Simulator"/>
 	<inherits name="com.google.gwt.junit.JUnit"/>
-	<inherits name="com.google.gwt.junit.JUnit"/>
-	<inherits name="com.google.gwt.junit.JUnit"/>
+    <inherits name="com.google.gwt.resources.Resources" />
 </module>
