@@ -30,6 +30,25 @@ public abstract class OperandParser {
         i.op2 = map.get(parts[1]);
     }
 
+    public static void parseRegAndImmediate(InstructionParser i, String operands) throws Exception {
+        String[] parts = operands.split(",", 2);
+        if(parts.length < 2) {
+            throw new Exception("Expected two operands");
+        }
+        i.op1 = map.get(parts[0]);
+        if(i.op1 == null) {
+            throw new Exception(parts[0] + " is not a valid register");
+        }
+
+        short num = 0;
+        try {
+            num = parseNumber(parts[1]);
+            i.setImmediate(num);
+        } catch(NumberFormatException e) {
+            throw new Exception("Not a valid number", e);
+        }
+    }
+
     public static void parseMovOperands(InstructionParser i,String operands) throws Exception {
         parseTwoOperands(i, operands);
         if(i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
@@ -38,8 +57,14 @@ public abstract class OperandParser {
         i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
     }
 
-    protected static void parseMviOperands(InstructionParser i, String operands) {
-        i.code = i.op1.ordinal() * 8 + 6;
+    protected static void parseMviOperands(InstructionParser i, String operands) throws Exception {
+        parseRegAndImmediate(i, operands);
+        if(i.op1.ordinal() >= InstructionParser.Operand.B.ordinal()  &&
+                i.op1.ordinal() <= InstructionParser.Operand.A.ordinal()) {
+            i.code = i.op1.ordinal() * 8 + 6;
+        } else {
+            throw new Exception("Mvi operand does not support register " + i.op1);
+        }
     }
 
     public static OperandParser zeroOperand = new OperandParser() {
