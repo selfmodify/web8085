@@ -1,7 +1,7 @@
 <module>
 	<inherits name="com.google.gwt.user.User"/>
 	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
-	<entry-point class="com.mycompany.project.client.Simulator"/>
+	<entry-point class="com.shastram.web8085.client.Simulator"/>
 	<inherits name="com.google.gwt.junit.JUnit"/>
     <inherits name="com.google.gwt.resources.Resources" />
 </module>

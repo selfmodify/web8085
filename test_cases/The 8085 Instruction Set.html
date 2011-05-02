@@ -1,0 +1,2277 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-- saved from url=(0063)http://www.cavehill.uwi.edu/fpas/cmp/online/el21c/lesson18.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 9">
+<meta name="Originator" content="Microsoft Word 9">
+<link rel="File-List" href="http://www.cavehill.uwi.edu/fpas/cmp/online/el21c/lesson18a_files/filelist.xml">
+<title>The 8085 Instruction Set </title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Peter Gibbs</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>pgibbs</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>14</o:TotalTime>
+  <o:Created>2001-09-14T11:56:00Z</o:Created>
+  <o:LastSaved>2001-09-14T11:56:00Z</o:LastSaved>
+  <o:Pages>8</o:Pages>
+  <o:Words>3489</o:Words>
+  <o:Characters>19890</o:Characters>
+  <o:Company>UWI</o:Company>
+  <o:Lines>165</o:Lines>
+  <o:Paragraphs>39</o:Paragraphs>
+  <o:CharactersWithSpaces>24426</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	mso-font-kerning:18.0pt;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";}
+p
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+tt
+	{mso-ascii-font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";}
+p.t1, li.t1, div.t1
+	{mso-style-name:t1;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:10.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p2, li.p2, div.p2
+	{mso-style-name:p2;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:60.0pt;
+	margin-bottom:.0001pt;
+	line-height:10.0pt;
+	mso-pagination:none;
+	tab-stops:132.0pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p3, li.p3, div.p3
+	{mso-style-name:p3;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:51.0pt;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	tab-stops:123.0pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p4, li.p4, div.p4
+	{mso-style-name:p4;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	tab-stops:1.5in;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p5, li.p5, div.p5
+	{mso-style-name:p5;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:35.0pt;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	tab-stops:107.0pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p1, li.p1, div.p1
+	{mso-style-name:p1;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:60.0pt;
+	margin-bottom:.0001pt;
+	line-height:11.0pt;
+	mso-pagination:none;
+	tab-stops:132.0pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.t5, li.t5, div.t5
+	{mso-style-name:t5;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:11.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.t6, li.t6, div.t6
+	{mso-style-name:t6;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.t7, li.t7, div.t7
+	{mso-style-name:t7;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.p8, li.p8, div.p8
+	{mso-style-name:p8;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:269.0pt;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	tab-stops:341.0pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.c4, li.c4, div.c4
+	{mso-style-name:c4;
+	margin:0in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	line-height:12.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.t8, li.t8, div.t8
+	{mso-style-name:t8;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:12.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.t9, li.t9, div.t9
+	{mso-style-name:t9;
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:10.0pt;
+	mso-pagination:none;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<meta name="Author" content="Kenneth Richardson">
+<meta name="KeyWords" content="DS5000,instruction,description,course,free,8051,microprocessor">
+</head>
+
+<body lang="EN-US" link="blue" vlink="blue" style="tab-interval:.5in">
+
+<div class="Section1">
+
+<h1>The 8085 Instruction Set</h1>
+
+<p class="MsoNormal">As I promised, in an earlier lesson, I am going to go
+through an in-depth explaination of ALL the 8085 instructions. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">----------------------------------------------------------------<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Intel<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>000<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>5555555<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>0<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>0<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>5<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>A
+A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>0<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>0 0<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>5<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>0<span style="mso-spacerun: yes">&nbsp; </span>0<span style="mso-spacerun: yes">&nbsp;
+</span>0<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>555555<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>AAAAAAA<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>0 0<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>0<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>5<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>0<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>0<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>8<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>5<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>000<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>88888<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>555555<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>8085A MICROPROCESSOR Instruction Set Summary<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_________<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>_________<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>\__/<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>--&gt; X1
+|_|1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>40|_|
+Vcc (+5V)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>--&gt; X2
+|_|2<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>39|_| HOLD &lt;--<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>&lt;-- RESET OUT |_|3 <span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>38|_|
+HLDA --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;-- SOD |_|4<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>37|_| CLK (OUT) --&gt;<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun: yes">&nbsp; </span>________<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>--&gt; SID |_|5<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>36|_| RESET IN &lt;--<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>--&gt; TRAP |_|6<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>35|_| READY &lt;--<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>--&gt; RST 7.5
+|_|7<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>34|_| IO/M --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>--&gt; RST 6.5
+|_|8<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>33|_| S1 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun: yes">&nbsp; </span>__<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>--&gt; RST 5.5
+|_|9<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>32|_| RD --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun: yes">&nbsp; </span>__<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>--&gt; INTR |_|10<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>8085A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>31|_| WR --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>____<span style="mso-spacerun: yes">&nbsp; </span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| <span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&lt;-- INTA |_|11<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>30|_| ALE --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD0 |_|12<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>29|_| S0 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD1 |_|13<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>28|_| A15 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD2 |_|14<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>27|_| A14 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD3 |_|15<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>26|_| A13 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD4 |_|16<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>25|_| A12 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD5 |_|17<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>24|_| A11 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD6 |_|18<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>23|_| A10 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&lt;--&gt; AD7 |_|19<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>22|_| A9 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>_|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|_<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(Gnd) Vss
+|_|20<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>21|_| A8 --&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|______________________|<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<div style="border:none;border-bottom:solid windowtext .75pt;padding:0in 0in 1.0pt 0in">
+
+<p class="MsoPlainText" style="border:none;mso-border-bottom-alt:solid windowtext .75pt;
+padding:0in;mso-padding-alt:0in 0in 1.0pt 0in"><span style="mso-fareast-font-family:
+&quot;MS Mincho&quot;">|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Copyright (C) J.P.Bowen 1985|<o:p></o:p></span></p>
+
+</div>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Instructions can be categorized according
+to their method of addressing the hardware registers and/or memory.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><b><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Implied Addressing:<o:p></o:p></span></b></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">The addressing mode of certain
+instructions is implied by the instruction’s function. For example, the STC
+(set carry flag) instruction deals only with the carry flag, the DAA (decimal
+adjust accumulator) instruction deals with the accumulator.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><b><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Register Addressing:<o:p></o:p></span></b></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Quite a large set of instructions call for
+register addressing. With these instructions, you must specify one of the
+registers A through E, H or L as well as the operation code. With these
+instructions, the accumulator is implied as a second operand. For example, the
+instruction CMP E may be interpreted as 'compare the contents of the E register
+with the contents of the accumulator.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Most of the instructions that use register
+addressing deal with<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">8-bit values. However, a few of these
+instructions deal with 16-bit register pairs.<span style="mso-spacerun:
+yes">&nbsp; </span>For example, the PCHL instruction exchanges the contents of
+the program counter with the contents of the H and L registers.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><b><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Immediate Addressing:<o:p></o:p></span></b></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Instructions that use immediate addressing
+have data assembled as a part of the instruction itself. For example, the
+instruction CPI 'C' may be interpreted as ‘compare the contents of the
+accumulator with the letter C. When assembled, this instruction has the
+hexadecimal value FE43. Hexadecimal 43 is the internal representation for the
+letter C. When this instruction is executed, the processor fetches the first
+instruction byte and determines that it must fetch one more byte. The processor
+fetches the next byte into one of its internal registers and then performs the
+compare operation.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Notice that the names of the immediate
+instructions indicate that they use immediate data. Thus, the name of an add
+instruction is ADD; the name of an add immediate instruction is ADI.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">All but two of the immediate instructions
+uses the accumulator as an implied operand, as in the CPI instruction shown
+previously. The MVI (move immediate) instruction can move its immediate data to
+any of the working registers including the accumulator or to memory. Thus, the
+instruction MVI D, OFFH moves the hexadecimal<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">value FF to the D register.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">The LXI instruction (load register pair
+immediate) is even more unusual in that its immediate data is a 16-bit value.
+This instruction is commonly used to load addresses into a register pair. As
+mentioned previously, your program must initialize the stack pointer; LXI is
+the instruction most commonly used for this purpose. For example, the
+instruction LXI SP,3OFFH loads the stack pointer with the hexadecimal value
+30FF.<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;"><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><b><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Direct Addressing:<o:p></o:p></span></b></p>
+
+<p class="MsoPlainText"><span style="font-size:12.0pt;mso-bidi-font-size:10.0pt;
+mso-fareast-font-family:&quot;MS Mincho&quot;">Jump instructions include a 16-bit address
+as part of the instruction. For example, the instruction JMP 1000H causes a
+jump to the hexadecimal address 1000 by replacing the current contents of the
+program counter with the new value 1000H. <o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:10.0pt;mso-line-height-rule:
+exactly"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:
+&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">Instructions that include a direct address require three
+bytes of storage: one for the instruction code, and two for the 16-bit address<o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;;mso-bidi-font-style:italic"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Register
+Indirect Addressing:<o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">Register indirect instructions reference memory via a
+register pair. Thus, the instruction MOV M,C moves the contents of the C
+register into the memory address stored in the H and L register pair. The
+instruction LDAX B loads the accumulator with the byte of data specified by the
+address in</span><span style="font-size:12.0pt;mso-bidi-font-size:6.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-weight:
+bold"> </span><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">the B and C
+register pair.<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:0in"><b><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Combined
+Addressing Modes:</span></b><span style="font-size:12.0pt;mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;;
+mso-bidi-font-style:italic"><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">Some instructions use a combination of addressing modes. A
+CALL instruction, for example, combines direct addressing and register indirect
+addressing. The direct address in a CALL instruction specifies the address of
+the desired subroutine; the register indirect address is the stack pointer. The
+CALL instruction pushes the current contents of the program counter into the
+memory location specified by the stack pointer.<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:132.0pt"><b><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Timing
+Effects of Addressing Modes:</span></b><span style="font-size:12.0pt;
+mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;;
+mso-bidi-font-style:italic"><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">Addressing modes affect both the amount of time required for
+executing an instruction and the amount of memory required for its storage. For
+example, instructions that use implied or register addressing, execute very
+quickly since they deal directly with the processor’s hardware or with data
+already present in hardware registers. Most important, however is that the
+entire instruction can be fetched with a single memory access. The number of
+memory accesses required is the single greatest factor in determining execution
+timing. More memory accesses therefore require more execution time. A CALL
+instruction for example, requires five memory accesses: three to access the
+entire instruction and two more to push the contents of the program counter
+onto the stack.<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:132.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">The processor can access memory once during each processor
+cycle. Each cycle comprises a variable number of states. (See below and the appendix
+of “USING THE SDK-85 MICROPROCESSOR TRAINER”). The length of a state depends on
+the clock frequency specified for your system, and may range from 480
+nanoseconds to 2 microseconds. Thus, the timing for a four state instruction
+may range from 1.920 microseconds through 8 microseconds. (The 8085 have a maximum
+clock frequency of 5 MHz and therefore a minimum state length of 200
+nanoseconds.)<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:132.0pt"><b><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></b></p>
+
+<p class="p3" style="margin-left:0in;line-height:normal"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Instruction
+Naming Conventions:</span></b><span style="font-size:12.0pt;mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;;
+mso-bidi-font-style:italic"><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">The mnemonics assigned to the instructions are designed to
+indicate the function of the instruction. The instruc­tions fall into the
+following functional categories:<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:132.0pt"><b><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Data
+Transfer Croup:<o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">The data transfer instructions move data between registers
+or between memory and registers.<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">MOV<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Move<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 2.0in 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">MVI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Move
+Immediate<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 2.0in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">LDA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Load
+Accumulator Directly from Memory<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 2.0in 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">STA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Store
+Accumulator Directly in Memory<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 2.0in 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">LHLD<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Load
+H &amp; L Registers Directly from Memory<o:p></o:p></span></p>
+
+<p class="t1" style="line-height:normal;tab-stops:1.5in 2.0in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">SHLD<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Store
+H &amp; L Registers Directly in Memory<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 192.0pt 3.5in"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">An 'X' in the<span style="mso-bidi-font-style:
+italic"> </span>name of a data transfer instruction implies that it deals with
+a register pair (16-bits);<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 132.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">LXI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-bidi-font-style:italic">Load </span>Register Pair with Immediate
+data<o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">LDAX<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Load
+Accumulator from Address in Register Pair<o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">STAX<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Store
+Accumulator in Address in Register Pair<o:p></o:p></span></p>
+
+<p class="p3" style="margin-left:0in;line-height:normal;tab-stops:1.5in 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-weight:bold">XCHG<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Exchange
+H &amp; L with D &amp; E<o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">XTHL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Exchange
+Top of Stack with H &amp; L<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 251.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Arithmetic
+Group</span></b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:
+italic">:<o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">The </span><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">arithmetic instructions add, subtract,
+increment, or <span style="mso-bidi-font-style:italic">decrement </span>data in
+registers or memory.<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ADD<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Add
+to Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ADI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Add
+Immediate Data to Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ADC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Add
+to Accumulator Using Carry Flag<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ACI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Add
+Immediate data to Accumulator Using Carry <o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 139.5pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">SUB<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Subtract
+from Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">SUI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Subtract
+Immediate Data from Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">SBB<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Subtract
+from Accumulator Using Borrow (Carry) Flag<o:p></o:p></span></p>
+
+<p class="t5" style="margin-left:1.5in;text-indent:-1.5in;line-height:normal;
+tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">SBI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Subtract
+Immediate from Accumulator Using Borrow (Carry) Flag<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">INR<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Increment
+Specified Byte by One<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">DCR<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Decrement
+Specified Byte by One<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-weight:bold">INX<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Increment
+Register Pair by One<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-weight:bold">DCX<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Decrement Register Pair by One<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in 341.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">DAD<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Double
+Register Add; Add Content of Register<o:p></o:p></span></p>
+
+<p class="p8" style="margin-left:0in;line-height:normal;tab-stops:1.5in 135.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Pair
+to H &amp; L Register Pair<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 341.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Logical
+Group:<o:p></o:p></span></b></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">This group performs logical (Boolean)
+operations on data in registers and memory and on condition flags.<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 132.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The logical AND, OR, and Exclusive OR
+instructions enable you to set specific bits in the accumulator ON or OFF.<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ANA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Logical
+AND with Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ANI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Logical
+AND with Accumulator Using Immediate Data<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">ORA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Logical
+OR with Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">OR<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Logical
+OR with Accumulator Using Immediate Data<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">XRA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Exclusive
+Logical OR with Accumulator<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">XRI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Exclusive
+OR Using Immediate Data<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 192.0pt 3.5in"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p1" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The Compare instructions compare the
+content of an 8-bit value with the contents of the accumulator;<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 192.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-weight:bold">CMP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Compare<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 135.0pt 3.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">CPI<span style="mso-bidi-font-weight:
+bold"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Compare
+Using Immediate Data<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 192.0pt 3.5in"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The rotate instructions shift the
+contents of the accumulator one bit position to the left or right:<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 150.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="c4" align="left" style="text-align:left;line-height:normal;tab-stops:
+1.5in 150.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">RLC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rotate
+Accumulator Left<o:p></o:p></span></p>
+
+<p class="c4" align="left" style="text-align:left;line-height:normal;tab-stops:
+1.5in 150.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">RRC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rotate
+Accumulator Right<o:p></o:p></span></p>
+
+<p class="c4" align="left" style="text-align:left;line-height:normal;tab-stops:
+1.5in 150.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">RAL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rotate
+Left Through Carry<o:p></o:p></span></p>
+
+<p class="p5" style="margin-left:0in;line-height:normal;tab-stops:1.5in"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">RAR<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rotate
+Right Through Carry<o:p></o:p></span></p>
+
+<p class="c4" align="left" style="text-align:left;line-height:normal;tab-stops:
+1.5in 150.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;
+font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Complement and carry flag instructions:<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 269.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">CMA<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Complement
+Accumulator<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">CMC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Complement
+Carry Flag<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">STC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Set
+Carry Flag<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 210.0pt 269.0pt"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Branch <span style="mso-bidi-font-style:
+italic">Group:<o:p></o:p></span></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The branching instructions alter normal
+sequential program flow, either unconditionally or conditionally. The
+unconditional branching instructions are as follows:<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JMP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Jump<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">CALL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Call<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">RET<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Return<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 210.0pt 269.0pt"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Conditional branching instructions
+examine the status of one of four condition flags to determine whether the
+specified branch is to be executed. The conditions that may be specified are as
+follows:<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">NZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Not
+Zero (Z =<span style="mso-tab-count:1"> </span>0)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Z<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Zero
+(Z = 1)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">NC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>No
+Carry (C =<span style="mso-tab-count:1"> </span>0)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">C<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Carry
+(C = 1)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">PO<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Parity
+Odd (P<span style="mso-tab-count:1"> </span>= 0)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">PE<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Parity
+Even (P<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>=
+1)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">P<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Plus
+(S = 0)<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">M<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Minus
+(S = 1)<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 210.0pt 269.0pt decimal 327.0pt"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Thus, the conditional branching
+instructions are specified as follows:<o:p></o:p></span></p>
+
+<p class="t8" style="line-height:normal;tab-stops:1.5in 3.75in 319.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t8" style="line-height:normal;tab-stops:1.5in 207.0pt 3.0in 319.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Jumps<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-bidi-font-style:italic">Calls<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Returns<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">C<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(Carry)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">INC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CNC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RNC<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>(No Carry)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(Zero)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JNZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CNZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RNZ<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>(Not Zero)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(Plus)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JM<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CM<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RM<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(Minus)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JPE<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CPE<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RPE<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>(Parity Even)<o:p></o:p></span></p>
+
+<p class="t9" style="line-height:normal;tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">JP0<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>CPO<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>RPO<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>(Parity Odd)<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 210.0pt 3.75in 320.0pt 359.0pt"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">Two other instructions can affect a
+branch by replacing the contents </span><span style="font-size:12.0pt;
+mso-bidi-font-size:9.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;">or
+</span><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">the program counter:<o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">PCHL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Move
+H &amp; L to Program Counter<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">RST<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Special
+Restart Instruction Used <o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>with
+Interrupts<o:p></o:p></span></p>
+
+<p class="t6" style="line-height:normal;tab-stops:1.5in 210.0pt 269.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-font-style:italic">Stack I/O,
+and Machine Control Instructions:<o:p></o:p></span></b></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The following instructions affect the
+Stack <span style="mso-bidi-font-style:italic">and/or S</span>tack Pointer:<o:p></o:p></span></b></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 158.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p4" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">PUSH<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Push
+Two bytes of Data onto the Stack<o:p></o:p></span></p>
+
+<p class="p4" style="margin-left:0in;line-height:normal"><span style="font-size:
+12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;">POP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Pop
+Two Bytes of Data off the Stack<o:p></o:p></span></p>
+
+<p class="p3" style="margin-left:0in;line-height:normal;tab-stops:1.5in 123.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">XTHL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Exchange
+Top of Stack with H &amp; L<o:p></o:p></span></p>
+
+<p class="p3" style="margin-left:0in;line-height:normal;tab-stops:1.5in 123.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">SPHL<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Move
+content of H &amp; L to Stack Pointer<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 217.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The I/0 instructions are as follows:<o:p></o:p></span></b></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 277.0pt"><span style="mso-bidi-font-size:
+8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">IN<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Initiate
+Input Operation<o:p></o:p></span></p>
+
+<p class="t5" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">OUT<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Initiate
+Output Operation<o:p></o:p></span></p>
+
+<p class="MsoNormal" style="tab-stops:1.5in 217.0pt 278.0pt"><span style="mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;mso-bidi-font-family:
+&quot;Times New Roman&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="p2" style="margin-left:0in;line-height:normal;tab-stops:1.5in 132.0pt"><b><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">The Machine Control instructions are as
+follows:<o:p></o:p></span></b></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">EI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Enable
+Interrupt System<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">DI<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Disable
+Interrupt System<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">HLT<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Halt<o:p></o:p></span></p>
+
+<p class="t7" style="line-height:normal;tab-stops:1.5in 217.0pt 278.0pt"><span style="font-size:12.0pt;mso-bidi-font-size:8.0pt;font-family:&quot;Courier New&quot;;
+mso-bidi-font-family:&quot;Times New Roman&quot;">NOP<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>No
+Operation<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">----------------------------------------------------------------<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|Mnemonic
+|Op|SZAPC|~s|Description<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Notes<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------+--+-----+--+--------------------------+-------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ACI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|CE|*****| 7|Add
+with Carry Immediate<span style="mso-spacerun: yes">&nbsp;
+</span>|A=A+n+CY<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ADC
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|8F|*****| 4|Add
+with Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A+r+CY(21X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ADC
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|8E|*****| 7|Add
+with Carry to Memory<span style="mso-spacerun: yes">&nbsp;
+</span>|A=A+[HL]+CY<span style="mso-spacerun: yes">&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ADD
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|87|*****|
+4|Add<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|A=A+r<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(20X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ADD
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|86|*****| 7|Add to
+Memory<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A+[HL]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ADI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|C6|*****| 7|Add
+Immediate<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ANA
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|A7|****0| 4|AND
+Accumulator<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A&amp;r<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(24X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ANA
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|A6|****0| 7|AND
+Accumulator and Memory|A=A&amp;[HL]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ANI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|E6|**0*0| 7|AND
+Immediate<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A&amp;n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CALL
+a<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|CD|-----|18|Call
+unconditional<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|-[SP]=PC,PC=a|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CC
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|DC|-----|
+9|Call on Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If CY=1(18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CM
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|FC|-----|
+9|Call on Minus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If S=1 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CMA<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|2F|-----|
+4|Complement Accumulator<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|A=~A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CMC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|3F|----*|
+4|Complement Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|CY=~CY<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CMP
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|BF|*****|
+4|Compare<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A-r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>(27X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CMP
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|BF|*****| 7|Compare
+with Memory<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A-[HL]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CNC
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|D4|-----| 9|Call on
+No Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+CY=0(18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CNZ
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|C4|-----| 9|Call on
+No Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+Z=0 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CP
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|F4|-----|
+9|Call on Plus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If S=0 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CPE
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|EC|-----| 9|Call on
+Parity Even<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If P=1 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CPI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|FE|*****| 7|Compare
+Immediate<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A-n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CPO
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|E4|-----| 9|Call on
+Parity Odd<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If P=0 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|CZ
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|CC|-----|
+9|Call on Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If Z=1 (18~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DAA<span style="mso-spacerun: yes">&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;</span>|27|*****| 4|Decimal Adjust
+Accumulator|A=BCD format |<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DAD
+B<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|09|----*|10|Double
+Add BC to HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|HL=HL+BC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DAD
+D<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|19|----*|10|Double
+Add DE to HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|HL=HL+DE<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DAD
+H<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|29|----*|10|Double
+Add HL to HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|HL=HL+HL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DAD
+SP<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|39|----*|10|Double Add
+SP to HL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL=HL+SP<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCR
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|3D|****-|
+4|Decrement<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|r=r-1<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(0X5)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCR
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|35|****-|10|Decrement Memory<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|[HL]=[HL]-1<span style="mso-spacerun: yes">&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCX
+B<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|0B|-----|
+6|Decrement BC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|BC=BC-1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCX
+D<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|1B|-----|
+6|Decrement DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|DE=DE-1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCX
+H<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|2B|-----|
+6|Decrement HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL=HL-1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DCX
+SP<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|3B|-----| 6|Decrement
+Stack Pointer<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|SP=SP-1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DI<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|F3|-----| 4|Disable Interrupts<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|EI<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|FB|-----| 4|Enable Interrupts<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|HLT<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|76|-----|
+5|Halt<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|IN
+p<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|DB|-----|10|Input<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=[p]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INR
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|3C|****-|
+4|Increment<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|r=r+1<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(0X4)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INR
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|3C|****-|10|Increment Memory<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|[HL]=[HL]+1<span style="mso-spacerun: yes">&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INX
+B<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|03|-----|
+6|Increment BC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|BC=BC+1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INX
+D<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|13|-----|
+6|Increment DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|DE=DE+1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INX
+H<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|23|-----|
+6|Increment HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL=HL+1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|INX
+SP<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|33|-----| 6|Increment
+Stack Pointer<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|SP=SP+1<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JMP
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|C3|-----| 7|Jump
+unconditional<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|PC=a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JC
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|DA|-----|
+7|Jump on Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If CY=1(10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JM
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|FA|-----|
+7|Jump on Minus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun: yes">&nbsp;&nbsp;</span>|If S=1 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JNC
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|D2|-----| 7|Jump on
+No Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+CY=0(10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JNZ
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|C2|-----| 7|Jump on
+No Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+Z=0 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JP
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|F2|-----|
+7|Jump on Plus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If S=0 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JPE
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|EA|-----| 7|Jump on
+Parity Even <span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|If P=1 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JPO
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|E2|-----| 7|Jump on
+Parity Odd<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If P=0 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|JZ
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|CA|-----|
+7|Jump on Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If Z=1 (10~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LDA
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|3A|-----|13|Load
+Accumulator direct<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>|A=[a]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LDAX
+B<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|0A|-----| 7|Load
+Accumulator indirect |A=[BC]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LDAX
+D<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|1A|-----| 7|Load
+Accumulator indirect |A=[DE]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LHLD
+a<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|2A|-----|16|Load HL
+Direct<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL=[a]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LXI
+B,nn |01|-----|10|Load Immediate BC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|BC=nn<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LXI
+D,nn |11|-----|10|Load Immediate DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|DE=nn<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LXI
+H,nn |21|-----|10|Load Immediate HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|HL=nn<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|LXI
+SP,nn|31|-----|10|Load Immediate Stack Ptr<span style="mso-spacerun:
+yes">&nbsp; </span>|SP=nn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|MOV
+r1,r2|7F|-----| 4|Move register to register |r1=r2<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>(1XX)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|MOV
+M,r<span style="mso-spacerun: yes">&nbsp; </span>|77|-----| 7|Move register to
+Memory<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|[HL]=r<span style="mso-spacerun: yes">&nbsp; </span>(16X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|MOV
+r,M<span style="mso-spacerun: yes">&nbsp; </span>|7E|-----| 7|Move Memory to
+register<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|r=[HL]<span style="mso-spacerun: yes">&nbsp; </span>(1X6)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|MVI
+r,n<span style="mso-spacerun: yes">&nbsp; </span>|3E|-----| 7|Move
+Immediate<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|r=n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>(0X6)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|MVI
+M,n<span style="mso-spacerun: yes">&nbsp; </span>|36|-----|10|Move Immediate to
+Memory<span style="mso-spacerun: yes">&nbsp; </span>|[HL]=n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|NOP<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|00|-----| 4|No
+Operation<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ORA
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|B7|**0*0|
+4|Inclusive OR Accumulator<span style="mso-spacerun: yes">&nbsp;
+</span>|A=Avr<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(26X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ORA
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|B6|**0*0|
+7|Inclusive OR Accumulator<span style="mso-spacerun: yes">&nbsp;
+</span>|A=Av[HL]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|ORI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|F6|**0*0|
+7|Inclusive OR Immediate<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|A=Avn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|OUT
+p<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|D3|-----|10|Output<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|[p]=A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|PCHL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|E9|-----| 6|Jump HL
+indirect<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|PC=[HL]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|POP
+B<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|C1|-----|10|Pop
+BC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|BC=[SP]+<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|POP
+D<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|D1|-----|10|Pop
+DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|DE=[SP]+<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|POP
+H<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|E1|-----|10|Pop
+HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL=[SP]+<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|POP
+PSW<span style="mso-spacerun: yes">&nbsp; </span>|F1|-----|10|Pop Processor
+Status Word |{PSW,A}=[SP]+|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">----------------------------------------------------------------<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">----------------------------------------------------------------<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|Mnemonic
+|Op|SZAPC|~s|Description<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Notes<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------+--+-----+--+--------------------------+-------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|PUSH
+B<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|C5|-----|12|Push BC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|-[SP]=BC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|PUSH
+D<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|D5|-----|12|Push DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|-[SP]=DE<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|PUSH
+H<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|E5|-----|12|Push HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|-[SP]=HL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|PUSH
+PSW |F5|-----|12|Push Processor Status Word|-[SP]={PSW,A}|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RAL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|17|----*|
+4|Rotate Accumulator Left<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>|A={CY,A}&lt;-<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RAR<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|1F|----*|
+4|Rotate Accumulator Righ<span style="mso-spacerun: yes">&nbsp;&nbsp;
+</span>|A=-&gt;{CY,A}<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RET<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|C9|-----|10|Return<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|PC=[SP]+<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|D8|-----| 6|Return on Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+CY=1(12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RIM<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|20|-----|
+4|Read Interrupt Mask<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A=mask<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RM<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|F8|-----| 6|Return on Minus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If
+S=1 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RNC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|D0|-----|
+6|Return on No Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If CY=0(12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RNZ<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|C0|-----|
+6|Return on No Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If Z=0 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RP<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|F0|-----| 6|Return on Plus<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If S=0 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RPE<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|E8|-----|
+6|Return on Parity Even<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If P=1 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RPO<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|E0|-----|
+6|Return on Parity Odd<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|If P=0 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RZ<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|C8|-----| 6|Return on Zero<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|If Z=1 (12~s)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RLC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|07|----*|
+4|Rotate Left Circular<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A=A&lt;-<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RRC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|0F|----*|
+4|Rotate Right Circular<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=-&gt;A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|RST
+z<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|C7|-----|12|Restart<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>(3X7)|-[SP]=PC,PC=z|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SBB
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|9F|*****|
+4|Subtract with Borrow<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A=A-r-CY<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SBB
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|9E|*****|
+7|Subtract with Borrow<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A=A-[HL]-CY<span style="mso-spacerun: yes">&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SBI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|DE|*****|
+7|Subtract with Borrow Immed|A=A-n-CY<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SHLD
+a<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|22|-----|16|Store HL
+Direct<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|[a]=HL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SIM<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|30|-----|
+4|Set Interrupt Mask<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|mask=A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SPHL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|F9|-----| 6|Move HL
+to SP<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|SP=HL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|STA
+a<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|32|-----|13|Store
+Accumulator<span style="mso-spacerun: yes">&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|[a]=A<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|STAX
+B<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|02|-----| 7|Store
+Accumulator indirect|[BC]=A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|STAX
+D<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|12|-----| 7|Store
+Accumulator indirect|[DE]=A<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|STC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|37|----1|
+4|Set Carry<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|CY=1<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SUB
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|97|*****|
+4|Subtract<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|A=A-r<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(22X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SUB
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|96|*****|
+7|Subtract Memory<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|A=A-[HL]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|SUI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|D6|*****|
+7|Subtract Immediate<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|A=A-n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|XCHG<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|EB|-----| 4|Exchange
+HL with DE<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|HL&lt;-&gt;DE<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|XRA
+r<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|AF|**0*0|
+4|Exclusive OR Accumulator<span style="mso-spacerun: yes">&nbsp;
+</span>|A=Axr<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>(25X)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|XRA
+M<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|AE|**0*0|
+7|Exclusive OR Accumulator<span style="mso-spacerun: yes">&nbsp;
+</span>|A=Ax[HL]<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|XRI
+n<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|EE|**0*0|
+7|Exclusive OR Immediate<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;
+</span>|A=Axn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|XTHL<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>|E3|-----|16|Exchange
+stack Top with HL|[SP]&lt;-&gt;HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|------------+-----+--+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+PSW<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|-*01 |<span style="mso-spacerun: yes">&nbsp; </span>|Flag
+unaffected/affected/reset/set<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+S<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|S<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun:
+yes">&nbsp; </span>|Sign (Bit 7)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+Z<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>| Z<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>|<span style="mso-spacerun:
+yes">&nbsp; </span>|Zero (Bit 6)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+AC<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun: yes">&nbsp; </span>A<span style="mso-spacerun: yes">&nbsp;
+</span>|<span style="mso-spacerun: yes">&nbsp; </span>|Auxilary Carry (Bit
+4)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+P<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun: yes">&nbsp;&nbsp; </span>P |<span style="mso-spacerun:
+yes">&nbsp; </span>|Parity (Bit 2)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+CY<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span>C|<span style="mso-spacerun: yes">&nbsp; </span>|Carry (Bit 0)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------------------+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| a
+p<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Direct addressing<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| M
+z<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Register indirect addressing<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| n
+nn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Immediate addressing<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+r<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Register addressing<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------------------+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DB
+n(,n)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Define Byte(s)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DB
+'string'<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|Define Byte
+ASCII character string<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DS
+nn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Define Storage Block<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|DW
+nn(,nn)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|Define Word(s)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------------------+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+A<span style="mso-spacerun: yes">&nbsp; </span>B<span style="mso-spacerun:
+yes">&nbsp; </span>C<span style="mso-spacerun: yes">&nbsp; </span>D<span style="mso-spacerun: yes">&nbsp; </span>E<span style="mso-spacerun: yes">&nbsp;
+</span>H<span style="mso-spacerun: yes">&nbsp; </span>L |Registers (8-bit)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+BC<span style="mso-spacerun: yes">&nbsp; </span>DE<span style="mso-spacerun:
+yes">&nbsp; </span>HL<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|Register
+pairs (16-bit)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+PC<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|Program
+Counter register (16-bit)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+PSW<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Processor Status Word (8-bit)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+SP<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Stack Pointer register (16-bit)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------------------+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+a<span style="mso-spacerun: yes">&nbsp; </span>nn<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|16-bit address/data (0 to 65535)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+n<span style="mso-spacerun: yes">&nbsp; </span>p<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|8-bit data/port (0 to 255)<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+r<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Register (X=B,C,D,E,H,L,M,A)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+z<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Vector (X=0H,8H,10H,18H,20H,28H,30H,38H)|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|---------------------+----------------------------------------|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
++<span style="mso-spacerun: yes">&nbsp; </span>-<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Arithmetic addition/subtraction<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+&amp;<span style="mso-spacerun: yes">&nbsp; </span>~<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Logical AND/NOT<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+v<span style="mso-spacerun: yes">&nbsp; </span>x<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Logical inclusive/exclusive OR<span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+&lt;-<span style="mso-spacerun: yes">&nbsp; </span>-&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Rotate left/right<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">|
+&lt;-&gt;<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Exchange<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| [
+]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Indirect addressing<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| [
+]+<span style="mso-spacerun: yes">&nbsp; </span>-[ ]<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|Indirect
+address auto-inc/decrement<span style="mso-spacerun: yes">&nbsp; </span><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| {
+}<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Combination operands<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| ( X
+)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Octal op code where X is a 3-bit code<span style="mso-spacerun:
+yes">&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">| If (
+~s)<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>|Number of cycles if condition true<span style="mso-spacerun:
+yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>|<o:p></o:p></span></p>
+
+<p class="MsoPlainText"><span style="mso-fareast-font-family:&quot;MS Mincho&quot;">----------------------------------------------------------------<o:p></o:p></span></p>
+
+<p class="MsoNormal"><span style="mso-spacerun: yes">&nbsp;</span></p>
+
+<p><a href="http://www.cavehill.uwi.edu/fpas/cmp/online/el21c/Hints.htm">On to lesson 19</a> </p>
+
+<p><a href="http://www.cavehill.uwi.edu/fpas/cmp/online/el21c/micro.html">Table of Contents</a> <br>
+&nbsp; </p>
+
+</div>
+
+
+
+
+</body></html>

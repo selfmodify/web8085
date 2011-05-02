@@ -9,6 +9,7 @@ public class InstructionParser {
         ADD,
         SUB,
         ASSERT,
+        MVI,
     }
 
     public enum Operand {
@@ -23,6 +24,8 @@ public class InstructionParser {
     public String name;
     private OperandParser oparser;
     public int ip;
+    private short immediate;
+    private boolean hasImmediate;
 
     public InstructionParser(Mnemonic type, int code, OperandParser oparser) {
         this.mnemonic = type;
@@ -37,5 +40,21 @@ public class InstructionParser {
 
     public void parseOperands(Parser parser, String operands) throws Exception {
         oparser.parse(parser, this, operands);
+    }
+
+    public void setImmediate(short num) {
+        hasImmediate = true;
+        immediate = num;
+    }
+
+    public short getImmediate( ) throws ParserException {
+        if(!hasImmediate) {
+            throw new ParserException("Instruction does not have an immediate operand.");
+        }
+        return immediate;
+    }
+
+    public boolean hasImmediate() {
+        return hasImmediate;
     }
 }

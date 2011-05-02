@@ -38,6 +38,10 @@ public abstract class OperandParser {
         i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
     }
 
+    protected static void parseMviOperands(InstructionParser i, String operands) {
+        i.code = i.op1.ordinal() * 8 + 6;
+    }
+
     public static OperandParser zeroOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {
@@ -48,10 +52,20 @@ public abstract class OperandParser {
     public static OperandParser oneOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
-            i.op1 = getOperand(operands);
             i.code = i.baseCode + i.op1.ordinal();
         }
+    };
 
+    /**
+     * Parse an immediate value operand.  The value must be within 16 bits.
+     */
+    public static OperandParser immediateOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String line)
+                throws Exception {
+            i.setImmediate(parseNumber(line));
+            i.code = i.baseCode;
+        }
     };
 
     public static OperandParser remainingLine = new OperandParser() {
@@ -68,5 +82,24 @@ public abstract class OperandParser {
             throw new Exception("Operand expected. " + operands);
         }
         return operand;
+    }
+
+    /**
+     * parse a string as a number. If the number ends with a H or an h
+     * then it is considered a hex number
+     * @param str
+     * @return
+     * @throws NumberFormatException if it cannot be parsed.
+     */
+    public static short parseNumber(String str) {
+        short num = 0;
+        str = str.trim();
+        int base = 10;
+        if(str.endsWith("h") || str.endsWith("H")) {
+            base = 16;
+            str = str.substring(0, str.length()-1);
+        }
+        num = Short.parseShort(str, base);
+        return num;
     }
 }

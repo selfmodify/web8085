@@ -1,7 +1,6 @@
 package com.shastram.web8085.client;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Parser {
@@ -25,6 +24,12 @@ public class Parser {
             @Override
             public void parse(Parser parser, InstructionParser i,String operands) throws Exception {
                 parseMovOperands(i, operands);
+            }
+        }));
+        map.put("mvi", new InstructionParser(InstructionParser.Mnemonic.MVI, 0x0,  new OperandParser() {
+            @Override
+            public void parse(Parser parser, InstructionParser i,String operands) throws Exception {
+                parseMviOperands(i, operands);
             }
         }));
         map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
@@ -77,18 +82,6 @@ public class Parser {
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null);
         ParseToken t = new ParseToken(ix, line);
         return t;
-    }
-
-    public static void test( ) {
-        String sourceCode = "mov a,b\n sub b\nadd c";
-        Parser p = new Parser(sourceCode);
-        try {
-            while(p.hasNext()) {
-                p.parseNextLine();
-            }
-        } catch(Exception ex) {
-            logger.log(Level.WARNING,"Error parsing",ex);
-        }
     }
 
     public ParseToken parseNextLine() throws Exception {

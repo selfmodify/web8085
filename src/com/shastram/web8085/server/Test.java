@@ -1,7 +1,6 @@
 package com.shastram.web8085.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 
 import com.shastram.web8085.client.Exe;
@@ -15,7 +14,7 @@ public class Test {
         String line;
         StringBuffer buffer = new StringBuffer();
         while((line = in.readLine()) != null) {
-            buffer.append(line);
+            buffer.append(line).append("\n");
         }
         Exe exe = new Exe();
         exe.compileCode(buffer.toString());

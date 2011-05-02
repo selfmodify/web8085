@@ -41,11 +41,21 @@ public class Exe {
         memory[ip++] = (byte)opcode;
     }
 
-    public void insert(ParseToken token) {
+    public void insert(int opcode, short immediate) {
+        memory[ip++] = (byte)opcode;
+        memory[ip++] = (byte)(immediate & 0xff);
+        memory[ip++] = (byte)(immediate >> 8);
+    }
+
+    public void insert(ParseToken token) throws ParserException {
         switch(token.getType()) {
         case INSTRUCTION:
                 InstructionParser i = token.getIx();
-                insert(i.code);
+                if(i.hasImmediate()) {
+                    insert(i.code, i.getImmediate());
+                } else {
+                    insert(i.code);
+                }
                 break;
         case ASSERT:
 
