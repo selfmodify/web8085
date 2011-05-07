@@ -17,7 +17,7 @@ public class Parser {
 
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
-        map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xC3, OperandParser.oneOperand));
+        map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xC3, OperandParser.immediateOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
         map.put(".assert",new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {

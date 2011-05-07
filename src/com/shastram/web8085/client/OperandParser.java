@@ -21,24 +21,29 @@ public abstract class OperandParser {
         return map;
     }
 
-    public static void parseTwoOperands(InstructionParser i,String operands) throws Exception {
+    /**
+     * Registers must be in the range B..A
+     * @param i
+     * @param operands
+     * @throws Exception
+     */
+    public static void parse2Register(InstructionParser i,String operands) throws Exception {
+        String[] parts = getTwoOperands(operands);
+        i.op1 = parseNormalRegister(parts[0]);
+        i.op2 = parseNormalRegister(parts[1]);
+    }
+
+    public static String[] getTwoOperands(String operands) throws Exception {
         String[] parts = operands.split(",", 2);
         if(parts.length < 2) {
             throw new Exception("Expected two operands");
         }
-        i.op1 = map.get(parts[0]);
-        i.op2 = map.get(parts[1]);
+        return parts;
     }
 
     public static void parseRegAndImmediate(InstructionParser i, String operands) throws Exception {
-        String[] parts = operands.split(",", 2);
-        if(parts.length < 2) {
-            throw new Exception("Expected two operands");
-        }
-        i.op1 = map.get(parts[0]);
-        if(i.op1 == null) {
-            throw new Exception(parts[0] + " is not a valid register");
-        }
+        String[] parts = getTwoOperands(operands);
+        i.op1 = parseNormalRegister(parts[0]);
 
         short num = 0;
         try {
@@ -49,8 +54,27 @@ public abstract class OperandParser {
         }
     }
 
+    /**
+     * parse the string as one of the following register
+     * B,C,D,E,H,L,M,A
+     * @param reg
+     * @return
+     * @throws Exception
+     */
+    private static Operand parseNormalRegister(String reg) throws Exception {
+        Operand op = map.get(reg);
+        if(op == null) {
+            throw new Exception(reg + " is not a valid register");
+        }
+        if(op.ordinal() >= InstructionParser.Operand.B.ordinal() &&
+                op.ordinal() <= InstructionParser.Operand.A.ordinal()) {
+            return op;
+        }
+        throw new Exception(reg + " is not a valid register");
+    }
+
     public static void parseMovOperands(InstructionParser i,String operands) throws Exception {
-        parseTwoOperands(i, operands);
+        parse2Register(i, operands);
         if(i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
             throw new Exception("Mov operand cannot have both operand set to memory");
         }
@@ -59,12 +83,7 @@ public abstract class OperandParser {
 
     protected static void parseMviOperands(InstructionParser i, String operands) throws Exception {
         parseRegAndImmediate(i, operands);
-        if(i.op1.ordinal() >= InstructionParser.Operand.B.ordinal()  &&
-                i.op1.ordinal() <= InstructionParser.Operand.A.ordinal()) {
-            i.code = i.op1.ordinal() * 8 + 6;
-        } else {
-            throw new Exception("Mvi operand does not support register " + i.op1);
-        }
+        i.code = i.op1.ordinal() * 8 + 6;
     }
 
     public static OperandParser zeroOperand = new OperandParser() {
@@ -77,6 +96,7 @@ public abstract class OperandParser {
     public static OperandParser oneOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+            i.op1 = parseNormalRegister(operands);
             i.code = i.baseCode + i.op1.ordinal();
         }
     };

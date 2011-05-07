@@ -2,6 +2,7 @@
 
 # aci - add with carry immediate
 
+add b
 stc
 mvi a,57h
 aci 6h
