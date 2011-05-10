@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Exe {
     public int ip = 0;
-    private byte memory[] = new byte[64 * 1024];
+    public byte memory[] = new byte[64 * 1024];
     private int counter = 0;
 
     public int a;
@@ -113,6 +113,11 @@ public class Exe {
         }
     }
 
+
+    public void setMemory(short addr, short value) {
+        memory[addr] = (byte)(value & 0xff);
+        memory[addr+1] = (byte)((value>>8) & 0xff);
+    }
 
     public void nextIp2(int len) {
         incrIp(len);
@@ -270,5 +275,15 @@ public class Exe {
     }
 
     public void assertionFailed(String string) {
+    }
+
+    /**
+     * @return Read the 16 bit immediate from ip+1, ip+2.
+     * Also increment the ip by 2.
+     */
+    public int read16bit() {
+        int value = memory[ip++];
+        value = (memory[ip++]<<8) + value;
+        return value;
     }
 }

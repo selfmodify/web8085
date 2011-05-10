@@ -118,7 +118,17 @@ public abstract class MicroCode {
             exe.setCarry();
             exe.nextIp();
         }
+    };
 
+    // The contents of a memory location, specified by a 16-bit address in the operand, are copied to the accumulator
+    public static MicroCode lda = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+            int value = exe.read16bit();
+            // set the value of the accumulator with the value of
+            exe.a = exe.memory[value];
+        }
     };
 
     /**

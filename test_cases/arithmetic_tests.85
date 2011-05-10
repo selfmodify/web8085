@@ -2,8 +2,8 @@
 
 # aci - add with carry immediate
 
+mvi a,57h
 add b
 stc
-mvi a,57h
 aci 6h
 .assert s=0, z=0, cy=1

@@ -10,6 +10,7 @@ public class InstructionParser {
         SUB,
         ASSERT,
         MVI,
+        LDA,
     }
 
     public enum Operand {
