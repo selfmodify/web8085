@@ -59,7 +59,8 @@ public class Instruction {
         }
     }
 
-    private static OneInstruction[] allInstructions = new OneInstruction[] {
+    public static OneInstruction[] allInstructions = new OneInstruction[] {
+            // 0 thru 10
             new OneInstruction("nop", "nop",  noOperand ,MicroCode.nop),
             new OneInstruction("lxi", "lxi b", wordOperand ,MicroCode.nop),
             new OneInstruction("stax", "stax b",  noOperand ,MicroCode.nop),
@@ -72,6 +73,7 @@ public class Instruction {
             new OneInstruction("dad", "dad b",  noOperand ,MicroCode.nop),
             new OneInstruction("ldax", "ldax b",  noOperand ,MicroCode.nop),
 
+            // 11 thru 20
             new OneInstruction("dcx", "dcx b",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr c",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr c",  noOperand ,MicroCode.nop),
@@ -82,7 +84,7 @@ public class Instruction {
             new OneInstruction("stax", "stax d",  noOperand ,MicroCode.nop),
             new OneInstruction("inx", "inx d",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr d",  noOperand ,MicroCode.nop),
-            //20
+            //21
             new OneInstruction("dcr", "dcr d",  noOperand ,MicroCode.nop),
             new OneInstruction("mvi", "mvi d", byteOperand ,MicroCode.nop),
             new OneInstruction("ral", "ral",  noOperand ,MicroCode.nop),
@@ -93,7 +95,7 @@ public class Instruction {
             new OneInstruction("inr", "inr e",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr e",  noOperand ,MicroCode.nop),
             new OneInstruction("mvi", "mvi e",  byteOperand ,MicroCode.nop),
-
+            //31
             new OneInstruction("rar", "rar",  noOperand ,MicroCode.nop),
             new OneInstruction("rim", "rim",  noOperand ,MicroCode.nop),
             new OneInstruction("lxi", "lxi h",  wordOperand ,MicroCode.nop),
@@ -103,7 +105,7 @@ public class Instruction {
             new OneInstruction("dcr", "dcr h",  noOperand ,MicroCode.nop),
             new OneInstruction("mvi", "mvi h",  byteOperand ,MicroCode.nop),
             new OneInstruction("daa", "daa",  noOperand ,MicroCode.nop),
-
+            //41
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("dad", "dad h",  noOperand ,MicroCode.nop),
             new OneInstruction("lhld", "lhld",  wordOperand ,MicroCode.nop),
@@ -114,7 +116,7 @@ public class Instruction {
             new OneInstruction("cma", "cma",  noOperand ,MicroCode.nop),
             new OneInstruction("sim", "sim",  noOperand ,MicroCode.nop),
             new OneInstruction("lxi", "lxi sp",  wordOperand ,MicroCode.nop),
-
+            //51
             new OneInstruction("sta", "sta",  wordOperand ,MicroCode.nop),
             new OneInstruction("inx", "inx sp",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr m",  noOperand ,MicroCode.nop),
@@ -125,12 +127,13 @@ public class Instruction {
             new OneInstruction("dad", "dad sp",  noOperand ,MicroCode.nop),
             new OneInstruction("lda", "lda",  wordOperand ,MicroCode.nop),
             new OneInstruction("dcx", "dcx sp",  noOperand ,MicroCode.nop),
-
+            //61
             new OneInstruction("inr", "inr a",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr a",  noOperand ,MicroCode.nop),
-            new OneInstruction("mvi", "mvi a",  byteOperand ,MicroCode.nop),
+            new OneInstruction("mvi", "mvi a",  byteOperand ,MicroCode.mvi),
             new OneInstruction("cmd", "cmd",  noOperand ,MicroCode.nop),
 
+            //65
             new OneInstruction("mov", "mov b,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov b,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov b,d",  noOperand ,MicroCode.move),
@@ -139,7 +142,7 @@ public class Instruction {
             new OneInstruction("mov", "mov b,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov b,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov b,a",  noOperand ,MicroCode.move),
-
+            //73
             new OneInstruction("mov", "mov c,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov c,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov c,d",  noOperand ,MicroCode.move),
@@ -148,7 +151,7 @@ public class Instruction {
             new OneInstruction("mov", "mov c,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov c,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov c,a",  noOperand ,MicroCode.move),
-
+            //81
             new OneInstruction("mov", "mov d,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov d,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov d,d",  noOperand ,MicroCode.move),
@@ -157,7 +160,7 @@ public class Instruction {
             new OneInstruction("mov", "mov d,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov d,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov d,a",  noOperand ,MicroCode.move),
-
+            //89
             new OneInstruction("mov", "mov e,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov e,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov e,d",  noOperand ,MicroCode.move),
@@ -166,7 +169,7 @@ public class Instruction {
             new OneInstruction("mov", "mov e,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov e,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov e,a",  noOperand ,MicroCode.move),
-
+            //97
             new OneInstruction("mov", "mov h,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov h,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov h,d",  noOperand ,MicroCode.move),
@@ -175,7 +178,7 @@ public class Instruction {
             new OneInstruction("mov", "mov h,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov h,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov h,a",  noOperand ,MicroCode.move),
-
+            //105
             new OneInstruction("mov", "mov l,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov l,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov l,d",  noOperand ,MicroCode.move),
@@ -184,16 +187,16 @@ public class Instruction {
             new OneInstruction("mov", "mov l,l",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov l,m",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov l,a",  noOperand ,MicroCode.move),
-
+            //113 0x70
             new OneInstruction("mov", "mov m,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov m,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov m,d",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov m,e",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov m,h",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov m,l",  noOperand ,MicroCode.move),
-            new OneInstruction("mov", "mov m,m",  noOperand ,MicroCode.move),
+            new OneInstruction("hlt", "hlt",  noOperand ,MicroCode.hlt),
             new OneInstruction("mov", "mov m,a",  noOperand ,MicroCode.move),
-
+            //121
             new OneInstruction("mov", "mov a,b",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov a,c",  noOperand ,MicroCode.move),
             new OneInstruction("mov", "mov a,d",  noOperand ,MicroCode.move),
@@ -347,7 +350,7 @@ public class Instruction {
     }
 
     public static void execute(Exe exe) throws Exception {
-        int opcode = exe.getOpcode();
+        int opcode = exe.getMemAtIp();
         if(opcode < 0 || opcode >=allInstructions.length) {
             throw new Exception("Invalid opcode " + opcode + " at ip " + exe.getIp());
         }

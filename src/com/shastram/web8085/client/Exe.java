@@ -25,6 +25,7 @@ public class Exe {
      * map containing the ip address to the assert instruction.
      */
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+    public boolean hltExecuted = false;
 
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
@@ -71,8 +72,8 @@ public class Exe {
         if(ix < 0) {
             ix = 256 + ix;
         }
-        counter++;
         String str = Instruction.toString(ix, 0);
+        counter++;  // this is buggy must be incremented by length of instruction
         return str;
     }
 
@@ -132,7 +133,7 @@ public class Exe {
     }
 
     public int getOpcode() {
-        int opcode = memory[counter];
+        int opcode = memory[ip];
         if(opcode < 0) {
             opcode = 256 + opcode;
         }
@@ -146,6 +147,7 @@ public class Exe {
     public void reset() {
         resetRegisters();
         clearFlags();
+        hltExecuted = false;
     }
 
     public void resetRegisters() {
@@ -260,6 +262,7 @@ public class Exe {
             ParseToken token = p.parseNextLine();
             insert(token);
         }
+        insert(0x76); // hlt
         // copy the assertion map from the parser
         assertOperation = p.getAssertionMap();
         reset();
@@ -274,7 +277,8 @@ public class Exe {
 
     }
 
-    public void assertionFailed(String string) {
+    public void assertionFailed(String reason) throws Exception {
+        throw new Exception("Assertion failed. " + reason);
     }
 
     /**
@@ -285,5 +289,19 @@ public class Exe {
         int value = memory[ip++];
         value = (memory[ip++]<<8) + value;
         return value;
+    }
+
+    public int readBc() {
+        int value = (b << 8) + c;
+        return value;
+    }
+
+    public int readDe() {
+        int value = (d << 8) + e;
+        return value;
+    }
+
+    public boolean hltExecuted() {
+        return hltExecuted;
     }
 }

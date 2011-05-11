@@ -18,6 +18,10 @@ public class Test {
         }
         Exe exe = new Exe();
         exe.compileCode(buffer.toString());
-        exe.step();
+
+        // run until hlt is executed
+        while(!exe.hltExecuted()) {
+            exe.step();
+        }
     }
 }

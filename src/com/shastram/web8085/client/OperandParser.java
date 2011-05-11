@@ -121,6 +121,22 @@ public abstract class OperandParser {
         }
     };
 
+    /**
+     * for ldax, stax
+     */
+    public static OperandParser ldaxOrStaxOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String line)
+                throws Exception {
+            Operand op = getOperand(line);
+            if(op == Operand.B || op == Operand.D) {
+                throw new Exception(line + " is not a valid register. Expected B or D registers");
+            }
+            i.code = i.baseCode + ((op == Operand.D) ? 0x0 : 0x10);
+        }
+    };
+
+
     private static Operand getOperand(String operands) throws Exception {
         Operand operand = map.get(operands.trim());
         if(operand == null) {

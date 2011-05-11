@@ -7,3 +7,10 @@ add b
 stc
 aci 6h
 .assert s=0, z=0, cy=1
+
+# load/store
+mvi a,1
+sta 100h
+mvi a,0
+lda 100h
+.assert a=1

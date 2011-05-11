@@ -11,6 +11,9 @@ public class InstructionParser {
         ASSERT,
         MVI,
         LDA,
+        LDAX,
+        STA,
+        STAX,
     }
 
     public enum Operand {

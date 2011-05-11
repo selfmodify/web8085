@@ -1,5 +1,7 @@
 package com.shastram.web8085.client;
 
+import java.util.logging.Logger;
+
 import com.shastram.web8085.client.Instruction.OneInstruction;
 
 /**
@@ -8,12 +10,14 @@ import com.shastram.web8085.client.Instruction.OneInstruction;
  *
  */
 public abstract class MicroCode {
+    private static Logger log = Logger.getLogger(MicroCode.class.getName());
     public abstract void execute(Exe exe, OneInstruction i) throws Exception;
 
     public static MicroCode nop = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
+            exe.hltExecuted = true;
         }
     };
 
@@ -32,6 +36,8 @@ public abstract class MicroCode {
                     exe.showDialog("Invalid assertion " + assertion1);
                     continue;
                 }
+
+                // parse the number specified in the assertion
                 int num = 0;
                 try {
                     num = Integer.parseInt(p[1].trim());
@@ -39,11 +45,24 @@ public abstract class MicroCode {
                     exe.showDialog("Invalid number in expression " + assertion1);
                 }
 
-                if("s".equalsIgnoreCase(p[0].trim())) {
-                    if(exe.getSign() != num) {
-                        exe.assertionFailed("Expected Sign=" + exe.getSign() + " Got="+num);
-                    }
+                // assert sign
+                String lhs = p[0].trim().toLowerCase();
+                if("s".equals(lhs)) {
+                    compare(exe, num, exe.getSign(), "Expected Sign=");
+                } else if("z".equals(lhs)) {
+                    compare(exe, num, exe.getZero(), "Expected Zero=");
+                } else if("cy".equals(lhs)) {
+                    compare(exe, num, exe.getCarry(), "Expected Carry=");
+                } else if("ac".equals(lhs)) {
+                    compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
                 }
+            }
+            log.info("Assertion passed: " + line);
+        }
+
+        private void compare(Exe exe, int expected, int got, String msg) throws Exception {
+            if(expected != got) {
+                exe.assertionFailed(msg + expected + " Got="+got);
             }
         }
     };
@@ -63,6 +82,18 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode mvi = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x06;
+            int op1 = code / 8;
+            exe.nextIp(); // one for the immediate operand
+            int data = exe.getMemAtIp();
+            exe.setRegOrMem(op1, data);
+            exe.nextIp();
+        }
+    };
+
     /**
      * Add instruction family.
      */
@@ -72,6 +103,14 @@ public abstract class MicroCode {
             int code = exe.getOpcode() - 0x80;
             int op1 = exe.getRegOrMem(code % 8);
             addWithoutCarry(exe, op1);
+        }
+    };
+
+    public static MicroCode hlt = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.hltExecuted = true;
+            log.info("HLT executed");
         }
     };
 
@@ -120,16 +159,52 @@ public abstract class MicroCode {
         }
     };
 
-    // The contents of a memory location, specified by a 16-bit address in the operand, are copied to the accumulator
+    // The contents of a memory location, specified by a 16-bit address in the operand
+    // are copied to the accumulator
     public static MicroCode lda = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
-            int value = exe.read16bit();
-            // set the value of the accumulator with the value of
-            exe.a = exe.memory[value];
+            int addr = exe.read16bit();
+            // set the value of the accumulator with the value of memory at 'addr'
+            exe.a = exe.memory[addr];
         }
     };
+
+    public static MicroCode ldax = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            byte code = exe.getMemAtIp();
+            exe.nextIp();
+            int addr = code == 0x0A ? exe.readBc() : exe.readDe();
+            // set the value of the accumulator with the value of memory at 'addr'
+            exe.a = exe.memory[addr];
+        }
+    };
+
+    /**
+     * The contents of the accumulator are stored in the memory location specified
+     */
+    public static MicroCode sta = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+            int addr = exe.read16bit();
+            exe.memory[addr] = (byte)exe.a;
+        }
+    };
+
+    public static MicroCode stax = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            byte code = exe.getMemAtIp();
+            exe.nextIp();
+            int addr = code == 0x02 ? exe.readBc() : exe.readDe();
+            // set the value of the accumulator with the value of memory at 'addr'
+            exe.memory[addr] = (byte)exe.a;
+        }
+    };
+
 
     /**
      * helper add function.
