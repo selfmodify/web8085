@@ -91,7 +91,6 @@ public class Parser {
     public ParseToken parseNextLine() throws Exception {
         String l = nextLine();
         ParseToken token = parseLine(l);
-        ip++;
         return token;
     }
 
