@@ -41,14 +41,14 @@ public abstract class OperandParser {
         return parts;
     }
 
-    public static void parseRegAndImmediate(InstructionParser i, String operands) throws Exception {
+    public static void parseRegAndByteImmediate(InstructionParser i, String operands) throws Exception {
         String[] parts = getTwoOperands(operands);
         i.op1 = parseNormalRegister(parts[0]);
 
-        short num = 0;
+        int num = 0;
         try {
-            num = parseNumber(parts[1]);
-            i.setImmediate(num);
+            num = parseNumberAsByte(parts[1]);
+            i.setImmediateByte(num);
         } catch(NumberFormatException e) {
             throw new Exception("Not a valid number", e);
         }
@@ -82,7 +82,7 @@ public abstract class OperandParser {
     }
 
     protected static void parseMviOperands(InstructionParser i, String operands) throws Exception {
-        parseRegAndImmediate(i, operands);
+        parseRegAndByteImmediate(i, operands);
         i.code = i.op1.ordinal() * 8 + 6;
     }
 
@@ -113,6 +113,15 @@ public abstract class OperandParser {
         }
     };
 
+    public static OperandParser immediateByteOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String line)
+                throws Exception {
+            i.setImmediate(parseNumberAsByte(line));
+            i.code = i.baseCode;
+        }
+    };
+    
     public static OperandParser remainingLine = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {
@@ -150,17 +159,28 @@ public abstract class OperandParser {
      * then it is considered a hex number
      * @param str
      * @return
+     * @throws Exception 
      * @throws NumberFormatException if it cannot be parsed.
      */
-    public static short parseNumber(String str) {
-        short num = 0;
+    public static int parseNumber(String str) throws Exception {
+        int num = 0;
         str = str.trim();
         int base = 10;
         if(str.endsWith("h") || str.endsWith("H")) {
             base = 16;
             str = str.substring(0, str.length()-1);
         }
-        num = Short.parseShort(str, base);
+        num = Integer.parseInt(str, base);
+        if(num < 0 || num > 65535) {
+            throw new Exception("Immediate number must be in the range 0-65535 " + str);
+        }
         return num;
+    }
+    public static byte parseNumberAsByte(String line) throws Exception {
+        int num = parseNumber(line);
+        if(num < 0 || num > 255) {
+            throw new Exception("Immediate number must be in the range 0-255 " + line);
+        }
+        return (byte)(num & 0xff);
     }
 }

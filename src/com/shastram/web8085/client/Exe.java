@@ -48,6 +48,11 @@ public class Exe {
         memory[ip++] = (byte)(immediate >> 8);
     }
 
+    public void insert(int opcode, byte immediate) {
+        memory[ip++] = (byte)opcode;
+        memory[ip++] = immediate;
+    }
+
     public void insert(ParseToken token) throws ParserException {
         switch(token.getType()) {
         case INSTRUCTION:
@@ -219,8 +224,9 @@ public class Exe {
         }
     }
 
-    public byte getMemAtIp() {
-        return memory[ip];
+    public int getMemAtIp() {
+        int value = Math.abs(memory[ip]);
+        return value;
     }
 
     /**

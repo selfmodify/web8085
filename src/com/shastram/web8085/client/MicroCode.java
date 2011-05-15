@@ -174,7 +174,7 @@ public abstract class MicroCode {
     public static MicroCode ldax = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            byte code = exe.getMemAtIp();
+            int code = exe.getMemAtIp();
             exe.nextIp();
             int addr = code == 0x0A ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
@@ -197,7 +197,7 @@ public abstract class MicroCode {
     public static MicroCode stax = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            byte code = exe.getMemAtIp();
+            int code = exe.getMemAtIp();
             exe.nextIp();
             int addr = code == 0x02 ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'

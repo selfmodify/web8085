@@ -28,8 +28,9 @@ public class InstructionParser {
     public String name;
     private OperandParser oparser;
     public int ip;
-    private short immediate;
+    private int immediate;
     private boolean hasImmediate;
+    int len = 1;
 
     public InstructionParser(Mnemonic type, int code, OperandParser oparser) {
         this.mnemonic = type;
@@ -46,12 +47,13 @@ public class InstructionParser {
         oparser.parse(parser, this, operands);
     }
 
-    public void setImmediate(short num) {
+    public void setImmediate(int num) {
         hasImmediate = true;
         immediate = num;
+        len = 3;
     }
 
-    public short getImmediate( ) throws ParserException {
+    public int getImmediate( ) throws ParserException {
         if(!hasImmediate) {
             throw new ParserException("Instruction does not have an immediate operand.");
         }
@@ -60,5 +62,11 @@ public class InstructionParser {
 
     public boolean hasImmediate() {
         return hasImmediate;
+    }
+
+    public void setImmediateByte(int num) {
+        hasImmediate = true;
+        immediate = num;
+        len = 2;
     }
 }

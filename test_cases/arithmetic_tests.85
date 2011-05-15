@@ -1,7 +1,3 @@
-# test arithmetic instructions
-
-# aci - add with carry immediate
-
 mvi a,57h
 add b
 stc

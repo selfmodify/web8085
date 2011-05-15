@@ -1,5 +1,7 @@
 package com.shastram.web8085.client;
 
+import org.mortbay.log.Log;
+
 
 public class Instruction {
     public static interface InstructionToString {
@@ -57,6 +59,7 @@ public class Instruction {
         public String toString(int op1) {
             return toStr.toString(longName, op1);
         }
+
     }
 
     public static OneInstruction[] allInstructions = new OneInstruction[] {
@@ -350,12 +353,14 @@ public class Instruction {
     }
 
     public static void execute(Exe exe) throws Exception {
-        int opcode = exe.getMemAtIp();
+        int opcode = (int)exe.getMemAtIp();
         if(opcode < 0 || opcode >=allInstructions.length) {
             throw new Exception("Invalid opcode " + opcode + " at ip " + exe.getIp());
         }
         OneInstruction ix = allInstructions[opcode];
         MicroCode m = ix.microCode;
+        String s = ix.longName;
+        Log.info(s);
         m.execute(exe, ix);
     }
 }
