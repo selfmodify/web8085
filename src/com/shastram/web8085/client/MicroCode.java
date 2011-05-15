@@ -212,7 +212,7 @@ public abstract class MicroCode {
      * @param r
      */
     private static void endAdd(Exe exe, int v, short carry) {
-        endAdd(exe, v, carry, true);
+        endAdd(exe, v, carry, true /* set carry*/);
     }
 
     /**

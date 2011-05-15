@@ -15,8 +15,6 @@ public class Parser {
     private int line;
     private int ip;
 
-    private String fullLine;
-
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
         map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xC3, OperandParser.immediateByteOperand));
@@ -72,7 +70,6 @@ public class Parser {
     }
 
     public ParseToken parseLine(String line) throws Exception {
-        this.fullLine = line;
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
         if( commentStart == 0 || line.length() == 0) {

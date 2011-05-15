@@ -1,4 +1,5 @@
 mvi a,57h
+mvi b,1
 add b
 stc
 aci 6h
