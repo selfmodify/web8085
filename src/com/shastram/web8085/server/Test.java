@@ -10,7 +10,10 @@ public class Test {
 
     @org.junit.Test
     public void testeArithmetic( ) throws Exception {
-        BufferedReader in = new BufferedReader(new FileReader("test_cases/arithmetic_tests.85"));
+    	String testArithmetic = "arithmetic_tests.85";
+    	String testMov = "mov_tests.85";
+    	String testName = testMov;
+        BufferedReader in = new BufferedReader(new FileReader("test_cases/" + testName ));
         String line;
         StringBuffer buffer = new StringBuffer();
         while((line = in.readLine()) != null) {

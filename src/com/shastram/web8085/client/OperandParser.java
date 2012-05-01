@@ -15,7 +15,7 @@ public abstract class OperandParser {
         map.put("b", InstructionParser.Operand.B);
         map.put("c", InstructionParser.Operand.C);
         map.put("d", InstructionParser.Operand.D);
-        map.put("f", InstructionParser.Operand.E);
+        map.put("e", InstructionParser.Operand.E);
         map.put("h", InstructionParser.Operand.H);
         map.put("l", InstructionParser.Operand.L);
         return map;

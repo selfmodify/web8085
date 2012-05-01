@@ -21,11 +21,19 @@ public abstract class MicroCode {
         }
     };
 
+    /**
+     * parse and execute assertions ".assert a=1" => reg a must be equal to 1
+     * .assert cy=1 => carry flag must be 1
+     */
     public static MicroCode assertRunner = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             String line = exe.getAsertionAt(exe.getIp());
             // split the assertions into its parts
+            if(line == null) {
+            	log.info("nothing to assert ");
+            	return;
+            }
             String[] parts = line.split("[ \t]+");
             for(String s: parts) {
                 // get the first assertion

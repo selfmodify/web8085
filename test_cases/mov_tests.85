@@ -1,0 +1,16 @@
+# testing move instructions
+
+mvi a,1
+mov b,a
+mov c,a
+mov d,a
+mov e,a
+mov h,a
+mov l,a
+.assert a=1
+.assert b=1
+.assert c=1
+.assert d=1
+.assert e=1
+.assert h=1
+.assert l=1
