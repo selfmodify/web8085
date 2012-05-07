@@ -8,7 +8,8 @@ public class ParseToken {
     public ParseToken(InstructionParser instruction, String token) {
         this.ix = instruction;
         this.token = token;
-        type = Type.INSTRUCTION;
+        // TODO: Maybe there is a better way to differentiate between asserts and instructions?
+        type = instruction.name.equalsIgnoreCase("assert") ? Type.ASSERT : Type.INSTRUCTION;
     }
 
     public ParseToken(Type type, String token) {

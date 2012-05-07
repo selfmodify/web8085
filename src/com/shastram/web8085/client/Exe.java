@@ -1,8 +1,11 @@
 package com.shastram.web8085.client;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Exe {
+	private static Logger logger = Logger.getLogger(Exe.class.getName());
+	
     public int ip = 0;
     public byte memory[] = new byte[64 * 1024];
     private int counter = 0;
@@ -26,6 +29,8 @@ public class Exe {
      */
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
     public boolean hltExecuted = false;
+
+	private boolean ignoreAsserts = true;
 
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
@@ -54,20 +59,20 @@ public class Exe {
     }
 
     public void insert(ParseToken token) throws ParserException {
+        InstructionParser i = token.getIx();
         switch(token.getType()) {
         case INSTRUCTION:
-                InstructionParser i = token.getIx();
                 if(i.hasImmediate()) {
                     insert(i.code, i.getImmediate());
                 } else {
                     insert(i.code);
                 }
-                if(i.name.equalsIgnoreCase("assert")) {
-                	this.assertOperation.put(this.ip, token.getToken());
-                }
                 break;
         case ASSERT:
-
+        	if(!ignoreAsserts) {
+            	this.assertOperation.put(this.ip, token.getToken());
+        		insert(i.code);
+        	}
         }
     }
 
@@ -138,6 +143,8 @@ public class Exe {
 
     public void step() throws Exception {
         Instruction.execute(this);
+        String str = this.getRegisterValues();
+        logger.info(str);
     }
 
     public int getOpcode() {
@@ -312,5 +319,14 @@ public class Exe {
 
     public boolean hltExecuted() {
         return hltExecuted;
+    }
+    
+    /**
+     * Get the register values as a string
+     * @return
+     */
+    public String getRegisterValues() {
+    	String str = " ip=" + ip + " a=" + a + " b=" + b + " c=" +c + " d=" + d + " e=" + e + " h=" +h + " l=" +l;
+    	return str;
     }
 }
