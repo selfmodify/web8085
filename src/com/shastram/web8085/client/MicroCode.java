@@ -3,6 +3,7 @@ package com.shastram.web8085.client;
 import java.util.logging.Logger;
 
 import com.shastram.web8085.client.Instruction.OneInstruction;
+import com.shastram.web8085.client.InstructionParser.Operand;
 
 /**
  *
@@ -56,6 +57,7 @@ public abstract class MicroCode {
 
                 // assert sign
                 String lhs = p[0].trim().toLowerCase();
+                Operand op;
                 if("s".equals(lhs)) {
                     compare(exe, num, exe.getSign(), "Expected Sign=");
                 } else if("z".equals(lhs)) {
@@ -64,6 +66,9 @@ public abstract class MicroCode {
                     compare(exe, num, exe.getCarry(), "Expected Carry=");
                 } else if("ac".equals(lhs)) {
                     compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
+                } else {
+                	op = OperandParser.parseNormalRegister(lhs);
+                	compare(exe, num, exe.getRegOrMem(op), "Expected " + op.toString() + "=");
                 }
             }
             log.info("Assertion passed: " + line);

@@ -61,7 +61,7 @@ public abstract class OperandParser {
      * @return
      * @throws Exception
      */
-    private static Operand parseNormalRegister(String reg) throws Exception {
+    public static Operand parseNormalRegister(String reg) throws Exception {
         Operand op = map.get(reg);
         if(op == null) {
             throw new Exception(reg + " is not a valid register");
@@ -78,7 +78,8 @@ public abstract class OperandParser {
         if(i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
             throw new Exception("Mov operand cannot have both operand set to memory");
         }
-        i.code = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
+        int value =  0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
+        i.code = value;
     }
 
     protected static void parseMviOperands(InstructionParser i, String operands) throws Exception {

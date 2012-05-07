@@ -97,7 +97,7 @@ public class Instruction {
             new OneInstruction("dcx", "dcx d",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr e",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr e",  noOperand ,MicroCode.nop),
-            new OneInstruction("mvi", "mvi e",  byteOperand ,MicroCode.nop),
+            new OneInstruction("mvi", "mvi e",  byteOperand ,MicroCode.mvi),
             //31
             new OneInstruction("rar", "rar",  noOperand ,MicroCode.nop),
             new OneInstruction("rim", "rim",  noOperand ,MicroCode.nop),
@@ -360,7 +360,7 @@ public class Instruction {
         OneInstruction ix = allInstructions[opcode];
         MicroCode m = ix.microCode;
         String s = ix.longName;
-        logger.fine(s);
+        logger.fine("Executing " + s);
         m.execute(exe, ix);
     }
 }

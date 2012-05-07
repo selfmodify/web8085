@@ -3,6 +3,8 @@ package com.shastram.web8085.client;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import com.shastram.web8085.client.InstructionParser.Operand;
+
 public class Exe {
 	private static Logger logger = Logger.getLogger(Exe.class.getName());
 	
@@ -30,7 +32,7 @@ public class Exe {
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
     public boolean hltExecuted = false;
 
-	private boolean ignoreAsserts = true;
+	private boolean ignoreAsserts = false;
 
     public void insert(int opcode, int op1, int op2) {
         memory[ip++] = (byte)opcode;
@@ -144,7 +146,7 @@ public class Exe {
     public void step() throws Exception {
         Instruction.execute(this);
         String str = this.getRegisterValues();
-        logger.info(str);
+        logger.fine(str); // instruction logging on
     }
 
     public int getOpcode() {
@@ -329,4 +331,17 @@ public class Exe {
     	String str = " ip=" + ip + " a=" + a + " b=" + b + " c=" +c + " d=" + d + " e=" + e + " h=" +h + " l=" +l;
     	return str;
     }
+
+	public int getRegOrMem(Operand op) {
+		switch(op) {
+		case B: return b;
+		case C: return c;
+		case D: return d;
+		case E: return e;
+		case H: return h;
+		case L: return l;
+		case A: return a;
+		}
+        throw new IllegalStateException("Invalid register " + op.toString());
+	}
 }
