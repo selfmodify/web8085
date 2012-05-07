@@ -1,9 +1,9 @@
 package com.shastram.web8085.client;
 
-import org.mortbay.log.Log;
-
+import java.util.logging.Logger;
 
 public class Instruction {
+	private static Logger logger = Logger.getLogger(Instruction.class.getName());
     public static interface InstructionToString {
         public String toString(String name, int op1);
     }
@@ -360,7 +360,7 @@ public class Instruction {
         OneInstruction ix = allInstructions[opcode];
         MicroCode m = ix.microCode;
         String s = ix.longName;
-        Log.info(s);
+        logger.fine(s);
         m.execute(exe, ix);
     }
 }
