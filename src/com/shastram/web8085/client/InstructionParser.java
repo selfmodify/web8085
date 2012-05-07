@@ -43,7 +43,8 @@ public class InstructionParser {
         return mnemonic;
     }
 
-    public void parseOperands(Parser parser, String operands) throws Exception {
+    public void parseOperands(Parser parser, String operands, int ip) throws Exception {
+    	this.ip = ip;
         oparser.parse(parser, this, operands);
     }
 

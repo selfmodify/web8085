@@ -62,6 +62,9 @@ public class Exe {
                 } else {
                     insert(i.code);
                 }
+                if(i.name.equalsIgnoreCase("assert")) {
+                	this.assertOperation.put(this.ip, token.getToken());
+                }
                 break;
         case ASSERT:
 
@@ -265,7 +268,7 @@ public class Exe {
         Parser p = new Parser(text);
         reset();
         while(p.hasNext()){
-            ParseToken token = p.parseNextLine();
+            ParseToken token = p.parseNextLine(this.ip);
             insert(token);
         }
         insert(0x76); // hlt

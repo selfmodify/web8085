@@ -1,16 +1,16 @@
 # testing move instructions
 
 mvi a,1
-mov b,a
-mov c,a
-mov d,a
-mov e,a
-mov h,a
-mov l,a
 .assert a=1
+mov b,a
 .assert b=1
+mov c,a
 .assert c=1
+mov d,a
 .assert d=1
+mov e,a
 .assert e=1
+mov h,a
 .assert h=1
+mov l,a
 .assert l=1

@@ -13,7 +13,6 @@ public class Parser {
 
     private String[] source;
     private int line;
-    private int ip;
 
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
@@ -69,7 +68,7 @@ public class Parser {
         return assertOperation;
     }
 
-    public ParseToken parseLine(String line) throws Exception {
+    public ParseToken parseLine(String line, int ip) throws Exception {
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
         if( commentStart == 0 || line.length() == 0) {
@@ -83,19 +82,18 @@ public class Parser {
         if(ix == null) {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
-        ix.parseOperands(this, parts.length > 1 ? parts[1] : null);
+        ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
         ParseToken t = new ParseToken(ix, line);
         return t;
     }
 
-    public ParseToken parseNextLine() throws Exception {
+    public ParseToken parseNextLine(int ip) throws Exception {
         String l = nextLine();
-        ParseToken token = parseLine(l);
+        ParseToken token = parseLine(l, ip);
         return token;
     }
 
     public boolean hasNext() {
         return line < source.length;
     }
-
 }

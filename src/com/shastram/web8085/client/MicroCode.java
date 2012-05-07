@@ -28,10 +28,11 @@ public abstract class MicroCode {
     public static MicroCode assertRunner = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            String line = exe.getAsertionAt(exe.getIp());
+        	int ip = exe.getIp();
+            String line = exe.getAsertionAt(ip);
             // split the assertions into its parts
             if(line == null) {
-            	log.info("nothing to assert ");
+            	log.info("nothing to assert at ip=" + ip);
             	return;
             }
             String[] parts = line.split("[ \t]+");
@@ -66,6 +67,7 @@ public abstract class MicroCode {
                 }
             }
             log.info("Assertion passed: " + line);
+            exe.nextIp();
         }
 
         private void compare(Exe exe, int expected, int got, String msg) throws Exception {
