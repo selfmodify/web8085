@@ -178,6 +178,16 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode lhld = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			exe.nextIp();
+			int addr = exe.read16bit();
+			exe.h = exe.getMemory(addr);
+			exe.l = exe.getMemory(addr+1);
+		}
+    };
+    
     // The contents of a memory location, specified by a 16-bit address in the operand
     // are copied to the accumulator
     public static MicroCode lda = new MicroCode() {

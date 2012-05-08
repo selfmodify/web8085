@@ -2,12 +2,20 @@ package com.shastram.web8085.server;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import junit.framework.Assert;
+
+import org.junit.internal.runners.statements.Fail;
+import org.mortbay.log.Log;
 
 import com.shastram.web8085.client.Exe;
 
 
 public class Test {
 
+	private static Logger logger = Logger.getLogger(Test.class.getName());
     @org.junit.Test
     public void testeArithmetic( ) throws Exception {
     	String testArithmetic = "arithmetic_tests.85";
@@ -20,11 +28,16 @@ public class Test {
             buffer.append(line).append("\n");
         }
         Exe exe = new Exe();
-        exe.compileCode(buffer.toString());
-
-        // run until hlt is executed
-        while(!exe.hltExecuted()) {
-            exe.step();
+        try {
+	        exe.compileCode(buffer.toString());
+	        // run until hlt is executed
+	        while(!exe.hltExecuted()) {
+	            exe.step();
+	        }
+	        Log.info("Finished");
+        } catch(Exception e) {
+        	logger.log(Level.SEVERE, "Failed with ", e);
+        	Assert.fail(e.getMessage());
         }
     }
 }

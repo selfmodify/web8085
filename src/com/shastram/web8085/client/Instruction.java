@@ -74,7 +74,7 @@ public class Instruction {
             new OneInstruction("rlc", "rlc",  noOperand ,MicroCode.nop),
             new OneInstruction("", "assert",  noOperand ,MicroCode.assertRunner),
             new OneInstruction("dad", "dad b",  noOperand ,MicroCode.nop),
-            new OneInstruction("ldax", "ldax b",  noOperand ,MicroCode.nop),
+            new OneInstruction("ldax", "ldax b",  noOperand ,MicroCode.ldax),
 
             // 11 thru 20
             new OneInstruction("dcx", "dcx b",  noOperand ,MicroCode.nop),
@@ -93,7 +93,7 @@ public class Instruction {
             new OneInstruction("ral", "ral",  noOperand ,MicroCode.nop),
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("dad", "dad d",  noOperand ,MicroCode.nop),
-            new OneInstruction("ldax", "ldax d",  noOperand ,MicroCode.nop),
+            new OneInstruction("ldax", "ldax d",  noOperand ,MicroCode.ldax),
             new OneInstruction("dcx", "dcx d",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr e",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr e",  noOperand ,MicroCode.nop),
@@ -111,7 +111,7 @@ public class Instruction {
             //41
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("dad", "dad h",  noOperand ,MicroCode.nop),
-            new OneInstruction("lhld", "lhld",  wordOperand ,MicroCode.nop),
+            new OneInstruction("lhld", "lhld",  wordOperand ,MicroCode.lhld),
             new OneInstruction("dcx", "dcx h",  noOperand ,MicroCode.nop),
             new OneInstruction("inr", "inr l",  noOperand ,MicroCode.nop),
             new OneInstruction("dcr", "dcr l",  noOperand ,MicroCode.nop),

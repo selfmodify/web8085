@@ -33,30 +33,33 @@ public class Exe {
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
     public boolean hltExecuted = false;
 
-	private boolean ignoreAsserts = false;
-
     public void insert(int opcode, int op1, int op2) {
+    	//TODO: Change ip++ to use incrIp
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)op1;
         memory[ip++] = (byte)op2;
     }
 
     public void insert(int opcode, int op1) {
+    	//TODO: Change ip++ to use incrIp
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)op1;
     }
 
     public void insert(int opcode) {
+    	//TODO: Change ip++ to use incrIp
         memory[ip++] = (byte)opcode;
     }
 
     public void insertCodeAnd16bit(int opcode, int immediate) {
+    	//TODO: Change ip++ to use incrIp
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)(immediate & 0xff);
         memory[ip++] = (byte)(immediate >> 8);
     }
 
     public void insert(int opcode, byte immediate) {
+    	//TODO: Change ip++ to use incrIp
         memory[ip++] = (byte)opcode;
         memory[ip++] = immediate;
     }
@@ -76,7 +79,7 @@ public class Exe {
                 }
                 break;
         case ASSERT:
-        	if(!ignoreAsserts) {
+        	if(!Config.ignoreAsserts) {
             	this.assertOperation.put(this.ip, token.getToken());
         		insert(i.code);
         	}
@@ -316,7 +319,7 @@ public class Exe {
     }
 
     /**
-     * @return Read the 16 bit immediate from ip+1, ip+2.
+     * @return Read the 16 bit immediate from ip, ip+1.
      * Also increment the ip by 2.
      */
     public int read16bit() {
@@ -368,5 +371,9 @@ public class Exe {
 			}
 		}
         throw new IllegalStateException("Invalid register " + op.toString());
+	}
+
+	public int getMemory(int addr) {
+		return memory[addr];
 	}
 }

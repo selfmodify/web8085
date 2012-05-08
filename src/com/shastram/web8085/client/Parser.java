@@ -22,6 +22,7 @@ public class Parser {
         map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
         map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("ldax", new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
+        map.put("lhld",  new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x2A, OperandParser.immediateOperand));
         map.put(".assert",new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {
             @Override
