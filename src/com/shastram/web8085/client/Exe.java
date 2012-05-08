@@ -50,7 +50,7 @@ public class Exe {
         memory[ip++] = (byte)opcode;
     }
 
-    public void insert(int opcode, short immediate) {
+    public void insertCodeAnd16bit(int opcode, int immediate) {
         memory[ip++] = (byte)opcode;
         memory[ip++] = (byte)(immediate & 0xff);
         memory[ip++] = (byte)(immediate >> 8);
@@ -66,7 +66,11 @@ public class Exe {
         switch(token.getType()) {
         case INSTRUCTION:
                 if(i.hasImmediate()) {
-                    insert(i.code, i.getImmediate());
+                	if(i.len == 3) {
+                		insertCodeAnd16bit(i.code, i.getImmediate());
+                	} else {
+                        insert(i.code, i.getImmediate());
+                	}
                 } else {
                     insert(i.code);
                 }
@@ -76,6 +80,7 @@ public class Exe {
             	this.assertOperation.put(this.ip, token.getToken());
         		insert(i.code);
         	}
+        	break;
         case SYNTAX_ERROR:
         	logger.log(Level.SEVERE, "Sytax error parsing " + token.getToken());
         	throw new ParserException("Sytax error parsing " + token.getToken());
