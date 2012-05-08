@@ -122,7 +122,11 @@ public class Exe {
         case 3: e = value; break;
         case 4: h = value; break;
         case 5: l = value; break;
-        case 6: memory[ip] = value; break;
+        case 6: {
+        	int addr = getHL();
+        	memory[addr] = value;
+        	break;
+        }
         case 7: a = value; break;
         default:
             throw new IllegalStateException("Invalid register index in set" + i);
@@ -332,6 +336,11 @@ public class Exe {
     	return str;
     }
 
+    public int getHL() {
+    	int hl = (h & 0xff) << 8 + (l & 0xff);
+    	hl = hl & 0xffff;
+    	return hl;
+    }
 	public int getRegOrMem(Operand op) {
 		switch(op) {
 		case B: return b;
@@ -341,6 +350,10 @@ public class Exe {
 		case H: return h;
 		case L: return l;
 		case A: return a;
+		case M: { 
+			int hl = getHL();
+			return memory[hl];
+			}
 		}
         throw new IllegalStateException("Invalid register " + op.toString());
 	}

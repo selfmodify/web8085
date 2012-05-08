@@ -68,7 +68,9 @@ public abstract class MicroCode {
                     compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
                 } else {
                 	op = OperandParser.parseNormalRegister(lhs);
-                	compare(exe, num, exe.getRegOrMem(op), "Expected " + op.toString() + "=");
+                	String msg = "Expected " + op.toString() + "=";
+                	int got = exe.getRegOrMem(op);
+                	compare(exe, num, got, msg);
                 }
             }
             log.info("Assertion passed: " + line);

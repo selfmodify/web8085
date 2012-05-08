@@ -1,5 +1,11 @@
 # testing move instructions
 
+# test mvi m, <8 bit data>
+mvi h,0
+mvi l,0
+mvi m, 99
+.assert m=99
+
 # mov <reg>, a
 mvi a,1
 mov b,a
