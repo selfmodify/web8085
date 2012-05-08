@@ -1,6 +1,7 @@
 package com.shastram.web8085.client;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.shastram.web8085.client.InstructionParser.Operand;
@@ -75,6 +76,9 @@ public class Exe {
             	this.assertOperation.put(this.ip, token.getToken());
         		insert(i.code);
         	}
+        case SYNTAX_ERROR:
+        	logger.log(Level.SEVERE, "Sytax error parsing " + token.getToken());
+        	throw new ParserException("Sytax error parsing " + token.getToken());
         }
     }
 
@@ -302,6 +306,7 @@ public class Exe {
     }
 
     public void assertionFailed(String reason) throws Exception {
+    	logger.warning("Assertion failed. " + reason);
         throw new Exception("Assertion failed. " + reason);
     }
 

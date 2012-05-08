@@ -1,5 +1,9 @@
 # testing move instructions
 
+#test lda <16 bit address>
+lda 0
+.assert a=58
+
 # test mvi m, <8 bit data>
 mvi h,0
 mvi l,0

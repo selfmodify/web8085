@@ -128,7 +128,7 @@ public class Instruction {
             new OneInstruction("stc", "stc",  noOperand ,MicroCode.stc),
             new OneInstruction("", "invalid",  noOperand ,MicroCode.nop),
             new OneInstruction("dad", "dad sp",  noOperand ,MicroCode.nop),
-            new OneInstruction("lda", "lda",  wordOperand ,MicroCode.nop),
+            new OneInstruction("lda", "lda",  wordOperand ,MicroCode.lda),
             new OneInstruction("dcx", "dcx sp",  noOperand ,MicroCode.nop),
             //61
             new OneInstruction("inr", "inr a",  noOperand ,MicroCode.nop),
