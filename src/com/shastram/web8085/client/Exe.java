@@ -149,8 +149,10 @@ public class Exe {
 
     public void step() throws Exception {
         Instruction.execute(this);
-        String str = this.getRegisterValues();
-        logger.fine(str); // instruction logging on
+        if(Config.printRegisters) {
+	        String str = this.getRegisterValues();
+	        logger.fine(str);
+        }
     }
 
     public int getOpcode() {

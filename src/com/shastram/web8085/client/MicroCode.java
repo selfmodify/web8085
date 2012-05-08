@@ -73,7 +73,9 @@ public abstract class MicroCode {
                 	compare(exe, num, got, msg);
                 }
             }
-            log.info("Assertion passed: " + line);
+            if(Config.printAssertions) {
+                log.info("Assertion passed: " + line);
+            }
             exe.nextIp();
         }
 
@@ -127,7 +129,7 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.hltExecuted = true;
-            log.info("HLT executed");
+            log.info("HLT executed. " + exe.getRegisterValues());
         }
     };
 

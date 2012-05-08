@@ -359,8 +359,10 @@ public class Instruction {
         }
         OneInstruction ix = allInstructions[opcode];
         MicroCode m = ix.microCode;
-        String s = ix.longName;
-        logger.fine("Executing " + s);
+        if(Config.printInstructions) {
+            String s = ix.longName;
+            logger.info("Executing " + s);
+        }
         m.execute(exe, ix);
     }
 }
