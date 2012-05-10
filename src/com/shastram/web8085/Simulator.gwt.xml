@@ -4,4 +4,9 @@
 	<entry-point class="com.shastram.web8085.client.Simulator"/>
 	<inherits name="com.google.gwt.junit.JUnit"/>
     <inherits name="com.google.gwt.resources.Resources" />
+    <inherits name="com.google.gwt.i18n.I18N"/>
+    <!-- 
+    <inherits name="com.google.gwt.logging.Logging"/>
+    <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
+     -->
 </module>

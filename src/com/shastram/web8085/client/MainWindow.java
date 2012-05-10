@@ -1,7 +1,10 @@
 package com.shastram.web8085.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -41,21 +44,45 @@ public class MainWindow extends Composite {
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
-        sourceCode.setHTML("mov a,b</br>sub b</br>add c");
+        sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
         refreshRegisters();
+        //extendMemoryWindow();
+		exeWindow.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				//System.out.println("Changed " + exeWindow.getSelectedIndex());
+			}
+		});
     }
 
-    @UiHandler("compile")
+    private void extendMemoryWindow() {
+    	if(exeWindow.getItemCount() == 0) {
+    		fillNextWindow(100);
+    	}
+	}
+    
+    private void fillNextWindow(int rows) {
+    	for(int i=0; i < rows ; ++i) {
+    		if(exeWindow.getItemCount() + i >= exe.memory.length) {
+    			break;
+    		}
+    		String str = "" + exe.memory[i];
+    		exeWindow.addItem(str, str);
+    	}
+    }
+    
+	@UiHandler("compile")
     public void compileHandler(ClickEvent e) {
         String text = sourceCode.getText();
         try {
-            exeWindow.clear();
             exe.compileCode(text);
+            exe.reset();
             errorWindow.setText("Finished parsing");
             while(exe.hasNext()) {
                 this.exeWindow.addItem(exe.next());
             }
-            exe.resetRegisters();
+            exe.reset();
+            refreshRegisters();
         } catch(Exception ex) {
             errorWindow.setText(ex.getMessage());
         }

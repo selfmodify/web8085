@@ -141,7 +141,7 @@ public class Exe {
         }
         case 7: a = value; break;
         default:
-            throw new IllegalStateException("Invalid register index in set" + i);
+            throw new IllegalStateException("Invalid register index in set " + i);
         }
     }
 
@@ -183,6 +183,7 @@ public class Exe {
         resetRegisters();
         clearFlags();
         hltExecuted = false;
+        ip = 0;
     }
 
     public void resetRegisters() {
