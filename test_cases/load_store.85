@@ -26,11 +26,20 @@ ldax d
 .assert a=11
 
 # -----------------------------------------
-# test lhld, <address>
-# l = [ip]
-# h = [ip+1]
+# lhld <address>
+# l = [addr]
+# h = [addr+1]
 mvi h,1
 mvi l,1
 lhld 0
 .assert h=11, l=11
 
+# -----------------------------------------
+# shld <address>
+# [addr] = l
+# [addr+1] = h
+mvi l,5
+mvi h,6
+shld 0
+.assert [0]=5
+.assert [1]=6 

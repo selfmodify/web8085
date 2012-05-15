@@ -103,7 +103,7 @@ public class Instruction {
             new OneInstruction("rar", "rar", noOperand, MicroCode.nop),
             new OneInstruction("rim", "rim", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi h", wordOperand, MicroCode.nop),
-            new OneInstruction("shld", "shld", wordOperand, MicroCode.nop),
+            new OneInstruction("shld", "shld", wordOperand, MicroCode.shld),
             new OneInstruction("inx", "inx h", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr h", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr h", noOperand, MicroCode.nop),

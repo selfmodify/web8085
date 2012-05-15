@@ -67,7 +67,7 @@ public abstract class MicroCode {
                     String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
                     int addr = OperandParser.parseNumber(n);
                     int value = exe.getMemory(addr);
-                    compare(exe, value, num, "Expected memory at address " + addr + " = ");
+                    compare(exe, value, num, "Expected memory at address [" + addr + "] = ");
                 } else {
                     // try to parse it as a register. 
                     op = OperandParser.parseNormalRegister(lhs);
@@ -188,6 +188,16 @@ public abstract class MicroCode {
             int addr = exe.read16bit();
             exe.h = exe.getMemory(addr);
             exe.l = exe.getMemory(addr + 1);
+        }
+    };
+
+    public static MicroCode shld = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+            int addr = exe.read16bit();
+            exe.setMemoryByte(addr, exe.l);
+            exe.setMemoryByte(addr + 1, exe.h);
         }
     };
 

@@ -22,17 +22,18 @@ public class Parser {
         map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
         map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("ldax", new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
-        map.put("lhld",  new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x2A, OperandParser.immediateOperand));
-        map.put(".assert",new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
-        map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40,  new OperandParser() {
+        map.put("lhld", new InstructionParser(InstructionParser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
+        map.put("shld", new InstructionParser(InstructionParser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
+        map.put(".assert", new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
+        map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40, new OperandParser() {
             @Override
-            public void parse(Parser parser, InstructionParser i,String operands) throws Exception {
+            public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
                 parseMovOperands(i, operands);
             }
         }));
-        map.put("mvi", new InstructionParser(InstructionParser.Mnemonic.MVI, 0x0,  new OperandParser() {
+        map.put("mvi", new InstructionParser(InstructionParser.Mnemonic.MVI, 0x0, new OperandParser() {
             @Override
-            public void parse(Parser parser, InstructionParser i,String operands) throws Exception {
+            public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
                 parseMviOperands(i, operands);
             }
         }));
@@ -40,12 +41,12 @@ public class Parser {
         return map;
     }
 
-    public Parser(String text ){
+    public Parser(String text) {
         this.source = text.split("\n");
     }
 
     public String nextLine() throws Exception {
-        if(line > source.length) {
+        if (line > source.length) {
             throw new Exception("Reached end of source code");
         }
         return source[line++];
@@ -53,7 +54,7 @@ public class Parser {
 
     public void reset() {
         line = 0;
-        source = new String[]{};
+        source = new String[] {};
         assertOperation.clear();
     }
 
@@ -72,15 +73,15 @@ public class Parser {
     public ParseToken parseLine(String line, int ip) throws Exception {
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
-        if( commentStart == 0 || line.length() == 0) {
+        if (commentStart == 0 || line.length() == 0) {
             return new ParseToken(Type.COMMENT, line);
         }
-        if(commentStart > 1) {
+        if (commentStart > 1) {
             line = line.substring(0, commentStart);
         }
-        String[] parts = line.split("[\t ]",2);
+        String[] parts = line.split("[\t ]", 2);
         InstructionParser ix = instructions.get(parts[0]);
-        if(ix == null) {
+        if (ix == null) {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);

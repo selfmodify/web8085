@@ -167,9 +167,10 @@ public class Exe {
         }
     }
 
-    public void setMemory(short addr, short value) {
-        memory[addr] = (byte) (value & 0xff);
-        memory[addr + 1] = (byte) ((value >> 8) & 0xff);
+    public void setMemory(int addr, int value) {
+        int v = value & 0xffff;
+        memory[addr] = (byte) (v & 0xff);
+        memory[addr + 1] = (byte) ((v >> 8) & 0xff);
     }
 
     public void nextIp2(int len) {
@@ -347,8 +348,9 @@ public class Exe {
     }
 
     public void assertionFailed(String reason) throws Exception {
-        logger.warning("Assertion failed. " + reason);
-        throw new Exception("Assertion failed. " + reason);
+        String str = "Assertion failed at ip=" + ip + ", " + reason;
+        logger.warning(str);
+        throw new Exception(str);
     }
 
     /**
@@ -417,5 +419,9 @@ public class Exe {
 
     public int getMemory(int addr) {
         return memory[addr];
+    }
+
+    public void setMemoryByte(int addr, int value) {
+        memory[addr] = (byte) (value & 0xff);
     }
 }

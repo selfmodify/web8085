@@ -1,6 +1,5 @@
 package com.shastram.web8085.client;
 
-
 public class InstructionParser {
     public enum Mnemonic {
         ACI,
@@ -12,12 +11,14 @@ public class InstructionParser {
         MVI,
         LDA,
         LDAX,
+        LHLD,
+        SHLD,
         STA,
         STAX,
     }
 
     public enum Operand {
-        B,C,D,E,H,L,M,A,PSW,SP
+        B, C, D, E, H, L, M, A, PSW, SP
     }
 
     public Operand op1 = null;
@@ -26,7 +27,7 @@ public class InstructionParser {
     public int baseCode = -1;
     public int code = -1;
     public String name;
-    private OperandParser oparser;
+    private final OperandParser oparser;
     public int ip;
     private int immediate;
     private boolean hasImmediate;
@@ -44,7 +45,7 @@ public class InstructionParser {
     }
 
     public void parseOperands(Parser parser, String operands, int ip) throws Exception {
-    	this.ip = ip;
+        this.ip = ip;
         oparser.parse(parser, this, operands);
     }
 
@@ -54,8 +55,8 @@ public class InstructionParser {
         len = 3;
     }
 
-    public int getImmediate( ) throws ParserException {
-        if(!hasImmediate) {
+    public int getImmediate() throws ParserException {
+        if (!hasImmediate) {
             throw new ParserException("Instruction does not have an immediate operand.");
         }
         return immediate;
