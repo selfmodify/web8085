@@ -1,0 +1,36 @@
+# -----------------------------------------
+# Store Accumulator Directly in Memory
+# [address] = a
+mvi a,11
+sta 0
+.assert [0]=11
+ 
+# -----------------------------------------
+#test lda <16 bit address>
+# The contents of the memory location specified are transferred to the accumulator
+lda 0
+.assert a=11
+
+# -----------------------------------------
+# test ldax bc/de.
+# a = [bc] 
+mvi a,0
+mvi b,0
+mvi c,0
+ldax b      # a = [de]
+.assert a=11
+mvi a,0
+mvi d,0
+mvi e,0
+ldax d
+.assert a=11
+
+# -----------------------------------------
+# test lhld, <address>
+# l = [ip]
+# h = [ip+1]
+mvi h,1
+mvi l,1
+lhld 0
+.assert h=11, l=11
+

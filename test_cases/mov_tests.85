@@ -1,31 +1,5 @@
 # testing move instructions
 
-#test lda <16 bit address>
-# The contents of the memory location specified are transferred to the accumulator
-lda 0
-.assert a=58
-
-# test ldax bc/de.
-# a = [bc] 
-mvi a,0
-mvi b,0
-mvi c,0
-ldax b 		# a = [de]
-.assert a=58
-mvi a,0
-mvi d,0
-mvi e,0
-ldax d
-.assert a=58
-
-# test lhld, <address>
-# l = [ip]
-# h = [ip+1]
-mvi h,1
-mvi l,1
-lhld 0
-.assert h=58, l=0
-
 # test mvi m, <8 bit data>
 mvi h,0
 mvi l,0

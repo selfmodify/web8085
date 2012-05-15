@@ -6,12 +6,13 @@ import com.shastram.web8085.client.Instruction.OneInstruction;
 import com.shastram.web8085.client.InstructionParser.Operand;
 
 /**
- *
+ * 
  * All instructions derive from here
- *
+ * 
  */
 public abstract class MicroCode {
     private static Logger log = Logger.getLogger(MicroCode.class.getName());
+
     public abstract void execute(Exe exe, OneInstruction i) throws Exception;
 
     public static MicroCode nop = new MicroCode() {
@@ -29,59 +30,61 @@ public abstract class MicroCode {
     public static MicroCode assertRunner = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-        	int ip = exe.getIp();
+            int ip = exe.getIp();
             String line = exe.getAsertionAt(ip);
             // split the assertions into its parts
-            if(line == null) {
-            	log.info("nothing to assert at ip=" + ip);
-            	return;
+            if (line == null) {
+                log.info("nothing to assert at ip=" + ip);
+                return;
             }
             String[] parts = line.split("[ \t]+");
-            for(String s: parts) {
+            for (String s : parts) {
                 // get the first assertion
                 String assertion1 = s.trim().toLowerCase().replaceAll(",", "");
                 // get the expression
-                String[] p = assertion1.split("=",2);
-                if(p.length < 2) {
+                String[] p = assertion1.split("=", 2);
+                if (p.length < 2) {
                     exe.showDialog("Invalid assertion " + assertion1);
                     continue;
                 }
 
                 // parse the number specified in the assertion
-                int num = 0;
-                try {
-                    num = Integer.parseInt(p[1].trim());
-                } catch(NumberFormatException e) {
-                    exe.showDialog("Invalid number in expression " + assertion1);
-                }
+                int num = OperandParser.parseNumber(p[1].trim());
 
                 // assert sign
                 String lhs = p[0].trim().toLowerCase();
                 Operand op;
-                if("s".equals(lhs)) {
+                if ("s".equals(lhs)) {
                     compare(exe, num, exe.getSign(), "Expected Sign=");
-                } else if("z".equals(lhs)) {
+                } else if ("z".equals(lhs)) {
                     compare(exe, num, exe.getZero(), "Expected Zero=");
-                } else if("cy".equals(lhs)) {
+                } else if ("cy".equals(lhs)) {
                     compare(exe, num, exe.getCarry(), "Expected Carry=");
-                } else if("ac".equals(lhs)) {
+                } else if ("ac".equals(lhs)) {
                     compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
+                } else if (lhs.startsWith("[")) {
+                    // parse [<memory address>]=number
+                    String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
+                    int addr = OperandParser.parseNumber(n);
+                    int value = exe.getMemory(addr);
+                    compare(exe, value, num, "Expected memory at address " + addr + " = ");
                 } else {
-                	op = OperandParser.parseNormalRegister(lhs);
-                	String msg = "Expected " + op.toString() + "=";
-                	int got = exe.getRegOrMem(op);
-                	compare(exe, num, got, msg);
+                    // try to parse it as a register. 
+                    op = OperandParser.parseNormalRegister(lhs);
+                    String msg = "Expected " + op.toString() + "=";
+                    int got = exe.getRegOrMem(op);
+                    compare(exe, num, got, msg);
                 }
             }
-            if(Config.printAssertions) {
+            if (Config.printAssertions) {
                 log.info("Assertion passed: " + line);
             }
             exe.nextIp();
         }
 
         private void compare(Exe exe, int expected, int got, String msg) throws Exception {
-            if(expected != got) {
-                exe.assertionFailed(msg + expected + " Got="+got);
+            if (expected != got) {
+                exe.assertionFailed(msg + expected + " Got=" + got);
             }
         }
     };
@@ -140,7 +143,7 @@ public abstract class MicroCode {
     public static MicroCode adi = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            assert(exe.getOpcode() == 0xC6);
+            assert (exe.getOpcode() == 0xC6);
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
             addWithCarry(exe, op1);
@@ -154,7 +157,7 @@ public abstract class MicroCode {
     public static MicroCode aci = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            assert(exe.getOpcode() == 0xce);
+            assert (exe.getOpcode() == 0xce);
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
             addWithCarry(exe, op1);
@@ -164,30 +167,30 @@ public abstract class MicroCode {
     public static MicroCode inra = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            assert(exe.getOpcode() == 0x3C);
-            endAdd(exe, 1, (short)0, false);
+            assert (exe.getOpcode() == 0x3C);
+            endAdd(exe, 1, (short) 0, false);
         }
     };
 
     public static MicroCode stc = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            assert(exe.getOpcode() == 0x37);
+            assert (exe.getOpcode() == 0x37);
             exe.setCarry();
             exe.nextIp();
         }
     };
 
     public static MicroCode lhld = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp();
-			int addr = exe.read16bit();
-			exe.h = exe.getMemory(addr);
-			exe.l = exe.getMemory(addr+1);
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+            int addr = exe.read16bit();
+            exe.h = exe.getMemory(addr);
+            exe.l = exe.getMemory(addr + 1);
+        }
     };
-    
+
     // The contents of a memory location, specified by a 16-bit address in the operand
     // are copied to the accumulator
     public static MicroCode lda = new MicroCode() {
@@ -212,14 +215,15 @@ public abstract class MicroCode {
     };
 
     /**
-     * The contents of the accumulator are stored in the memory location specified
+     * The contents of the accumulator are stored in the memory location
+     * specified
      */
     public static MicroCode sta = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
             int addr = exe.read16bit();
-            exe.memory[addr] = (byte)exe.a;
+            exe.memory[addr] = (byte) exe.a;
         }
     };
 
@@ -230,13 +234,13 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = code == 0x02 ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.memory[addr] = (byte)exe.a;
+            exe.memory[addr] = (byte) exe.a;
         }
     };
 
-
     /**
      * helper add function.
+     * 
      * @param exe
      * @param r
      */
@@ -245,8 +249,8 @@ public abstract class MicroCode {
     }
 
     /**
-     * Do a = a+v, set Zero, Sign, set carry optionally and
-     * increment the ip.
+     * Do a = a+v, set Zero, Sign, set carry optionally and increment the ip.
+     * 
      * @param exe
      * @param v
      * @param setCarry
@@ -254,8 +258,8 @@ public abstract class MicroCode {
     private static void endAdd(Exe exe, int v, short carry, boolean setCarry) {
         int r = exe.a + v;
         exe.a = (0xff & r);
-        if(setCarry) {
-            if(r > 0xff) {
+        if (setCarry) {
+            if (r > 0xff) {
                 exe.setCarry();
             } else {
                 exe.resetCarry();
