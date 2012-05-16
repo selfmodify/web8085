@@ -21,8 +21,9 @@ public class Test {
         String loadStoreTests = "load_store.85";
         String testMov = "mov_tests.85";
         String testLxi = "lxi_tests.85";
-        String testName = testLxi;
-        BufferedReader in = new BufferedReader(new FileReader("test_cases/" + testName));
+        String testName = testMov;
+        String fullTestcaseName = "test_cases/" + testName;
+        BufferedReader in = new BufferedReader(new FileReader(fullTestcaseName));
         String line;
         StringBuffer buffer = new StringBuffer();
         while ((line = in.readLine()) != null) {
@@ -30,7 +31,7 @@ public class Test {
         }
         Exe exe = new Exe();
         try {
-            exe.compileCode(buffer.toString());
+            exe.compileCode(buffer.toString(), fullTestcaseName);
             // run until hlt is executed
             while (!exe.hltExecuted()) {
                 exe.step();

@@ -44,3 +44,17 @@ shld 0
 .assert [0]=5
 .assert [1]=6 
 
+# -----------------------------------------
+# STAX : Store accumulator indirect
+# [BC] = A
+# [DE] = A
+mvi b,0
+mvi c,0
+mvi a, 1
+stax b
+.assert [0] = 1
+
+mvi d, 1
+mvi e, 0
+stax d
+.assert [10] = 1

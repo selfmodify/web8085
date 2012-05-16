@@ -23,6 +23,65 @@ public abstract class MicroCode {
         }
     };
 
+    private static void assertInternal(Exe exe, OneInstruction i) throws Exception {
+        int ip = exe.getIp();
+        String line = exe.getAsertionAt(ip);
+        // split the assertions into its parts
+        if (line == null) {
+            log.info("nothing to assert at ip=" + ip);
+            return;
+        }
+        String[] parts = line.split(",");
+        for (String s : parts) {
+            // get the first assertion
+            String assertion1 = s.trim().toLowerCase(); //.replaceAll(",", "");
+            // get the expression
+            String[] p = assertion1.split("=", 2);
+            if (p.length < 2) {
+                exe.showDialog("Invalid assertion " + assertion1);
+                continue;
+            }
+
+            // parse the number specified in the assertion
+            int num = OperandParser.parseNumber(p[1].trim());
+
+            // assert sign
+            String lhs = p[0].trim().toLowerCase();
+            Operand op;
+            if ("s".equals(lhs)) {
+                compare(exe, num, exe.getSign(), "Expected Sign=");
+            } else if ("z".equals(lhs)) {
+                compare(exe, num, exe.getZero(), "Expected Zero=");
+            } else if ("cy".equals(lhs)) {
+                compare(exe, num, exe.getCarry(), "Expected Carry=");
+            } else if ("ac".equals(lhs)) {
+                compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
+            } else if (lhs.startsWith("[")) {
+                // parse [<memory address>]=number
+                String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
+                int addr = OperandParser.parseNumber(n);
+                int value = exe.getMemory(addr);
+                compare(exe, value, num, "Expected memory at address [" + addr + "] = ");
+            } else {
+                // try to parse it as a register. 
+                op = OperandParser.parseRegisterForAssert(lhs);
+                String msg = "Expected " + op.toString() + "=";
+                int got = exe.getRegOrMem(op);
+                compare(exe, num, got, msg);
+            }
+        }
+        if (Config.printAssertions) {
+            log.info("Assertion passed: " + line);
+        }
+        exe.nextIp();
+    }
+
+    private static void compare(Exe exe, int expected, int got, String msg) throws Exception {
+        if (expected != got) {
+            exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got=" + Integer.toHexString(got) + "h");
+        }
+    }
+
     /**
      * parse and execute assertions ".assert a=1" => reg a must be equal to 1
      * .assert cy=1 => carry flag must be 1
@@ -31,60 +90,10 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int ip = exe.getIp();
-            String line = exe.getAsertionAt(ip);
-            // split the assertions into its parts
-            if (line == null) {
-                log.info("nothing to assert at ip=" + ip);
-                return;
-            }
-            String[] parts = line.split(",");
-            for (String s : parts) {
-                // get the first assertion
-                String assertion1 = s.trim().toLowerCase(); //.replaceAll(",", "");
-                // get the expression
-                String[] p = assertion1.split("=", 2);
-                if (p.length < 2) {
-                    exe.showDialog("Invalid assertion " + assertion1);
-                    continue;
-                }
-
-                // parse the number specified in the assertion
-                int num = OperandParser.parseNumber(p[1].trim());
-
-                // assert sign
-                String lhs = p[0].trim().toLowerCase();
-                Operand op;
-                if ("s".equals(lhs)) {
-                    compare(exe, num, exe.getSign(), "Expected Sign=");
-                } else if ("z".equals(lhs)) {
-                    compare(exe, num, exe.getZero(), "Expected Zero=");
-                } else if ("cy".equals(lhs)) {
-                    compare(exe, num, exe.getCarry(), "Expected Carry=");
-                } else if ("ac".equals(lhs)) {
-                    compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
-                } else if (lhs.startsWith("[")) {
-                    // parse [<memory address>]=number
-                    String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
-                    int addr = OperandParser.parseNumber(n);
-                    int value = exe.getMemory(addr);
-                    compare(exe, value, num, "Expected memory at address [" + addr + "] = ");
-                } else {
-                    // try to parse it as a register. 
-                    op = OperandParser.parseRegisterForAssert(lhs);
-                    String msg = "Expected " + op.toString() + "=";
-                    int got = exe.getRegOrMem(op);
-                    compare(exe, num, got, msg);
-                }
-            }
-            if (Config.printAssertions) {
-                log.info("Assertion passed: " + line);
-            }
-            exe.nextIp();
-        }
-
-        private void compare(Exe exe, int expected, int got, String msg) throws Exception {
-            if (expected != got) {
-                exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got=" + Integer.toHexString(got) + "h");
+            try {
+                assertInternal(exe, i);
+            } catch (Exception e) {
+                throw new Exception("Assert failed at " + exe.getContext() + ":" + exe.getSourceLineNumber(ip), e);
             }
         }
     };

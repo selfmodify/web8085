@@ -63,11 +63,14 @@ public class Instruction {
 
     }
 
+    /**
+     * Instructions arranged according to their microcode.
+     */
     public static OneInstruction[] allInstructions = new OneInstruction[] {
             // 0 thru 10
             new OneInstruction("nop", "nop", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi b", wordOperand, MicroCode.lxi),
-            new OneInstruction("stax", "stax b", noOperand, MicroCode.nop),
+            new OneInstruction("stax", "stax b", noOperand, MicroCode.stax),
             new OneInstruction("inx", "inx b", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr b", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr b", noOperand, MicroCode.nop),
@@ -85,7 +88,7 @@ public class Instruction {
             new OneInstruction("rrc", "rrc", noOperand, MicroCode.nop),
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi d", wordOperand, MicroCode.lxi),
-            new OneInstruction("stax", "stax d", noOperand, MicroCode.nop),
+            new OneInstruction("stax", "stax d", noOperand, MicroCode.stax),
             new OneInstruction("inx", "inx d", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr d", noOperand, MicroCode.nop),
             //21

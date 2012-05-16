@@ -32,7 +32,10 @@ public class Exe {
      * map containing the ip address to the assert instruction.
      */
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+    private final HashMap<Integer, Integer> debugInfo = new HashMap<Integer, Integer>();
     public boolean hltExecuted = false;
+
+    private String context;
 
     public void insert(int opcode, int op1, int op2) {
         //TODO: Change ip++ to use incrIp
@@ -67,6 +70,7 @@ public class Exe {
 
     public void insert(ParseToken token) throws ParserException {
         InstructionParser i = token.getIx();
+        addDebugInfo(token);
         switch (token.getType()) {
         case INSTRUCTION:
             if (i.hasImmediate()) {
@@ -85,10 +89,16 @@ public class Exe {
                 insert(i.code);
             }
             break;
-        case SYNTAX_ERROR:
-            logger.log(Level.SEVERE, "Sytax error parsing " + token.getToken());
-            throw new ParserException("Sytax error parsing " + token.getToken());
+        case SYNTAX_ERROR: {
+            String msg = "Sytax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
+            logger.log(Level.SEVERE, msg);
+            throw new ParserException(msg);
         }
+        }
+    }
+
+    private void addDebugInfo(ParseToken token) {
+        debugInfo.put(ip, token.getLineNumber());
     }
 
     public boolean hasNext() {
@@ -331,9 +341,10 @@ public class Exe {
         return (short) (auxCarry ? 1 : 0);
     }
 
-    public void compileCode(String text) throws Exception {
+    public void compileCode(String text, String context) throws Exception {
         Parser p = new Parser(text);
         reset();
+        this.context = context;
         while (p.hasNext()) {
             String l = p.nextLine();
             ParseToken token = p.parseLine(l, ip);
@@ -342,7 +353,7 @@ public class Exe {
         insert(0x76); // hlt
         // copy the assertion map from the parser
         assertOperation = p.getAssertionMap();
-        logger.info("Finished compilation");
+        logger.info("Finished compilation - " + context);
         logger.info("---------------");
         reset();
     }
@@ -443,5 +454,14 @@ public class Exe {
 
     public void setMemoryByte(int addr, int value) {
         memory[addr] = (byte) (value & 0xff);
+    }
+
+    public Integer getSourceLineNumber(int ip) {
+        Integer line = debugInfo.get(ip);
+        return line;
+    }
+
+    public String getContext() {
+        return context;
     }
 }

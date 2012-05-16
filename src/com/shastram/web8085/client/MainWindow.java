@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -40,50 +39,50 @@ public class MainWindow extends Composite {
     @UiField
     ListBox registerWindow;
 
-    private Exe exe = new Exe();
+    private final Exe exe = new Exe();
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
         refreshRegisters();
         //extendMemoryWindow();
-		exeWindow.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				//System.out.println("Changed " + exeWindow.getSelectedIndex());
-			}
-		});
+        exeWindow.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                //System.out.println("Changed " + exeWindow.getSelectedIndex());
+            }
+        });
     }
 
     private void extendMemoryWindow() {
-    	if(exeWindow.getItemCount() == 0) {
-    		fillNextWindow(100);
-    	}
-	}
-    
-    private void fillNextWindow(int rows) {
-    	for(int i=0; i < rows ; ++i) {
-    		if(exeWindow.getItemCount() + i >= exe.memory.length) {
-    			break;
-    		}
-    		String str = "" + exe.memory[i];
-    		exeWindow.addItem(str, str);
-    	}
+        if (exeWindow.getItemCount() == 0) {
+            fillNextWindow(100);
+        }
     }
-    
-	@UiHandler("compile")
+
+    private void fillNextWindow(int rows) {
+        for (int i = 0; i < rows; ++i) {
+            if (exeWindow.getItemCount() + i >= exe.memory.length) {
+                break;
+            }
+            String str = "" + exe.memory[i];
+            exeWindow.addItem(str, str);
+        }
+    }
+
+    @UiHandler("compile")
     public void compileHandler(ClickEvent e) {
         String text = sourceCode.getText();
         try {
-            exe.compileCode(text);
+            exe.compileCode(text, "");
             exe.reset();
             errorWindow.setText("Finished parsing");
-            while(exe.hasNext()) {
+            while (exe.hasNext()) {
                 this.exeWindow.addItem(exe.next());
             }
             exe.reset();
             refreshRegisters();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
     }
@@ -99,7 +98,7 @@ public class MainWindow extends Composite {
         }
     }
 
-    public void refreshRegisters( ) {
+    public void refreshRegisters() {
         registerWindow.clear();
         registerWindow.addItem("a = " + exe.a);
         registerWindow.addItem("b = " + exe.b);

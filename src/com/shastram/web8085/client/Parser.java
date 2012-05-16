@@ -12,8 +12,13 @@ public class Parser {
     private static HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
 
     private String[] source;
-    private int line;
+    private int lineNumber;
 
+    /**
+     * Parsers for the instructions
+     * 
+     * @return
+     */
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
         map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xC3, OperandParser.immediateByteOperand));
@@ -22,6 +27,7 @@ public class Parser {
         map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
         map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("ldax", new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
+        map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("lhld", new InstructionParser(InstructionParser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
         map.put("shld", new InstructionParser(InstructionParser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
         map.put("lxi", new InstructionParser(InstructionParser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
@@ -47,14 +53,14 @@ public class Parser {
     }
 
     public String nextLine() throws Exception {
-        if (line > source.length) {
+        if (lineNumber > source.length) {
             throw new Exception("Reached end of source code");
         }
-        return source[line++];
+        return source[lineNumber++];
     }
 
     public void reset() {
-        line = 0;
+        lineNumber = 0;
         source = new String[] {};
         assertOperation.clear();
     }
@@ -86,11 +92,11 @@ public class Parser {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
-        ParseToken t = new ParseToken(ix, line);
+        ParseToken t = new ParseToken(ix, line, lineNumber);
         return t;
     }
 
     public boolean hasNext() {
-        return line < source.length;
+        return lineNumber < source.length;
     }
 }
