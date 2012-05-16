@@ -1,0 +1,13 @@
+# -----------------------------------------
+# lxi bc/de/hl/sp = <16 bit immediate data>
+lxi b,2050H
+.assert b=20h,c=50h
+
+lxi d,7898h
+.assert d=78h,e=98h
+
+lxi h,1432h
+.assert h=14h,l=32h
+
+lxi sp,9053h
+.assert sp=9053h

@@ -20,7 +20,8 @@ public class Test {
         String testArithmetic = "arithmetic_tests.85";
         String loadStoreTests = "load_store.85";
         String testMov = "mov_tests.85";
-        String testName = loadStoreTests;
+        String testLxi = "lxi_tests.85";
+        String testName = testLxi;
         BufferedReader in = new BufferedReader(new FileReader("test_cases/" + testName));
         String line;
         StringBuffer buffer = new StringBuffer();

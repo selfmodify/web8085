@@ -43,3 +43,4 @@ mvi h,6
 shld 0
 .assert [0]=5
 .assert [1]=6 
+

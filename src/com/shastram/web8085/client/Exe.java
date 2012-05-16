@@ -20,6 +20,7 @@ public class Exe {
     public int e;
     public int h;
     public int l;
+    public int sp;
 
     public boolean sign;
     public boolean zero;
@@ -55,7 +56,7 @@ public class Exe {
         //TODO: Change ip++ to use incrIp
         memory[ip++] = (byte) opcode;
         memory[ip++] = (byte) (immediate & 0xff);
-        memory[ip++] = (byte) (immediate >> 8);
+        memory[ip++] = (byte) ((immediate & 0xff00) >> 8);
     }
 
     public void insert(int opcode, byte immediate) {
@@ -187,10 +188,10 @@ public class Exe {
             String str = this.getRegisterValues();
             logger.info(str);
             String memStr = "";
-            int end = 0;
+            int end = Config.maxMemToPrint;
             if (end > 0) {
                 for (int i = 0; i < end; ++i) {
-                    memStr += getMemory(i) + " ";
+                    memStr += Integer.toHexString(getMemory(i)) + "h ";
                 }
                 logger.info("Memory= " + memStr);
             }
@@ -219,6 +220,7 @@ public class Exe {
     public void resetRegisters() {
         ip = 0;
         a = b = c = d = e = h = l = 0;
+        sp = 0;
         counter = 0;
     }
 
@@ -226,6 +228,10 @@ public class Exe {
         sign = false;
         zero = false;
         carry = false;
+    }
+
+    private void incrIp() {
+        incrIp(1);
     }
 
     private void incrIp(int i) {
@@ -286,7 +292,7 @@ public class Exe {
     }
 
     public int getMemAtIp() {
-        int value = Math.abs(memory[ip]);
+        int value = Math.abs(memory[ip] & 0xff);
         return value;
     }
 
@@ -329,12 +335,15 @@ public class Exe {
         Parser p = new Parser(text);
         reset();
         while (p.hasNext()) {
-            ParseToken token = p.parseNextLine(this.ip);
+            String l = p.nextLine();
+            ParseToken token = p.parseLine(l, ip);
             insert(token);
         }
         insert(0x76); // hlt
         // copy the assertion map from the parser
         assertOperation = p.getAssertionMap();
+        logger.info("Finished compilation");
+        logger.info("---------------");
         reset();
     }
 
@@ -358,8 +367,10 @@ public class Exe {
      *         2.
      */
     public int read16bit() {
-        int value = memory[ip++];
-        value = (memory[ip++] << 8) + value;
+        int value = getMemAtIp();
+        incrIp();
+        value = ((getMemAtIp() << 8) & 0xff00) + value;
+        incrIp();
         return value;
     }
 
@@ -411,14 +422,23 @@ public class Exe {
             return a;
         case M: {
             int hl = getHL();
-            return memory[hl];
+            return getMemory(hl);
         }
+        case SP:
+            return sp;
         }
         throw new IllegalStateException("Invalid register " + op.toString());
     }
 
+    /**
+     * Get 8 bit value at address addr
+     * 
+     * @param addr
+     * @return
+     */
     public int getMemory(int addr) {
-        return memory[addr];
+        int value = memory[addr] & 0xff;
+        return value;
     }
 
     public void setMemoryByte(int addr, int value) {

@@ -66,7 +66,7 @@ public class Instruction {
     public static OneInstruction[] allInstructions = new OneInstruction[] {
             // 0 thru 10
             new OneInstruction("nop", "nop", noOperand, MicroCode.nop),
-            new OneInstruction("lxi", "lxi b", wordOperand, MicroCode.nop),
+            new OneInstruction("lxi", "lxi b", wordOperand, MicroCode.lxi),
             new OneInstruction("stax", "stax b", noOperand, MicroCode.nop),
             new OneInstruction("inx", "inx b", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr b", noOperand, MicroCode.nop),
@@ -84,7 +84,7 @@ public class Instruction {
             new OneInstruction("mvi", "mvi c", byteOperand, MicroCode.mvi),
             new OneInstruction("rrc", "rrc", noOperand, MicroCode.nop),
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
-            new OneInstruction("lxi", "lxi d", wordOperand, MicroCode.nop),
+            new OneInstruction("lxi", "lxi d", wordOperand, MicroCode.lxi),
             new OneInstruction("stax", "stax d", noOperand, MicroCode.nop),
             new OneInstruction("inx", "inx d", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr d", noOperand, MicroCode.nop),
@@ -102,7 +102,7 @@ public class Instruction {
             //31
             new OneInstruction("rar", "rar", noOperand, MicroCode.nop),
             new OneInstruction("rim", "rim", noOperand, MicroCode.nop),
-            new OneInstruction("lxi", "lxi h", wordOperand, MicroCode.nop),
+            new OneInstruction("lxi", "lxi h", wordOperand, MicroCode.lxi),
             new OneInstruction("shld", "shld", wordOperand, MicroCode.shld),
             new OneInstruction("inx", "inx h", noOperand, MicroCode.nop),
             new OneInstruction("inr", "inr h", noOperand, MicroCode.nop),
@@ -119,7 +119,7 @@ public class Instruction {
             new OneInstruction("mvi", "mvi l", byteOperand, MicroCode.mvi),
             new OneInstruction("cma", "cma", noOperand, MicroCode.nop),
             new OneInstruction("sim", "sim", noOperand, MicroCode.nop),
-            new OneInstruction("lxi", "lxi sp", wordOperand, MicroCode.nop),
+            new OneInstruction("lxi", "lxi sp", wordOperand, MicroCode.lxi),
             //51
             new OneInstruction("sta", "sta", wordOperand, MicroCode.sta),
             new OneInstruction("inx", "inx sp", noOperand, MicroCode.nop),

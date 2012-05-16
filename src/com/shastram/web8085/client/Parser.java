@@ -24,6 +24,7 @@ public class Parser {
         map.put("ldax", new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
         map.put("lhld", new InstructionParser(InstructionParser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
         map.put("shld", new InstructionParser(InstructionParser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
+        map.put("lxi", new InstructionParser(InstructionParser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
         map.put(".assert", new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40, new OperandParser() {
             @Override
@@ -87,12 +88,6 @@ public class Parser {
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
         ParseToken t = new ParseToken(ix, line);
         return t;
-    }
-
-    public ParseToken parseNextLine(int ip) throws Exception {
-        String l = nextLine();
-        ParseToken token = parseLine(l, ip);
-        return token;
     }
 
     public boolean hasNext() {

@@ -37,10 +37,10 @@ public abstract class MicroCode {
                 log.info("nothing to assert at ip=" + ip);
                 return;
             }
-            String[] parts = line.split("[ \t]+");
+            String[] parts = line.split(",");
             for (String s : parts) {
                 // get the first assertion
-                String assertion1 = s.trim().toLowerCase().replaceAll(",", "");
+                String assertion1 = s.trim().toLowerCase(); //.replaceAll(",", "");
                 // get the expression
                 String[] p = assertion1.split("=", 2);
                 if (p.length < 2) {
@@ -70,7 +70,7 @@ public abstract class MicroCode {
                     compare(exe, value, num, "Expected memory at address [" + addr + "] = ");
                 } else {
                     // try to parse it as a register. 
-                    op = OperandParser.parseNormalRegister(lhs);
+                    op = OperandParser.parseRegisterForAssert(lhs);
                     String msg = "Expected " + op.toString() + "=";
                     int got = exe.getRegOrMem(op);
                     compare(exe, num, got, msg);
@@ -84,7 +84,7 @@ public abstract class MicroCode {
 
         private void compare(Exe exe, int expected, int got, String msg) throws Exception {
             if (expected != got) {
-                exe.assertionFailed(msg + expected + " Got=" + got);
+                exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got=" + Integer.toHexString(got) + "h");
             }
         }
     };
@@ -245,6 +245,36 @@ public abstract class MicroCode {
             int addr = code == 0x02 ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
             exe.memory[addr] = (byte) exe.a;
+        }
+    };
+
+    public static MicroCode lxi = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getMemAtIp();
+            exe.nextIp();
+            int value = exe.read16bit();
+            int low = value & 0xff;
+            int high = (value & 0xff00) >> 8;
+            switch (code) {
+            case 0x1:
+                exe.b = high;
+                exe.c = low;
+                break;
+            case 0x11:
+                exe.d = high;
+                exe.e = low;
+                break;
+            case 0x21:
+                exe.h = high;
+                exe.l = low;
+                break;
+            case 0x31:
+                exe.sp = value;
+                break;
+            default:
+                throw new Exception("Invalid microcode " + code + " interpreted as lxi.");
+            }
         }
     };
 
