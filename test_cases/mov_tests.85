@@ -25,7 +25,7 @@ mov d,b
 mov e,b
 mov h,b
 mov l,b
-.assert a=2 b=2 c=2 b=2 e=2 h=2 l=2
+.assert a=2, b=2, c=2, b=2, e=2, h=2, l=2
 
 # mov <reg>, c
 mvi c,3
@@ -36,7 +36,7 @@ mov d,c
 mov e,c
 mov h,c
 mov l,c
-.assert a=3 b=3 c=3 d=3 e=3 h=3 l=3
+.assert a=3, b=3, c=3, d=3, e=3, h=3, l=3
 
 # mov <reg>, d
 mvi d,4
@@ -47,7 +47,7 @@ mov d,d
 mov e,d
 mov h,d
 mov l,d
-.assert a=4 b=4 c=4 b=4 e=4 h=4 l=4
+.assert a=4, b=4, c=4, b=4, e=4, h=4, l=4
 
 # mov <reg>, e
 mvi e,5
@@ -58,7 +58,7 @@ mov d,e
 mov e,e
 mov h,e
 mov l,e
-.assert a=5 b=5 c=5 d=5 e=5 h=5 l=5
+.assert a=5, b=5, c=5, d=5, e=5, h=5, l=5
 
 # mov <reg>, h
 mvi h,6
@@ -69,7 +69,7 @@ mov d,h
 mov e,h
 mov h,h
 mov l,h
-.assert a=6 b=6 c=6 d=6 e=6 h=6 l=6
+.assert a=6, b=6, c=6, d=6, e=6, h=6, l=6
 
 # mov <reg>, l
 mvi l,7
@@ -80,4 +80,4 @@ mov d,l
 mov e,l
 mov h,l
 mov l,l
-.assert a=7 b=7 c=7 d=7 e=7 h=7 l=7
+.assert a=7, b=7, c=7, d=7, e=7, h=7, l=7
