@@ -18,7 +18,8 @@ lda 0
 mvi a,0
 mvi b,0
 mvi c,0
-ldax b      # a = [de]
+ldax b
+# a = [de]
 .assert a=11
 mvi a,0
 mvi d,0

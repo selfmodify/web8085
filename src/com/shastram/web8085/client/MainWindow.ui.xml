@@ -36,11 +36,10 @@
 				<g:HorizontalPanel spacing="10">
 					<g:VerticalPanel>
 						<g:Label>Memory Window</g:Label>
-						<g:ListBox ui:field="exeWindow" width="100px"
-							visibleItemCount="20"></g:ListBox>
+                        <g:VerticalPanel ui:field="memoryWindow" width="100px" spacing="0"></g:VerticalPanel>
 					</g:VerticalPanel>
 					<g:VerticalPanel>
-						<g:Label>Registers</g:Label>
+						<g:Label>Registers in hex</g:Label>
 						<g:ListBox ui:field="registerWindow" visibleItemCount="12"></g:ListBox>
 					</g:VerticalPanel>
 				</g:HorizontalPanel>

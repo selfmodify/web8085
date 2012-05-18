@@ -1,8 +1,6 @@
 package com.shastram.web8085.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,6 +10,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainWindow extends Composite {
@@ -31,7 +30,7 @@ public class MainWindow extends Composite {
     TextBox errorWindow;
 
     @UiField
-    ListBox exeWindow;
+    VerticalPanel memoryWindow;
 
     @UiField
     Button stepButton;
@@ -45,28 +44,21 @@ public class MainWindow extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
         sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
         refreshRegisters();
-        //extendMemoryWindow();
-        exeWindow.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                //System.out.println("Changed " + exeWindow.getSelectedIndex());
-            }
-        });
+        createMemoryWindowItems();
     }
 
-    private void extendMemoryWindow() {
-        if (exeWindow.getItemCount() == 0) {
-            fillNextWindow(100);
+    private void createMemoryWindowItems() {
+        memoryWindow.clear();
+        for (int i = 0; i < 20; ++i) {
+            TextBox tb = new TextBox();
+            memoryWindow.add(tb);
         }
     }
 
-    private void fillNextWindow(int rows) {
-        for (int i = 0; i < rows; ++i) {
-            if (exeWindow.getItemCount() + i >= exe.memory.length) {
-                break;
-            }
-            String str = "" + exe.getMemory(i);
-            exeWindow.addItem(str, str);
+    private void fillMemoryWindow(int start) {
+        for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
+            TextBox tb = (TextBox) memoryWindow.getWidget(i);
+            tb.setText("" + exe.getMemory(start + i));
         }
     }
 
@@ -77,14 +69,16 @@ public class MainWindow extends Composite {
             exe.compileCode(text, "");
             exe.reset();
             errorWindow.setText("Finished parsing");
-            while (exe.hasNext()) {
-                this.exeWindow.addItem(exe.next());
-            }
             exe.reset();
             refreshRegisters();
+            refreshMemory();
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
+    }
+
+    private void refreshMemory() {
+        fillMemoryWindow(0);
     }
 
     @UiHandler("stepButton")
@@ -95,18 +89,29 @@ public class MainWindow extends Composite {
             errorWindow.setText(e1.getMessage());
         } finally {
             refreshRegisters();
+            refreshMemory();
         }
     }
 
     public void refreshRegisters() {
         registerWindow.clear();
-        registerWindow.addItem("a = " + exe.a);
-        registerWindow.addItem("b = " + exe.b);
-        registerWindow.addItem("c = " + exe.c);
-        registerWindow.addItem("d = " + exe.d);
-        registerWindow.addItem("e = " + exe.e);
-        registerWindow.addItem("h = " + exe.h);
-        registerWindow.addItem("l = " + exe.l);
-        registerWindow.addItem("ip = " + exe.ip);
+
+        registerWindow.addItem("a = " + toHex(exe.a));
+        registerWindow.addItem("b = " + toHex(exe.b));
+        registerWindow.addItem("c = " + toHex(exe.c));
+        registerWindow.addItem("d = " + toHex(exe.d));
+        registerWindow.addItem("e = " + toHex(exe.e));
+        registerWindow.addItem("h = " + toHex(exe.h));
+        registerWindow.addItem("l = " + toHex(exe.l));
+        registerWindow.addItem("ip = " + toHex(exe.ip));
+    }
+
+    private String toHex(int i) {
+        String str = Integer.toHexString(i);
+        if (str.length() == 1) {
+            str = "0" + str;
+        }
+        str = str.toUpperCase();
+        return str;
     }
 }
