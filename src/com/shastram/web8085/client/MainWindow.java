@@ -65,7 +65,7 @@ public class MainWindow extends Composite {
             if (exeWindow.getItemCount() + i >= exe.memory.length) {
                 break;
             }
-            String str = "" + exe.memory[i];
+            String str = "" + exe.getMemory(i);
             exeWindow.addItem(str, str);
         }
     }

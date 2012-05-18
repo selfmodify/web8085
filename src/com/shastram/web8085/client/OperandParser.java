@@ -133,7 +133,7 @@ public abstract class OperandParser {
         i.code = i.op1.ordinal() * 8 + 6;
     }
 
-    public static OperandParser zeroOperand = new OperandParser() {
+    public static OperandParser noOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {
             i.code = i.baseCode;

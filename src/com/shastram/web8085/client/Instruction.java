@@ -328,7 +328,7 @@ public class Instruction {
             new OneInstruction("rep", "rep", noOperand, MicroCode.nop),
             new OneInstruction("pchl", "pchl", noOperand, MicroCode.nop),
             new OneInstruction("jpe", "jpe", wordOperand, MicroCode.nop),
-            new OneInstruction("xchg", "xchg", wordOperand, MicroCode.nop),
+            new OneInstruction("xchg", "xchg", noOperand, MicroCode.xchg),
             new OneInstruction("cpe", "cpe", wordOperand, MicroCode.nop),
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("xri", "xri", noOperand, MicroCode.nop),

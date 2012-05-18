@@ -58,3 +58,12 @@ mvi d, 1
 mvi e, 0
 stax d
 .assert [10] = 1
+
+# -------------------------------------------
+# XCHG          Exchange H & L with D & E
+mvi h,1
+mvi l,2
+mvi d,3
+mvi e,4
+xchg
+.assert h=3,l=4,d=1,d=2

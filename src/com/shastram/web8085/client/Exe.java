@@ -39,33 +39,39 @@ public class Exe {
 
     public void insert(int opcode, int op1, int op2) {
         //TODO: Change ip++ to use incrIp
-        memory[ip++] = (byte) opcode;
-        memory[ip++] = (byte) op1;
-        memory[ip++] = (byte) op2;
+        setMemoryByte(ip, (byte) opcode);
+        incrIp();
+        setMemoryByte(ip, (byte) op1);
+        incrIp();
+        setMemoryByte(ip, (byte) op2);
+        incrIp();
     }
 
     public void insert(int opcode, int op1) {
         //TODO: Change ip++ to use incrIp
-        memory[ip++] = (byte) opcode;
-        memory[ip++] = (byte) op1;
+        setMemoryByte(ip, (byte) opcode);
+        incrIp();
+        setMemoryByte(ip, (byte) op1);
+        incrIp();
     }
 
     public void insert(int opcode) {
-        //TODO: Change ip++ to use incrIp
-        memory[ip++] = (byte) opcode;
+        setMemoryByte(ip, (byte) opcode);
+        incrIp();
     }
 
     public void insertCodeAnd16bit(int opcode, int immediate) {
         //TODO: Change ip++ to use incrIp
-        memory[ip++] = (byte) opcode;
-        memory[ip++] = (byte) (immediate & 0xff);
-        memory[ip++] = (byte) ((immediate & 0xff00) >> 8);
+        setMemoryByte(ip, (byte) opcode);
+        incrIp();
+        setMemoryByte(ip, (byte) (immediate & 0xff));
+        incrIp();
+        setMemoryByte(ip, (byte) ((immediate & 0xff00) >> 8));
+        incrIp();
     }
 
     public void insert(int opcode, byte immediate) {
-        //TODO: Change ip++ to use incrIp
-        memory[ip++] = (byte) opcode;
-        memory[ip++] = immediate;
+        insert(opcode, immediate);
     }
 
     public void insert(ParseToken token) throws ParserException {
@@ -106,7 +112,7 @@ public class Exe {
     }
 
     public String next() {
-        int ix = memory[counter];
+        int ix = getMemory(counter);
         if (ix < 0) {
             ix = 256 + ix;
         }
@@ -136,12 +142,16 @@ public class Exe {
         case 5:
             return l;
         case 6:
-            return memory[ip];
+            return getMemAtIp();
         case 7:
             return a;
         default:
             throw new IllegalStateException("Invalid register index in get" + i);
         }
+    }
+
+    public void setRegOrMem(int i, Operand op) {
+        setRegOrMem(i, op.ordinal());
     }
 
     public void setRegOrMem(int i, int intValue) {
@@ -167,7 +177,7 @@ public class Exe {
             break;
         case 6: {
             int addr = getHL();
-            memory[addr] = value;
+            setMemoryByte(addr, value);
             break;
         }
         case 7:
@@ -176,12 +186,6 @@ public class Exe {
         default:
             throw new IllegalStateException("Invalid register index in set " + i);
         }
-    }
-
-    public void setMemory(int addr, int value) {
-        int v = value & 0xffff;
-        memory[addr] = (byte) (v & 0xff);
-        memory[addr + 1] = (byte) ((v >> 8) & 0xff);
     }
 
     public void nextIp2(int len) {
@@ -209,7 +213,7 @@ public class Exe {
     }
 
     public int getOpcode() {
-        int opcode = memory[ip];
+        int opcode = getMemAtIp();
         if (opcode < 0) {
             opcode = 256 + opcode;
         }
@@ -302,7 +306,7 @@ public class Exe {
     }
 
     public int getMemAtIp() {
-        int value = Math.abs(memory[ip] & 0xff);
+        int value = getMemory(ip);
         return value;
     }
 
@@ -448,11 +452,17 @@ public class Exe {
      * @return
      */
     public int getMemory(int addr) {
+        addr = normalizeMemoryAddress(addr);
         int value = memory[addr] & 0xff;
         return value;
     }
 
+    private int normalizeMemoryAddress(int addr) {
+        return addr % 65536;
+    }
+
     public void setMemoryByte(int addr, int value) {
+        addr = normalizeMemoryAddress(addr);
         memory[addr] = (byte) (value & 0xff);
     }
 

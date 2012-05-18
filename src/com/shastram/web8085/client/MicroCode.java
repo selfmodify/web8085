@@ -218,7 +218,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = exe.read16bit();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.a = exe.memory[addr];
+            exe.a = exe.getMemory(addr);
         }
     };
 
@@ -229,7 +229,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = code == 0x0A ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.a = exe.memory[addr];
+            exe.a = exe.getMemory(addr);
         }
     };
 
@@ -242,7 +242,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
             int addr = exe.read16bit();
-            exe.memory[addr] = (byte) exe.a;
+            exe.setMemoryByte(addr, (byte) exe.a);
         }
     };
 
@@ -253,7 +253,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = code == 0x02 ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.memory[addr] = (byte) exe.a;
+            exe.setMemoryByte(addr, (byte) exe.a);
         }
     };
 
@@ -284,6 +284,37 @@ public abstract class MicroCode {
             default:
                 throw new Exception("Invalid microcode " + code + " interpreted as lxi.");
             }
+        }
+    };
+
+    /**
+     * XCHG Exchange H & L with D & E
+     */
+    public static MicroCode xchg = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int h = exe.getRegOrMem(Operand.H);
+            int l = exe.getRegOrMem(Operand.L);
+            int d = exe.getRegOrMem(Operand.D);
+            int e = exe.getRegOrMem(Operand.E);
+            exe.setRegOrMem(h, Operand.D);
+            exe.setRegOrMem(l, Operand.E);
+            exe.setRegOrMem(d, Operand.H);
+            exe.setRegOrMem(e, Operand.L);
+        }
+    };
+
+    /**
+     * XTHL Exchange Top of Stack with H & L
+     */
+    public static MicroCode xthl = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int sp = exe.getRegOrMem(Operand.SP);
+            int h = exe.getMemory(sp);
+            int l = exe.getMemory(sp + 1);
+            exe.setRegOrMem(h, Operand.H);
+            exe.setRegOrMem(l, Operand.L);
         }
     };
 
