@@ -81,7 +81,8 @@ public class Parser {
     public ParseToken parseLine(String line, int ip) throws Exception {
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
-        if (commentStart == 0 || line.length() == 0) {
+        int len = line.length();
+        if (commentStart == 0 || len == 0) {
             return new ParseToken(Type.COMMENT, line);
         }
         if (commentStart > 1) {
@@ -90,6 +91,12 @@ public class Parser {
         String[] parts = line.split("[\t ]", 2);
         InstructionParser ix = instructions.get(parts[0]);
         if (ix == null) {
+            Character ch = line.charAt(0);
+            if (ch == '\u00a0') {
+                // workaround for some strange character showing up when compiling
+                // from web ui.
+                return new ParseToken(Type.COMMENT, line);
+            }
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
