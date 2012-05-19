@@ -91,7 +91,6 @@ public class Exe {
             break;
         case ASSERT:
             if (!Config.ignoreAsserts) {
-                this.assertOperation.put(this.ip, token.getToken());
                 insert(i.code);
             }
             break;

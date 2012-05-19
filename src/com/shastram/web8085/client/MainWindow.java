@@ -2,6 +2,7 @@ package com.shastram.web8085.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -39,18 +40,23 @@ public class MainWindow extends Composite {
     ListBox registerWindow;
 
     private final Exe exe = new Exe();
+    private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
+        Style style = new Style(); // create a dummy one
+        Style.style = style;
         sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
         refreshRegisters();
         createMemoryWindowItems();
+        refreshMemory();
     }
 
     private void createMemoryWindowItems() {
         memoryWindow.clear();
         for (int i = 0; i < 20; ++i) {
             TextBox tb = new TextBox();
+            tb.addStyleName(Style.style.css.memoryTextBox());
             memoryWindow.add(tb);
         }
     }
@@ -58,7 +64,8 @@ public class MainWindow extends Composite {
     private void fillMemoryWindow(int start) {
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             TextBox tb = (TextBox) memoryWindow.getWidget(i);
-            tb.setText("" + exe.getMemory(start + i));
+            int addr = start + i;
+            tb.setText(formatter.format(addr) + ":  " + formatter.format(exe.getMemory(addr)));
         }
     }
 

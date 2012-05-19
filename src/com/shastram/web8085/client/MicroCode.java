@@ -31,6 +31,7 @@ public abstract class MicroCode {
             log.info("nothing to assert at ip=" + ip);
             return;
         }
+
         String[] parts = line.split(",");
         for (String s : parts) {
             // get the first assertion
@@ -93,7 +94,11 @@ public abstract class MicroCode {
             try {
                 assertInternal(exe, i);
             } catch (Exception e) {
-                throw new Exception("Assert failed at " + exe.getContext() + ":" + exe.getSourceLineNumber(ip), e);
+                throw new Exception("Assert failed at "
+                        + exe.getContext()
+                        + ":" + exe.getSourceLineNumber(ip)
+                        + ": " + e.getMessage(),
+                        e);
             }
         }
     };

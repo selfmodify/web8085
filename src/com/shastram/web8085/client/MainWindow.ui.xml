@@ -1,11 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-		.important {
-			font-weight: bold;
-		}
-	</ui:style>
+    <ui:style field="css" src="Style.css"/>
 	<g:DockLayoutPanel unit='EM' height="8000px" width="100%">
 		<g:north size='1'>
 			<g:VerticalPanel></g:VerticalPanel>
@@ -36,7 +32,7 @@
 				<g:HorizontalPanel spacing="10">
 					<g:VerticalPanel>
 						<g:Label>Memory Window</g:Label>
-                        <g:VerticalPanel ui:field="memoryWindow" width="100px" spacing="0"></g:VerticalPanel>
+                        <g:VerticalPanel addStyleNames="{css.memoryWindow}" ui:field="memoryWindow" width="100px" spacing="0"></g:VerticalPanel>
 					</g:VerticalPanel>
 					<g:VerticalPanel>
 						<g:Label>Registers in hex</g:Label>

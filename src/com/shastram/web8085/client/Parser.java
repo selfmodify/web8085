@@ -9,7 +9,7 @@ public class Parser {
 
     private static Logger logger = Logger.getLogger(Parser.class.getName());
 
-    private static HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+    private final HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
 
     private String[] source;
     private int lineNumber;
