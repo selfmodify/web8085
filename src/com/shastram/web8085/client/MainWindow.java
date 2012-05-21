@@ -45,10 +45,16 @@ public class MainWindow extends Composite {
     @UiField
     VerticalPanel registerWindowNames;
 
+    @UiField
+    Button memoryScrollUp;
+
+    @UiField
+    Button memoryScrollDown;
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
     private HashMap<String, TextBox> registerValueMap;
+    private int memoryStart = 0;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -58,10 +64,9 @@ public class MainWindow extends Composite {
         createMemoryWindowItems();
         createRegisterWindowNames();
         refreshRegisters();
-        refreshMemory();
+        fillMemoryWindow(false);
         // refresh the register and memory window to remove the red highlight
         refreshRegisters();
-        refreshMemory();
     }
 
     private void createRegisterWindowNames() {
@@ -96,23 +101,14 @@ public class MainWindow extends Composite {
         return addr;
     }
 
-    private void fillMemoryWindow(int start) {
+    private void fillMemoryWindow(boolean highlight) {
+        int start = memoryStart;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             int addr = start + i;
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
             addrBox.setText(" " + formatter.format(addr) + ":  ");
             TextBox value = (TextBox) memoryWindow.getWidget(i);
-            updateTextboxValue(exe.getMemory(addr), value);
-            /*
-            String newValue = " " + formatter.format(exe.getMemory(addr)) + " ";
-            String oldValue = value.getText();
-            if (!oldValue.equals(newValue) && highlight) {
-                value.addStyleName(Style.style.css.memoryWindowHighlight());
-            } else {
-                value.removeStyleName(Style.style.css.memoryWindowHighlight());
-            }
-            value.setText(newValue);
-            */
+            updateTextboxValue(exe.getMemory(addr), value, highlight);
         }
     }
 
@@ -125,17 +121,12 @@ public class MainWindow extends Composite {
             errorWindow.setText("Finished parsing");
             exe.reset();
             refreshRegisters();
-            refreshMemory();
+            fillMemoryWindow(false);
             // refresh the register and memory window to remove the red highlight
             refreshRegisters();
-            refreshMemory();
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
-    }
-
-    private void refreshMemory() {
-        fillMemoryWindow(0);
     }
 
     @UiHandler("stepButton")
@@ -146,7 +137,7 @@ public class MainWindow extends Composite {
             errorWindow.setText(e1.getMessage());
         } finally {
             refreshRegisters();
-            refreshMemory();
+            fillMemoryWindow(true);
         }
     }
 
@@ -163,15 +154,19 @@ public class MainWindow extends Composite {
         updateTextboxValue(exe.ip, registerValueMap.get("ip"));
     }
 
-    private void updateTextboxValue(int v, TextBox textBox) {
+    private void updateTextboxValue(int v, TextBox textBox, boolean highlight) {
         String oldValue = textBox.getText().trim();
         String newValue = toHex(v);
         textBox.setText(newValue);
-        if (oldValue.equals(newValue)) {
-            textBox.removeStyleName(Style.style.css.memoryWindowHighlight());
-        } else {
+        if (!oldValue.equals(newValue) && highlight) {
             textBox.addStyleName(Style.style.css.memoryWindowHighlight());
+        } else {
+            textBox.removeStyleName(Style.style.css.memoryWindowHighlight());
         }
+    }
+
+    private void updateTextboxValue(int v, TextBox textBox) {
+        updateTextboxValue(v, textBox, true);
     }
 
     private String toHex(int i) {
@@ -181,5 +176,21 @@ public class MainWindow extends Composite {
         }
         str = str.toUpperCase();
         return str;
+    }
+
+    @UiHandler("memoryScrollUp")
+    void memoryScrollUpHandler(ClickEvent e) {
+        if (memoryStart < 65536) {
+            ++memoryStart;
+            fillMemoryWindow(false);
+        }
+    }
+
+    @UiHandler("memoryScrollDown")
+    void memoryScrollDownHandler(ClickEvent e) {
+        if (memoryStart > 0) {
+            --memoryStart;
+            fillMemoryWindow(false);
+        }
     }
 }

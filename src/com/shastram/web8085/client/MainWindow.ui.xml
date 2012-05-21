@@ -20,10 +20,10 @@
 			<g:HorizontalPanel>
 				<g:VerticalPanel spacing="1">
 					<g:Label>Enter code here</g:Label>
-					<g:RichTextArea ui:field="sourceCode" width="250px"
+					<g:RichTextArea ui:field="sourceCode" width="200px"
 						height="200px"></g:RichTextArea>
 					<g:Label>Output</g:Label>
-					<g:TextBox ui:field="errorWindow" width="250px"></g:TextBox>
+					<g:TextBox ui:field="errorWindow" width="200px"></g:TextBox>
 					<g:HorizontalPanel spacing="5">
 						<g:Button ui:field="compile">Compile</g:Button>
 						<g:Button ui:field="stepButton">Step</g:Button>
@@ -32,10 +32,12 @@
 				<g:HorizontalPanel spacing="5">
 					<g:VerticalPanel>
 						<g:Label>Memory Window</g:Label>
-                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                        <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
+                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER" width="100%">
                             <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
                             <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
                         </g:HorizontalPanel>
+                        <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
 					</g:VerticalPanel>
 					<g:VerticalPanel>
                         <g:Label>Registers in hex</g:Label>
