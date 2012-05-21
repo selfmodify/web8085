@@ -1,0 +1,16 @@
+.memoryTextBox {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+    font-family: courier;
+    width: 50px;
+}
+
+.memoryWindow {
+	border: 1px inset gray;
+	font-family: monospace;
+}
+
+.memoryWindowHighlight {
+	color: red;
+}

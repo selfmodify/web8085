@@ -18,25 +18,31 @@
 
 		<g:center>
 			<g:HorizontalPanel>
-				<g:VerticalPanel spacing="5">
+				<g:VerticalPanel spacing="1">
 					<g:Label>Enter code here</g:Label>
-					<g:RichTextArea ui:field="sourceCode" width="350px"
+					<g:RichTextArea ui:field="sourceCode" width="250px"
 						height="200px"></g:RichTextArea>
 					<g:Label>Output</g:Label>
-					<g:TextBox ui:field="errorWindow" width="300px"></g:TextBox>
-					<g:HorizontalPanel spacing="10">
+					<g:TextBox ui:field="errorWindow" width="250px"></g:TextBox>
+					<g:HorizontalPanel spacing="5">
 						<g:Button ui:field="compile">Compile</g:Button>
 						<g:Button ui:field="stepButton">Step</g:Button>
 					</g:HorizontalPanel>
 				</g:VerticalPanel>
-				<g:HorizontalPanel spacing="10">
+				<g:HorizontalPanel spacing="5">
 					<g:VerticalPanel>
 						<g:Label>Memory Window</g:Label>
-                        <g:VerticalPanel addStyleNames="{css.memoryWindow}" ui:field="memoryWindow" width="100px" spacing="0"></g:VerticalPanel>
+                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                            <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
+                            <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
+                        </g:HorizontalPanel>
 					</g:VerticalPanel>
 					<g:VerticalPanel>
-						<g:Label>Registers in hex</g:Label>
-						<g:ListBox ui:field="registerWindow" visibleItemCount="12"></g:ListBox>
+                        <g:Label>Registers in hex</g:Label>
+                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                            <g:VerticalPanel ui:field="registerWindowNames" spacing="0"></g:VerticalPanel>
+                            <g:VerticalPanel ui:field="registerWindowValues" spacing="0"></g:VerticalPanel>
+                        </g:HorizontalPanel>
 					</g:VerticalPanel>
 				</g:HorizontalPanel>
 			</g:HorizontalPanel>
