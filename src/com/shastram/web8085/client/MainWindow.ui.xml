@@ -31,6 +31,7 @@
 				</g:VerticalPanel>
 				<g:HorizontalPanel spacing="5">
 					<g:VerticalPanel>
+                        <g:CheckBox ui:field="memoryFollowIp">Follow Ip</g:CheckBox>
 						<g:Label>Memory Window</g:Label>
                         <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
                         <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER" width="100%">

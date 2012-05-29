@@ -79,7 +79,7 @@ public class Parser {
         return assertOperation;
     }
 
-    public ParseToken parseLine(String line, int ip) throws Exception {
+    public ParseToken parseLine(String line, int ip, int startColumn) throws Exception {
         line = line.trim().toLowerCase();
         int commentStart = line.indexOf('#');
         int len = line.length();
@@ -101,7 +101,8 @@ public class Parser {
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
-        ParseToken t = new ParseToken(ix, line, lineNumber);
+        int endColumn = startColumn + line.length();
+        ParseToken t = new ParseToken(ix, line, lineNumber, startColumn, endColumn);
         return t;
     }
 

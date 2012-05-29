@@ -15,6 +15,8 @@ public class Style extends Composite {
         String memoryTextBox();
 
         String memoryWindowHighlight();
+
+        String currentInstructionHighlight();
     }
 
     @UiField

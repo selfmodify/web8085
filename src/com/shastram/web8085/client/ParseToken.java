@@ -5,11 +5,19 @@ public class ParseToken {
     private Type type;
     private String token;
     private int lineNumber;
+    private int startColumn;
+    private int endColumn;
 
-    public ParseToken(InstructionParser instruction, String token, int line) {
+    public ParseToken(InstructionParser instruction,
+            String token,
+            int line,
+            int startColumn,
+            int endColumn) {
         this.ix = instruction;
         this.token = token;
         this.setLineNumber(line);
+        this.startColumn = startColumn;
+        this.endColumn = endColumn;
         // TODO: Maybe there is a better way to differentiate between asserts and instructions?
         type = instruction.name.equalsIgnoreCase("assert") ? Type.ASSERT : Type.INSTRUCTION;
     }

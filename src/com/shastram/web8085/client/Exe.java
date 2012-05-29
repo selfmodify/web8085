@@ -32,7 +32,7 @@ public class Exe {
      * map containing the ip address to the assert instruction.
      */
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
-    private final HashMap<Integer, Integer> debugInfo = new HashMap<Integer, Integer>();
+    private final HashMap<Integer, DebugLineInfo> debugInfo = new HashMap<Integer, DebugLineInfo>();
     public boolean hltExecuted = false;
 
     private String context;
@@ -103,7 +103,8 @@ public class Exe {
     }
 
     private void addDebugInfo(ParseToken token) {
-        debugInfo.put(ip, token.getLineNumber());
+        DebugLineInfo info = new DebugLineInfo(token.getLineNumber(), 0, 0);
+        debugInfo.put(ip, info);
     }
 
     public boolean hasNext() {
@@ -348,9 +349,11 @@ public class Exe {
         Parser p = new Parser(text);
         reset();
         this.context = context;
+        int startColumn = 0;
         while (p.hasNext()) {
             String l = p.nextLine();
-            ParseToken token = p.parseLine(l, ip);
+            startColumn += l.length();
+            ParseToken token = p.parseLine(l, ip, startColumn);
             insert(token);
         }
         insert(0x76); // hlt
@@ -465,9 +468,8 @@ public class Exe {
         memory[addr] = (byte) (value & 0xff);
     }
 
-    public Integer getSourceLineNumber(int ip) {
-        Integer line = debugInfo.get(ip);
-        return line;
+    public DebugLineInfo getSourceLineNumber(int ip) {
+        return debugInfo.get(ip);
     }
 
     public String getContext() {

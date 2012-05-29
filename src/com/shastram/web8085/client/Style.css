@@ -14,3 +14,9 @@
 .memoryWindowHighlight {
 	color: red;
 }
+
+.currentInstructionHighlight {
+	background: blue;
+	font-weight: bold;
+	color: white;
+}

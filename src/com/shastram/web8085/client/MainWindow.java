@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -56,6 +57,9 @@ public class MainWindow extends Composite {
 
     @UiField
     Button memoryScrollDown;
+
+    @UiField
+    CheckBox memoryFollowIp;
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
@@ -63,6 +67,10 @@ public class MainWindow extends Composite {
     private int memoryStart = 0;
 
     private HashMap<String, TextBox> flagValueMap;
+
+    private TextBox prevHighlightAddress;
+
+    private TextBox prevHighlightValue;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -127,6 +135,14 @@ public class MainWindow extends Composite {
     }
 
     private void fillMemoryWindow(boolean highlight) {
+        if (memoryFollowIp.isEnabled()) {
+            boolean changeMemoryStart =
+                    memoryStart >= exe.ip &&
+                            memoryStart <= memoryStart + memoryWindow.getWidgetCount();
+            if (changeMemoryStart) {
+                memoryStart = exe.ip;
+            }
+        }
         int start = memoryStart;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             int addr = start + i;
@@ -134,7 +150,23 @@ public class MainWindow extends Composite {
             addrBox.setText(" " + formatter.format(addr) + ":  ");
             TextBox value = (TextBox) memoryWindow.getWidget(i);
             updateTextboxValue(exe.getMemory(addr), value, highlight);
+            if (addr == exe.ip) {
+                updateFollowMemoryHighlight(addrBox, value);
+            }
         }
+    }
+
+    private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
+        if (prevHighlightAddress != null) {
+            prevHighlightAddress.removeStyleName(Style.style.css.currentInstructionHighlight());
+        }
+        if (prevHighlightValue != null) {
+            prevHighlightValue.removeStyleName(Style.style.css.currentInstructionHighlight());
+        }
+        prevHighlightAddress = addrBox;
+        prevHighlightValue = value;
+        value.addStyleName(Style.style.css.currentInstructionHighlight());
+        addrBox.addStyleName(Style.style.css.currentInstructionHighlight());
     }
 
     @UiHandler("compile")
@@ -163,6 +195,13 @@ public class MainWindow extends Composite {
         } finally {
             refreshRegistersAndFlags();
             fillMemoryWindow(true);
+            highlightCurrentInstruction();
+        }
+    }
+
+    private void highlightCurrentInstruction() {
+        DebugLineInfo info = exe.getSourceLineNumber(exe.ip);
+        if (info != null) {
         }
     }
 
