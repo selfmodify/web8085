@@ -45,6 +45,12 @@
                             <g:VerticalPanel ui:field="registerWindowNames" spacing="0"></g:VerticalPanel>
                             <g:VerticalPanel ui:field="registerWindowValues" spacing="0"></g:VerticalPanel>
                         </g:HorizontalPanel>
+                        <g:Label height="20px"></g:Label>
+                        <g:Label>Flags</g:Label>
+                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                            <g:VerticalPanel ui:field="flagNames" spacing="0"></g:VerticalPanel>
+                            <g:VerticalPanel ui:field="flagValues" spacing="0"></g:VerticalPanel>
+                        </g:HorizontalPanel>
 					</g:VerticalPanel>
 				</g:HorizontalPanel>
 			</g:HorizontalPanel>

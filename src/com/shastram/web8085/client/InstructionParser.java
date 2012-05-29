@@ -17,6 +17,7 @@ public class InstructionParser {
         STAX,
         LXI,
         XCHG,
+        STC,
     }
 
     public enum Operand {

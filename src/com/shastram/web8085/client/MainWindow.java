@@ -46,6 +46,12 @@ public class MainWindow extends Composite {
     VerticalPanel registerWindowNames;
 
     @UiField
+    VerticalPanel flagNames;
+
+    @UiField
+    VerticalPanel flagValues;
+
+    @UiField
     Button memoryScrollUp;
 
     @UiField
@@ -56,6 +62,8 @@ public class MainWindow extends Composite {
     private HashMap<String, TextBox> registerValueMap;
     private int memoryStart = 0;
 
+    private HashMap<String, TextBox> flagValueMap;
+
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
@@ -63,10 +71,11 @@ public class MainWindow extends Composite {
         sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
         createMemoryWindowItems();
         createRegisterWindowNames();
-        refreshRegisters();
+        createFlagWindow();
+        refreshRegistersAndFlags();
         fillMemoryWindow(false);
         // refresh the register and memory window to remove the red highlight
-        refreshRegisters();
+        refreshRegistersAndFlags();
     }
 
     private void createRegisterWindowNames() {
@@ -81,6 +90,22 @@ public class MainWindow extends Composite {
             TextBox value = createValueTextbox();
             registerValueMap.put(n, value);
             registerWindowValues.add(value);
+        }
+    }
+
+    private void createFlagWindow() {
+        flagNames.clear();
+        flagValues.clear();
+        String[] names = { "Sign", "Zero", "AuxCy", "Parity", "Carry" };
+        flagValueMap = new HashMap<String, TextBox>();
+        for (String n : names) {
+            TextBox name = createValueTextbox();
+            name.setText(n);
+            name.setReadOnly(true);
+            flagNames.add(name);
+            TextBox value = createValueTextbox();
+            flagValueMap.put(n, value);
+            flagValues.add(value);
         }
     }
 
@@ -120,10 +145,10 @@ public class MainWindow extends Composite {
             exe.reset();
             errorWindow.setText("Finished parsing");
             exe.reset();
-            refreshRegisters();
+            refreshRegistersAndFlags();
             fillMemoryWindow(false);
             // refresh the register and memory window to remove the red highlight
-            refreshRegisters();
+            refreshRegistersAndFlags();
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
@@ -136,12 +161,12 @@ public class MainWindow extends Composite {
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
-            refreshRegisters();
+            refreshRegistersAndFlags();
             fillMemoryWindow(true);
         }
     }
 
-    public void refreshRegisters() {
+    public void refreshRegistersAndFlags() {
         updateTextboxValue(exe.a, registerValueMap.get("a"));
         updateTextboxValue(exe.b, registerValueMap.get("b"));
         updateTextboxValue(exe.c, registerValueMap.get("c"));
@@ -152,6 +177,33 @@ public class MainWindow extends Composite {
         updateTextboxValue(exe.l, registerValueMap.get("sp"));
         updateTextboxValue(exe.l, registerValueMap.get("psw"));
         updateTextboxValue(exe.ip, registerValueMap.get("ip"));
+
+        // refresh flags
+        updateTextboxValue(exe.sign, flagValueMap.get("Sign"));
+        updateTextboxValue(exe.zero, flagValueMap.get("Zero"));
+        updateTextboxValue(exe.auxCarry, flagValueMap.get("AuxCy"));
+        updateTextboxValue(exe.parity, flagValueMap.get("Parity"));
+        updateTextboxValue(exe.carry, flagValueMap.get("Carry"));
+    }
+
+    private void updateTextboxValue(boolean sign, TextBox textBox) {
+        updateTextboxValue(sign, textBox, true);
+    }
+
+    private void updateTextboxValue(boolean v, TextBox textBox, boolean highlight) {
+        String oldValue = textBox.getText().trim();
+        String newValue = toHex(v);
+        textBox.setText(newValue);
+        if (!oldValue.equals(newValue) && highlight) {
+            textBox.addStyleName(Style.style.css.memoryWindowHighlight());
+        } else {
+            textBox.removeStyleName(Style.style.css.memoryWindowHighlight());
+        }
+    }
+
+    private String toHex(boolean v) {
+        String str = Integer.toHexString(v ? 1 : 0);
+        return str;
     }
 
     private void updateTextboxValue(int v, TextBox textBox, boolean highlight) {

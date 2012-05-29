@@ -33,6 +33,7 @@ public class Parser {
         map.put("lxi", new InstructionParser(InstructionParser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
         map.put("xchg", new InstructionParser(InstructionParser.Mnemonic.XCHG, 0x01, OperandParser.noOperand));
         map.put(".assert", new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
+        map.put("stc", new InstructionParser(InstructionParser.Mnemonic.STC, 0x37, OperandParser.noOperand));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40, new OperandParser() {
             @Override
             public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
