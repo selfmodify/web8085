@@ -291,7 +291,7 @@ public class Instruction {
             new OneInstruction("jmp", "jmp", wordOperand, MicroCode.nop),
             new OneInstruction("cnz", "cnz", wordOperand, MicroCode.nop),
             new OneInstruction("push", "push b", noOperand, MicroCode.nop),
-            new OneInstruction("adi", "adi", byteOperand, MicroCode.nop),
+            new OneInstruction("adi", "adi", byteOperand, MicroCode.adi),
             new OneInstruction("rst", "rst 0", noOperand, MicroCode.nop),
             new OneInstruction("rz", "rz", noOperand, MicroCode.nop),
             new OneInstruction("ret", "ret", noOperand, MicroCode.nop),

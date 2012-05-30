@@ -1,9 +1,9 @@
 ##################################
 # add - add to accumulator
-mvi a,57h
-mvi b,1
+mvi a,47h
+mvi b,51h
 add b
-stc
+.assert a=98h, s=1, z=0, ac=0, p=0, cy=0
 
 ##################################
 # adi - Add Immediate Data to Accumulator

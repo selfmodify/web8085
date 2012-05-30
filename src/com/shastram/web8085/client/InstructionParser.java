@@ -2,6 +2,7 @@ package com.shastram.web8085.client;
 
 public class InstructionParser {
     public enum Mnemonic {
+        ADI,
         ACI,
         NONE,
         MOV,

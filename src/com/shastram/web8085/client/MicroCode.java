@@ -154,7 +154,7 @@ public abstract class MicroCode {
     };
 
     protected static void addWithoutCarry(Exe exe, int op1) {
-        endAdd(exe, op1, (short) 0);
+        endAdd(exe, op1, (short) 0, false);
     }
 
     public static MicroCode adi = new MicroCode() {
