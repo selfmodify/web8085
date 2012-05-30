@@ -475,4 +475,8 @@ public class Exe {
     public String getContext() {
         return context;
     }
+
+    public void setParityFlags() {
+
+    }
 }

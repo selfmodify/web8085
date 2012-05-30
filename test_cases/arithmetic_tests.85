@@ -1,13 +1,15 @@
+# add - add to accumulator
 mvi a,57h
 mvi b,1
 add b
 stc
+
+# aci  Add Immediate data to Accumulator Using Carry
 aci 6h
 .assert s=0, z=0, cy=1
 
-# load/store
-mvi a,1
-sta 100h
-mvi a,0
-lda 100h
-.assert a=1
+# adi - Add Immediate Data to Accumulator
+mvi a,26h
+stc
+aci 57h
+.assert a=7eh, s=0, z=0, ac=0, p=1, cy=0

@@ -57,6 +57,8 @@ public abstract class MicroCode {
                 compare(exe, num, exe.getCarry(), "Expected Carry=");
             } else if ("ac".equals(lhs)) {
                 compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
+            } else if ("p".equals(lhs)) {
+                compare(exe, num, exe.getParity(), "Expected Parity=");
             } else if (lhs.startsWith("[")) {
                 // parse [<memory address>]=number
                 String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
@@ -94,11 +96,12 @@ public abstract class MicroCode {
             try {
                 assertInternal(exe, i);
             } catch (Exception e) {
-                throw new Exception("Assert failed at "
-                        + exe.getContext()
-                        + ":" + exe.getSourceLineNumber(ip)
-                        + ": " + e.getMessage(),
-                        e);
+                String msg =
+                        "Assert failed at "
+                                + exe.getContext()
+                                + ":" + exe.getSourceLineNumber(ip).line
+                                + ": " + e.getMessage();
+                throw new Exception(msg);
             }
         }
     };
@@ -341,7 +344,7 @@ public abstract class MicroCode {
      * @param setCarry
      */
     private static void endAdd(Exe exe, int v, short carry, boolean setCarry) {
-        int r = exe.a + v;
+        int r = exe.a + v + carry;
         exe.a = (0xff & r);
         if (setCarry) {
             if (r > 0xff) {
@@ -351,6 +354,7 @@ public abstract class MicroCode {
             }
         }
         exe.setZSFlags();
+        exe.setParityFlags();
         exe.nextIp();
     }
 }

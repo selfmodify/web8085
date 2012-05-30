@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,7 +36,7 @@ public class MainWindow extends Composite {
     RichTextArea sourceCode;
 
     @UiField
-    TextBox errorWindow;
+    TextArea errorWindow;
 
     @UiField
     VerticalPanel memoryWindow;
@@ -65,6 +66,10 @@ public class MainWindow extends Composite {
 
     @UiField
     CheckBox memoryFollowIp;
+
+    @UiField
+    Button loadArithmeticButton;
+
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
@@ -90,7 +95,6 @@ public class MainWindow extends Composite {
         fillMemoryWindow(false);
         // refresh the register and memory window to remove the red highlight
         refreshRegistersAndFlags();
-
         // mouse UP/DOWN handler
         memoryScrollDown.addMouseDownHandler(new MouseDownHandler() {
             @Override
@@ -146,7 +150,7 @@ public class MainWindow extends Composite {
 
     private void createMemoryWindowItems() {
         memoryWindow.clear();
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 15; ++i) {
             TextBox addr = createValueTextbox();
             addr.setReadOnly(true);
             memoryWindowAddress.add(addr);
@@ -303,5 +307,14 @@ public class MainWindow extends Composite {
         }
         str = str.toUpperCase();
         return str;
+    }
+
+    @UiHandler("loadArithmeticButton")
+    void loadArithmeticButtonHandler(ClickEvent e) {
+        sourceCode.setText("# adi - Add Immediate Data to Accumulator\n" +
+                " mvi a,26h\n" +
+                " stc\n" +
+                " aci 57h\n" +
+                " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
     }
 }
