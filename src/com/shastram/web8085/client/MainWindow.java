@@ -1,9 +1,14 @@
 package com.shastram.web8085.client;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -60,6 +65,7 @@ public class MainWindow extends Composite {
 
     @UiField
     CheckBox memoryFollowIp;
+    private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
@@ -84,6 +90,27 @@ public class MainWindow extends Composite {
         fillMemoryWindow(false);
         // refresh the register and memory window to remove the red highlight
         refreshRegistersAndFlags();
+
+        // mouse UP/DOWN handler
+        memoryScrollDown.addMouseDownHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                if (memoryStart > 0) {
+                    --memoryStart;
+                    fillMemoryWindow(false, false);
+                }
+            }
+        });
+
+        memoryScrollUp.addMouseUpHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                if (memoryStart < 65536) {
+                    ++memoryStart;
+                    fillMemoryWindow(false, false);
+                }
+            }
+        });
     }
 
     private void createRegisterWindowNames() {
@@ -134,8 +161,8 @@ public class MainWindow extends Composite {
         return addr;
     }
 
-    private void fillMemoryWindow(boolean highlight) {
-        if (memoryFollowIp.isEnabled()) {
+    private void fillMemoryWindow(boolean highlight, boolean followIp) {
+        if (followIp) {
             boolean changeMemoryStart =
                     memoryStart >= exe.ip &&
                             memoryStart <= memoryStart + memoryWindow.getWidgetCount();
@@ -143,6 +170,7 @@ public class MainWindow extends Composite {
                 memoryStart = exe.ip;
             }
         }
+        removeFollowMemoryHighlight();
         int start = memoryStart;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             int addr = start + i;
@@ -156,17 +184,25 @@ public class MainWindow extends Composite {
         }
     }
 
+    private void fillMemoryWindow(boolean highlight) {
+        fillMemoryWindow(highlight, memoryFollowIp.isEnabled());
+    }
+
     private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
+        removeFollowMemoryHighlight();
+        prevHighlightAddress = addrBox;
+        prevHighlightValue = value;
+        value.addStyleName(Style.style.css.currentInstructionHighlight());
+        addrBox.addStyleName(Style.style.css.currentInstructionHighlight());
+    }
+
+    public void removeFollowMemoryHighlight() {
         if (prevHighlightAddress != null) {
             prevHighlightAddress.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
         if (prevHighlightValue != null) {
             prevHighlightValue.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
-        prevHighlightAddress = addrBox;
-        prevHighlightValue = value;
-        value.addStyleName(Style.style.css.currentInstructionHighlight());
-        addrBox.addStyleName(Style.style.css.currentInstructionHighlight());
     }
 
     @UiHandler("compile")
@@ -267,21 +303,5 @@ public class MainWindow extends Composite {
         }
         str = str.toUpperCase();
         return str;
-    }
-
-    @UiHandler("memoryScrollUp")
-    void memoryScrollUpHandler(ClickEvent e) {
-        if (memoryStart < 65536) {
-            ++memoryStart;
-            fillMemoryWindow(false);
-        }
-    }
-
-    @UiHandler("memoryScrollDown")
-    void memoryScrollDownHandler(ClickEvent e) {
-        if (memoryStart > 0) {
-            --memoryStart;
-            fillMemoryWindow(false);
-        }
     }
 }

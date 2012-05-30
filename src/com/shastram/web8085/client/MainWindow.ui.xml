@@ -1,60 +1,61 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style field="css" src="Style.css"/>
-	<g:DockLayoutPanel unit='EM' height="8000px" width="100%">
-		<g:north size='1'>
-			<g:VerticalPanel></g:VerticalPanel>
-		</g:north>
-		<g:east size='2'>
-			<g:VerticalPanel></g:VerticalPanel>
-		</g:east>
-		<g:west size='2'>
-			<g:VerticalPanel></g:VerticalPanel>
-		</g:west>
-		<g:south size='2'>
-			<g:VerticalPanel></g:VerticalPanel>
-		</g:south>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style field="css" src="Style.css" />
+    
+  <g:DockLayoutPanel unit='EM' height="8000px" width="100%">
+    <g:north size='1'>
+      <g:VerticalPanel></g:VerticalPanel>
+    </g:north>
+    <g:east size='2'>
+      <g:VerticalPanel></g:VerticalPanel>
+    </g:east>
+    <g:west size='2'>
+      <g:VerticalPanel></g:VerticalPanel>
+    </g:west>
+    <g:south size='2'>
+      <g:VerticalPanel></g:VerticalPanel>
+    </g:south>
 
-		<g:center>
-			<g:HorizontalPanel>
-				<g:VerticalPanel spacing="1">
-					<g:Label>Enter code here</g:Label>
-					<g:RichTextArea ui:field="sourceCode" width="200px"
-						height="200px"></g:RichTextArea>
-					<g:Label>Output</g:Label>
-					<g:TextBox ui:field="errorWindow" width="200px"></g:TextBox>
-					<g:HorizontalPanel spacing="5">
-						<g:Button ui:field="compile">Compile</g:Button>
-						<g:Button ui:field="stepButton">Step</g:Button>
-					</g:HorizontalPanel>
-				</g:VerticalPanel>
-				<g:HorizontalPanel spacing="5">
-					<g:VerticalPanel>
-                        <g:CheckBox ui:field="memoryFollowIp">Follow Ip</g:CheckBox>
-						<g:Label>Memory Window</g:Label>
-                        <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
-                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER" width="100%">
-                            <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
-                            <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
-                        </g:HorizontalPanel>
-                        <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
-					</g:VerticalPanel>
-					<g:VerticalPanel>
-                        <g:Label>Registers in hex</g:Label>
-                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
-                            <g:VerticalPanel ui:field="registerWindowNames" spacing="0"></g:VerticalPanel>
-                            <g:VerticalPanel ui:field="registerWindowValues" spacing="0"></g:VerticalPanel>
-                        </g:HorizontalPanel>
-                        <g:Label height="20px"></g:Label>
-                        <g:Label>Flags</g:Label>
-                        <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
-                            <g:VerticalPanel ui:field="flagNames" spacing="0"></g:VerticalPanel>
-                            <g:VerticalPanel ui:field="flagValues" spacing="0"></g:VerticalPanel>
-                        </g:HorizontalPanel>
-					</g:VerticalPanel>
-				</g:HorizontalPanel>
-			</g:HorizontalPanel>
-		</g:center>
-	</g:DockLayoutPanel>
+    <g:center>
+      <g:HorizontalPanel>
+        <g:VerticalPanel spacing="1">
+          <g:Label>Enter code here</g:Label>
+          <g:RichTextArea ui:field="sourceCode" width="200px" height="200px"></g:RichTextArea>
+          <g:Label>Output</g:Label>
+          <g:TextBox ui:field="errorWindow" width="200px"></g:TextBox>
+          <g:HorizontalPanel spacing="5">
+            <g:Button ui:field="compile">Compile</g:Button>
+            <g:Button ui:field="stepButton">Step</g:Button>
+          </g:HorizontalPanel>
+        </g:VerticalPanel>
+        <g:HorizontalPanel spacing="5">
+            <g:VerticalPanel>
+              <g:Label>Registers in hex</g:Label>
+              <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                <g:VerticalPanel ui:field="registerWindowNames" spacing="0"></g:VerticalPanel>
+                <g:VerticalPanel ui:field="registerWindowValues" spacing="0"></g:VerticalPanel>
+              </g:HorizontalPanel>
+              <g:Label height="20px"></g:Label>
+              <g:Label>Flags</g:Label>
+              <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER">
+                <g:VerticalPanel ui:field="flagNames" spacing="0"></g:VerticalPanel>
+                <g:VerticalPanel ui:field="flagValues" spacing="0"></g:VerticalPanel>
+              </g:HorizontalPanel>
+            </g:VerticalPanel>
+
+            <g:VerticalPanel>
+              <g:Label>Memory Window</g:Label>
+              <g:CheckBox ui:field="memoryFollowIp">Follow Ip</g:CheckBox>
+              <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
+              <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER"
+                width="100%">
+                <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
+                <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
+              </g:HorizontalPanel>
+              <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
+            </g:VerticalPanel>
+        </g:HorizontalPanel>
+      </g:HorizontalPanel>
+    </g:center>
+  </g:DockLayoutPanel>
 </ui:UiBinder> 
