@@ -103,7 +103,7 @@ public class Exe {
     }
 
     private void addDebugInfo(ParseToken token) {
-        DebugLineInfo info = new DebugLineInfo(token.getLineNumber(), 0, 0);
+        DebugLineInfo info = new DebugLineInfo(token.getToken(), token.getLineNumber(), 0, 0);
         debugInfo.put(ip, info);
     }
 
@@ -468,7 +468,7 @@ public class Exe {
         memory[addr] = (byte) (value & 0xff);
     }
 
-    public DebugLineInfo getSourceLineNumber(int ip) {
+    public DebugLineInfo getDebugInfo(int ip) {
         return debugInfo.get(ip);
     }
 
@@ -477,6 +477,14 @@ public class Exe {
     }
 
     public void setParityFlags() {
-
+        int v = a & 0xff;
+        int count1s = 0;
+        while (v != 0) {
+            if ((v & 0x1) == 1) {
+                ++count1s;
+            }
+            v = v >> 1;
+        }
+        parity = count1s % 2 == 0 ? true : false;
     }
 }

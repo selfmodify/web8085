@@ -230,6 +230,14 @@ public class MainWindow extends Composite {
     public void stepButtonHandler(ClickEvent e) {
         try {
             exe.step();
+            if (exe.hltExecuted) {
+                errorWindow.setText("HLT Executed at ip=" + exe.ip);
+            } else {
+                DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
+                if (debugInfo != null) {
+                    errorWindow.setText("Next instruction, Line: " + debugInfo.line + " " + debugInfo.getToken());
+                }
+            }
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
@@ -240,7 +248,7 @@ public class MainWindow extends Composite {
     }
 
     private void highlightCurrentInstruction() {
-        DebugLineInfo info = exe.getSourceLineNumber(exe.ip);
+        DebugLineInfo info = exe.getDebugInfo(exe.ip);
         if (info != null) {
         }
     }

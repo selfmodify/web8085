@@ -99,7 +99,7 @@ public abstract class MicroCode {
                 String msg =
                         "Assert failed at "
                                 + exe.getContext()
-                                + ":" + exe.getSourceLineNumber(ip).line
+                                + ":" + exe.getDebugInfo(ip).line
                                 + ": " + e.getMessage();
                 throw new Exception(msg);
             }
