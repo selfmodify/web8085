@@ -1,15 +1,19 @@
+##################################
 # add - add to accumulator
 mvi a,57h
 mvi b,1
 add b
 stc
 
+##################################
+# adi - Add Immediate Data to Accumulator
+mvi a,26h
+stc
+adi 57h
+.assert a=7eh, s=0, z=0, ac=0, p=1, cy=0
+
+##################################
 # aci  Add Immediate data to Accumulator Using Carry
 aci 6h
 .assert s=0, z=0, cy=1
 
-# adi - Add Immediate Data to Accumulator
-mvi a,26h
-stc
-aci 57h
-.assert a=7eh, s=0, z=0, ac=0, p=1, cy=0
