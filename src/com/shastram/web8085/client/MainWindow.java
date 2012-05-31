@@ -16,6 +16,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -48,15 +50,10 @@ public class MainWindow extends Composite {
     Button stepButton;
 
     @UiField
-    VerticalPanel registerWindowValues;
-    @UiField
-    VerticalPanel registerWindowNames;
+    HorizontalPanel registerWindowValues;
 
     @UiField
-    VerticalPanel flagNames;
-
-    @UiField
-    VerticalPanel flagValues;
+    HorizontalPanel flagValues;
 
     @UiField
     Button memoryScrollUp;
@@ -74,10 +71,10 @@ public class MainWindow extends Composite {
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
-    private HashMap<String, TextBox> registerValueMap;
+    private HashMap<String, HorizontalPanel> registerValueMap;
     private int memoryStart = 0;
 
-    private HashMap<String, TextBox> flagValueMap;
+    private HashMap<String, HorizontalPanel> flagValueMap;
 
     private TextBox prevHighlightAddress;
 
@@ -118,33 +115,43 @@ public class MainWindow extends Composite {
     }
 
     private void createRegisterWindowNames() {
-        registerWindowNames.clear();
+        registerWindowValues.clear();
         String[] names = { "a", "b", "c", "d", "e", "h", "l", "sp", "psw", "ip" };
-        registerValueMap = new HashMap<String, TextBox>();
+        registerValueMap = new HashMap<String, HorizontalPanel>();
         for (String n : names) {
-            TextBox name = createValueTextbox();
+            TextBox name = createRegisterValueTextbox();
             name.setText(n);
             name.setReadOnly(true);
-            registerWindowNames.add(name);
-            TextBox value = createValueTextbox();
-            registerValueMap.put(n, value);
-            registerWindowValues.add(value);
+            TextBox value = createRegisterValueTextbox();
+            HorizontalPanel hp = createRegOrFlagBox(name, value);
+            registerValueMap.put(n, hp);
+            registerWindowValues.add(hp);
         }
     }
 
+    public HorizontalPanel createRegOrFlagBox(TextBox name, TextBox value) {
+        HorizontalPanel hp = new HorizontalPanel();
+        hp.setSpacing(0);
+        hp.add(name);
+        hp.add(value);
+        Label l = new Label("|");
+        l.setWidth("9px");
+        hp.add(l);
+        return hp;
+    }
+
     private void createFlagWindow() {
-        flagNames.clear();
         flagValues.clear();
         String[] names = { "Sign", "Zero", "AuxCy", "Parity", "Carry" };
-        flagValueMap = new HashMap<String, TextBox>();
+        flagValueMap = new HashMap<String, HorizontalPanel>();
         for (String n : names) {
             TextBox name = createValueTextbox();
             name.setText(n);
             name.setReadOnly(true);
-            flagNames.add(name);
             TextBox value = createValueTextbox();
-            flagValueMap.put(n, value);
-            flagValues.add(value);
+            HorizontalPanel hp = createRegOrFlagBox(name, value);
+            flagValueMap.put(n, hp);
+            flagValues.add(hp);
         }
     }
 
@@ -162,6 +169,12 @@ public class MainWindow extends Composite {
     public TextBox createValueTextbox() {
         TextBox addr = new TextBox();
         addr.addStyleName(Style.style.css.memoryTextBox());
+        return addr;
+    }
+
+    public TextBox createRegisterValueTextbox() {
+        TextBox addr = new TextBox();
+        addr.addStyleName(Style.style.css.registerTextBox());
         return addr;
     }
 
@@ -273,6 +286,13 @@ public class MainWindow extends Composite {
         updateTextboxValue(exe.carry, flagValueMap.get("Carry"));
     }
 
+    private void updateTextboxValue(boolean sign, HorizontalPanel hp) {
+        if (hp.getWidgetCount() > 1) {
+            TextBox textBox = (TextBox) hp.getWidget(1);
+            updateTextboxValue(sign, textBox, true);
+        }
+    }
+
     private void updateTextboxValue(boolean sign, TextBox textBox) {
         updateTextboxValue(sign, textBox, true);
     }
@@ -301,6 +321,13 @@ public class MainWindow extends Composite {
             textBox.addStyleName(Style.style.css.memoryWindowHighlight());
         } else {
             textBox.removeStyleName(Style.style.css.memoryWindowHighlight());
+        }
+    }
+
+    private void updateTextboxValue(int v, HorizontalPanel hp) {
+        if (hp.getWidgetCount() > 1) {
+            TextBox textBox = (TextBox) hp.getWidget(1);
+            updateTextboxValue(v, textBox);
         }
     }
 

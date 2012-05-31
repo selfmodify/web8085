@@ -6,6 +6,14 @@
     width: 60px;
 }
 
+.registerTextBox {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    font-family: courier;
+    width: 30px;
+}
+
 .memoryWindow {
 	border: 1px inset gray;
 	font-family: monospace;
