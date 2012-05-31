@@ -14,6 +14,8 @@ public class Style extends Composite {
     public interface Css extends CssResource {
         String memoryTextBox();
 
+        String memoryAddressTextBox();
+
         String memoryWindowHighlight();
 
         String currentInstructionHighlight();

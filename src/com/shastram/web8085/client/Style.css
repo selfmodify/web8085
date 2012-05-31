@@ -1,9 +1,17 @@
+.memoryAddressTextBox {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    font-family: courier;
+    width: 60px;
+}
+
 .memoryTextBox {
 	padding: 0px;
 	margin: 0px;
 	border: 0px;
     font-family: courier;
-    width: 60px;
+    width: 30px;
 }
 
 .bigLabel {

@@ -120,8 +120,8 @@ public class MainWindow extends Composite {
         registerWindowValues.clear();
         registerWindowValues2.clear();
         registerValueMap = new HashMap<String, HorizontalPanel>();
-        String[] names = { "a", "b", "c", "d", "e", "h", "l" };
-        String[] names2 = { "sp", "psw", "ip" };
+        String[] names = { "a", "b", "c", "d", "e" };
+        String[] names2 = { "h", "l", "sp", "psw", "ip" };
         addLabelValuePairToPanel(names, registerWindowValues);
         addLabelValuePairToPanel(names2, registerWindowValues2);
     }
@@ -166,18 +166,28 @@ public class MainWindow extends Composite {
 
     private void createMemoryWindowItems() {
         memoryWindow.clear();
-        for (int i = 0; i < 15; ++i) {
-            TextBox addr = createValueTextbox();
+        for (int i = 0; i < 8; ++i) {
+            HorizontalPanel hp = new HorizontalPanel();
+            TextBox addr = createMemoryAddressTextbox();
             addr.setReadOnly(true);
             memoryWindowAddress.add(addr);
-            TextBox value = createValueTextbox();
-            memoryWindow.add(value);
+            for (int j = 0; j < 8; ++j) {
+                TextBox value = createValueTextbox();
+                hp.add(value);
+            }
+            memoryWindow.add(hp);
         }
     }
 
     public TextBox createValueTextbox() {
         TextBox addr = new TextBox();
         addr.addStyleName(Style.style.css.memoryTextBox());
+        return addr;
+    }
+
+    public TextBox createMemoryAddressTextbox() {
+        TextBox addr = new TextBox();
+        addr.addStyleName(Style.style.css.memoryAddressTextBox());
         return addr;
     }
 
@@ -198,15 +208,19 @@ public class MainWindow extends Composite {
         }
         removeFollowMemoryHighlight();
         int start = memoryStart;
+        int addr = start;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
-            int addr = start + i;
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
             addrBox.setText(" " + formatter.format(addr) + ":  ");
-            TextBox valueTextbox = (TextBox) memoryWindow.getWidget(i);
-            String newValue = toHex(exe.getMemory(addr));
-            updateTextboxValue(newValue, valueTextbox, highlight);
-            if (addr == exe.ip) {
-                updateFollowMemoryHighlight(addrBox, valueTextbox);
+            HorizontalPanel hp = (HorizontalPanel) memoryWindow.getWidget(i);
+            for (int j = 0; j < hp.getWidgetCount(); ++j) {
+                TextBox valueTextbox = (TextBox) hp.getWidget(j);
+                String newValue = toHex(exe.getMemory(addr));
+                updateTextboxValue(newValue, valueTextbox, highlight);
+                if (addr == exe.ip) {
+                    updateFollowMemoryHighlight(addrBox, valueTextbox);
+                }
+                ++addr;
             }
         }
     }
