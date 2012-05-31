@@ -20,7 +20,7 @@
       <g:VerticalPanel>
         <g:HorizontalPanel>
           <g:VerticalPanel spacing="1">
-            <g:Label>Enter code here</g:Label>
+            <g:Label  addStyleNames="{css.bigLabel}">Enter code here</g:Label>
             <g:RichTextArea ui:field="sourceCode" width="300px" height="300px" addStyleNames="{css.sourceCodeWindow}"></g:RichTextArea>
           </g:VerticalPanel>
           <g:HorizontalPanel width="100%">
@@ -42,14 +42,17 @@
 
         <g:VerticalPanel spacing="5">
         <g:VerticalPanel>
-          <g:Label>Registers in hex</g:Label>
+          <g:Label  addStyleNames="{css.bigLabel}">Registers in hex</g:Label>
           <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues"
+            spacing="0"></g:HorizontalPanel>
+          <g:Label height="7px"></g:Label>
+          <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues2"
             spacing="0"></g:HorizontalPanel>
         </g:VerticalPanel>
 
           <g:VerticalPanel>
-            <g:Label>Flags</g:Label>
-            <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="flagValues" spacing="0"></g:HorizontalPanel>
+            <g:Label addStyleNames="{css.bigLabel}">Flags</g:Label>
+            <g:HorizontalPanel  addStyleNames="{css.registerWindow}" ui:field="flagValues" spacing="0"></g:HorizontalPanel>
           </g:VerticalPanel>
           <g:HorizontalPanel spacing="0">
             <g:Button ui:field="compile">Compile</g:Button>
@@ -62,7 +65,7 @@
           <g:HTMLPanel>
             <HR></HR>
           </g:HTMLPanel>
-          <g:Label>Output</g:Label>
+          <g:Label  addStyleNames="{css.bigLabel}">Output</g:Label>
           <g:TextArea ui:field="errorWindow" width="100%" height="80px"></g:TextArea>
           <g:VerticalPanel width="100%">
             <g:HTMLPanel>

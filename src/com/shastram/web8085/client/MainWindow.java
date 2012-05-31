@@ -53,6 +53,8 @@ public class MainWindow extends Composite {
     HorizontalPanel registerWindowValues;
 
     @UiField
+    HorizontalPanel registerWindowValues2;
+    @UiField
     HorizontalPanel flagValues;
 
     @UiField
@@ -116,8 +118,15 @@ public class MainWindow extends Composite {
 
     private void createRegisterWindowNames() {
         registerWindowValues.clear();
-        String[] names = { "a", "b", "c", "d", "e", "h", "l", "sp", "psw", "ip" };
+        registerWindowValues2.clear();
         registerValueMap = new HashMap<String, HorizontalPanel>();
+        String[] names = { "a", "b", "c", "d", "e", "h", "l" };
+        String[] names2 = { "sp", "psw", "ip" };
+        addLabelValuePairToPanel(names, registerWindowValues);
+        addLabelValuePairToPanel(names2, registerWindowValues2);
+    }
+
+    public void addLabelValuePairToPanel(String[] names, HorizontalPanel parentPanel) {
         for (String n : names) {
             TextBox name = createRegisterValueTextbox();
             name.setText(n);
@@ -125,7 +134,7 @@ public class MainWindow extends Composite {
             TextBox value = createRegisterValueTextbox();
             HorizontalPanel hp = createRegOrFlagBox(name, value);
             registerValueMap.put(n, hp);
-            registerWindowValues.add(hp);
+            parentPanel.add(hp);
         }
     }
 
@@ -142,13 +151,13 @@ public class MainWindow extends Composite {
 
     private void createFlagWindow() {
         flagValues.clear();
-        String[] names = { "Sign", "Zero", "AuxCy", "Parity", "Carry" };
+        String[] names = { "S", "Z", "AuxCy", "P", "Cy" };
         flagValueMap = new HashMap<String, HorizontalPanel>();
         for (String n : names) {
-            TextBox name = createValueTextbox();
+            TextBox name = createRegisterValueTextbox();
             name.setText(n);
             name.setReadOnly(true);
-            TextBox value = createValueTextbox();
+            TextBox value = createRegisterValueTextbox();
             HorizontalPanel hp = createRegOrFlagBox(name, value);
             flagValueMap.put(n, hp);
             flagValues.add(hp);
@@ -193,10 +202,11 @@ public class MainWindow extends Composite {
             int addr = start + i;
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
             addrBox.setText(" " + formatter.format(addr) + ":  ");
-            TextBox value = (TextBox) memoryWindow.getWidget(i);
-            updateTextboxValue(exe.getMemory(addr), value, highlight);
+            TextBox valueTextbox = (TextBox) memoryWindow.getWidget(i);
+            String newValue = toHex(exe.getMemory(addr));
+            updateTextboxValue(newValue, valueTextbox, highlight);
             if (addr == exe.ip) {
-                updateFollowMemoryHighlight(addrBox, value);
+                updateFollowMemoryHighlight(addrBox, valueTextbox);
             }
         }
     }
@@ -279,32 +289,18 @@ public class MainWindow extends Composite {
         updateTextboxValue(exe.ip, registerValueMap.get("ip"));
 
         // refresh flags
-        updateTextboxValue(exe.sign, flagValueMap.get("Sign"));
-        updateTextboxValue(exe.zero, flagValueMap.get("Zero"));
+        updateTextboxValue(exe.sign, flagValueMap.get("S"));
+        updateTextboxValue(exe.zero, flagValueMap.get("Z"));
         updateTextboxValue(exe.auxCarry, flagValueMap.get("AuxCy"));
-        updateTextboxValue(exe.parity, flagValueMap.get("Parity"));
-        updateTextboxValue(exe.carry, flagValueMap.get("Carry"));
+        updateTextboxValue(exe.parity, flagValueMap.get("P"));
+        updateTextboxValue(exe.carry, flagValueMap.get("Cy"));
     }
 
     private void updateTextboxValue(boolean sign, HorizontalPanel hp) {
         if (hp.getWidgetCount() > 1) {
             TextBox textBox = (TextBox) hp.getWidget(1);
-            updateTextboxValue(sign, textBox, true);
-        }
-    }
-
-    private void updateTextboxValue(boolean sign, TextBox textBox) {
-        updateTextboxValue(sign, textBox, true);
-    }
-
-    private void updateTextboxValue(boolean v, TextBox textBox, boolean highlight) {
-        String oldValue = textBox.getText().trim();
-        String newValue = toHex(v);
-        textBox.setText(newValue);
-        if (!oldValue.equals(newValue) && highlight) {
-            textBox.addStyleName(Style.style.css.memoryWindowHighlight());
-        } else {
-            textBox.removeStyleName(Style.style.css.memoryWindowHighlight());
+            String newValue = toHex(sign);
+            updateTextboxValue(newValue, textBox, true);
         }
     }
 
@@ -313,9 +309,8 @@ public class MainWindow extends Composite {
         return str;
     }
 
-    private void updateTextboxValue(int v, TextBox textBox, boolean highlight) {
+    private void updateTextboxValue(String newValue, TextBox textBox, boolean highlight) {
         String oldValue = textBox.getText().trim();
-        String newValue = toHex(v);
         textBox.setText(newValue);
         if (!oldValue.equals(newValue) && highlight) {
             textBox.addStyleName(Style.style.css.memoryWindowHighlight());
@@ -332,7 +327,8 @@ public class MainWindow extends Composite {
     }
 
     private void updateTextboxValue(int v, TextBox textBox) {
-        updateTextboxValue(v, textBox, true);
+        String newValue = toHex(v);
+        updateTextboxValue(newValue, textBox, true);
     }
 
     private String toHex(int i) {
