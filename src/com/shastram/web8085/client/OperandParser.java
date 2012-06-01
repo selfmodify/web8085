@@ -181,7 +181,7 @@ public abstract class OperandParser {
         @Override
         public void parse(Parser parser, InstructionParser i, String line)
                 throws Exception {
-            i.setImmediate(parseNumberAsByte(line));
+            i.setImmediateByte(parseNumberAsByte(line));
             i.code = i.baseCode;
         }
     };
