@@ -4,6 +4,7 @@
     border: 0px;
     font-family: courier;
     width: 60px;
+    font-weight: bold;
 }
 
 .memoryTextBox {
@@ -12,10 +13,12 @@
 	border: 0px;
     font-family: courier;
     width: 30px;
+    font-weight: bold;
 }
 
 .bigLabel {
-    font-weight: bold;	
+    font-weight: bold;
+    color: purple;
 }
 
 .registerTextBox {
@@ -24,17 +27,19 @@
     border: 0px;
     font-family: courier;
     width: 30px;
+    font-weight: bold;
 }
 
 .memoryWindow {
 	border: 1px inset gray;
 	font-family: monospace;
+	font-weight: bold;
 }
 
 .registerWindow {
     border: 1px inset gray;
     font-family: monospace;
-    width: 10px;
+    font-weight: bold;
 }
 
 
@@ -51,4 +56,8 @@
 .sourceCodeWindow {
 	font-family: monospace;
 	
+}
+
+.border {
+	border: 1px solid;
 }

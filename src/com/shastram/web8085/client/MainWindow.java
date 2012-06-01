@@ -69,6 +69,9 @@ public class MainWindow extends Composite {
     @UiField
     Button loadArithmeticButton;
 
+    @UiField
+    VerticalPanel disassemblyWindow;
+
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
@@ -82,16 +85,22 @@ public class MainWindow extends Composite {
 
     private TextBox prevHighlightValue;
 
+    private final int maxMemoryWindowRows = 8;
+
+    private final int maxDisassemblyRows = 11;
+
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
         Style.style = style;
         sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
-        createMemoryWindowItems();
+        createMemoryWindowItems(maxMemoryWindowRows);
+        createDisassemblyWindowItems(maxDisassemblyRows);
         createRegisterWindowNames();
         createFlagWindow();
         refreshRegistersAndFlags();
         fillMemoryWindow(false);
+        fillDisassemblyWindow();
         // refresh the register and memory window to remove the red highlight
         refreshRegistersAndFlags();
         // mouse UP/DOWN handler
@@ -114,6 +123,47 @@ public class MainWindow extends Composite {
                 }
             }
         });
+    }
+
+    private void createDisassemblyWindowItems(int maxRows) {
+        disassemblyWindow.clear();
+        for (int i = 0; i < maxRows; ++i) {
+            HorizontalPanel hp = new HorizontalPanel();
+            TextBox addr = createMemoryAddressTextbox();
+            hp.add(addr);
+            TextBox value = createValueTextbox();
+            hp.add(value);
+            disassemblyWindow.add(hp);
+        }
+    }
+
+    private void fillDisassemblyWindow() {
+        boolean followIp = true;
+        boolean highlight = true;
+        if (followIp) {
+            boolean changeMemoryStart =
+                    memoryStart >= exe.ip &&
+                            memoryStart <= memoryStart + memoryWindow.getWidgetCount();
+            if (changeMemoryStart) {
+                memoryStart = exe.ip;
+            }
+        }
+        removeFollowMemoryHighlight();
+        int start = memoryStart;
+        int addr = start;
+        for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
+            HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
+            TextBox addrBox = (TextBox) hp.getWidget(0);
+            addrBox.setText(" " + formatter.format(addr) + ":  ");
+            TextBox valueBox = (TextBox) hp.getWidget(1);
+            DebugLineInfo debugInfo = exe.getDebugInfo(addr);
+            if (debugInfo != null) {
+                valueBox.setText(debugInfo.getToken());
+            } else {
+                valueBox.setText("nop");
+            }
+            ++addr;
+        }
     }
 
     private void createRegisterWindowNames() {
@@ -151,7 +201,7 @@ public class MainWindow extends Composite {
 
     private void createFlagWindow() {
         flagValues.clear();
-        String[] names = { "S", "Z", "AuxCy", "P", "Cy" };
+        String[] names = { "S", "Z", "Aux", "P", "Cy" };
         flagValueMap = new HashMap<String, HorizontalPanel>();
         for (String n : names) {
             TextBox name = createRegisterValueTextbox();
@@ -164,12 +214,11 @@ public class MainWindow extends Composite {
         }
     }
 
-    private void createMemoryWindowItems() {
+    private void createMemoryWindowItems(int maxRows) {
         memoryWindow.clear();
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < maxRows; ++i) {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
-            addr.setReadOnly(true);
             memoryWindowAddress.add(addr);
             for (int j = 0; j < 8; ++j) {
                 TextBox value = createValueTextbox();
@@ -188,6 +237,7 @@ public class MainWindow extends Composite {
     public TextBox createMemoryAddressTextbox() {
         TextBox addr = new TextBox();
         addr.addStyleName(Style.style.css.memoryAddressTextBox());
+        addr.setReadOnly(true);
         return addr;
     }
 
@@ -226,7 +276,7 @@ public class MainWindow extends Composite {
     }
 
     private void fillMemoryWindow(boolean highlight) {
-        fillMemoryWindow(highlight, memoryFollowIp.isEnabled());
+        fillMemoryWindow(highlight, memoryFollowIp.getValue());
     }
 
     private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
@@ -256,6 +306,7 @@ public class MainWindow extends Composite {
             exe.reset();
             refreshRegistersAndFlags();
             fillMemoryWindow(false);
+            fillDisassemblyWindow();
             // refresh the register and memory window to remove the red highlight
             refreshRegistersAndFlags();
         } catch (Exception ex) {
@@ -280,13 +331,7 @@ public class MainWindow extends Composite {
         } finally {
             refreshRegistersAndFlags();
             fillMemoryWindow(true);
-            highlightCurrentInstruction();
-        }
-    }
-
-    private void highlightCurrentInstruction() {
-        DebugLineInfo info = exe.getDebugInfo(exe.ip);
-        if (info != null) {
+            fillDisassemblyWindow();
         }
     }
 
@@ -305,7 +350,7 @@ public class MainWindow extends Composite {
         // refresh flags
         updateTextboxValue(exe.sign, flagValueMap.get("S"));
         updateTextboxValue(exe.zero, flagValueMap.get("Z"));
-        updateTextboxValue(exe.auxCarry, flagValueMap.get("AuxCy"));
+        updateTextboxValue(exe.auxCarry, flagValueMap.get("Aux"));
         updateTextboxValue(exe.parity, flagValueMap.get("P"));
         updateTextboxValue(exe.carry, flagValueMap.get("Cy"));
     }

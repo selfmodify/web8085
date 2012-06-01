@@ -20,41 +20,53 @@
       <g:VerticalPanel>
         <g:HorizontalPanel>
           <g:VerticalPanel spacing="1">
-            <g:Label  addStyleNames="{css.bigLabel}">Enter code here</g:Label>
+            <g:Label addStyleNames="{css.bigLabel}">Enter code here</g:Label>
             <g:RichTextArea ui:field="sourceCode" width="300px" height="200px" addStyleNames="{css.sourceCodeWindow}"></g:RichTextArea>
           </g:VerticalPanel>
         </g:HorizontalPanel>
 
-          <g:HorizontalPanel width="100%">
-            <g:HorizontalPanel spacing="5">
-              <g:VerticalPanel>
-                <g:Label>Memory Window</g:Label>
+        <g:HorizontalPanel width="100%">
+          <g:HorizontalPanel spacing="5">
+            <g:VerticalPanel>
+              <g:HorizontalPanel>
+                <g:Label addStyleNames="{css.bigLabel}">Memory Window</g:Label>
+                <g:Label width="15px"></g:Label>
                 <g:CheckBox ui:field="memoryFollowIp">Follow Ip</g:CheckBox>
-                <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
-                <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER"
-                  width="100%">
-                  <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
-                  <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
-                </g:HorizontalPanel>
-                <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
+              </g:HorizontalPanel>
+              <g:Button width="100%" ui:field="memoryScrollUp">Up</g:Button>
+              <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER"
+                width="100%">
+                <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
+                <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
+              </g:HorizontalPanel>
+              <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
+            </g:VerticalPanel>
+
+            <g:VerticalPanel>
+              <!-- Disassembly -->
+              <g:Label addStyleNames="{css.bigLabel}">Disassembly</g:Label>
+              <g:VerticalPanel addStyleNames="{css.border}">
+                <g:VerticalPanel ui:field="disassemblyWindow">
+                </g:VerticalPanel>
               </g:VerticalPanel>
-            </g:HorizontalPanel>
+            </g:VerticalPanel>
           </g:HorizontalPanel>
+        </g:HorizontalPanel>
 
         <g:VerticalPanel spacing="5">
-        <g:VerticalPanel>
-          <g:Label  addStyleNames="{css.bigLabel}">Registers in hex</g:Label>
-          <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues"
-            spacing="0"></g:HorizontalPanel>
-          <g:Label height="7px"></g:Label>
-          <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues2"
-            spacing="0"></g:HorizontalPanel>
-        </g:VerticalPanel>
+          <g:VerticalPanel width="100%">
+            <g:Label addStyleNames="{css.bigLabel}">Registers in hex</g:Label>
+            <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues"
+              spacing="0"></g:HorizontalPanel>
+            <g:Label height="7px"></g:Label>
+            <g:HorizontalPanel width="200px" addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues2"
+              spacing="0"></g:HorizontalPanel>
+          </g:VerticalPanel>
 
           <g:Label height="10px"></g:Label>
           <g:VerticalPanel>
             <g:Label addStyleNames="{css.bigLabel}">Flags</g:Label>
-            <g:HorizontalPanel  addStyleNames="{css.registerWindow}" ui:field="flagValues" spacing="0"></g:HorizontalPanel>
+            <g:HorizontalPanel addStyleNames="{css.registerWindow}" ui:field="flagValues" spacing="0"></g:HorizontalPanel>
           </g:VerticalPanel>
           <g:HorizontalPanel spacing="0">
             <g:Button ui:field="compile">Compile</g:Button>
@@ -67,7 +79,7 @@
           <g:HTMLPanel>
             <HR></HR>
           </g:HTMLPanel>
-          <g:Label  addStyleNames="{css.bigLabel}">Output</g:Label>
+          <g:Label addStyleNames="{css.bigLabel}">Output</g:Label>
           <g:TextArea ui:field="errorWindow" width="100%" height="80px"></g:TextArea>
           <g:VerticalPanel width="100%">
             <g:HTMLPanel>
