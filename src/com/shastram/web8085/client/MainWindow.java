@@ -89,9 +89,9 @@ public class MainWindow extends Composite {
 
     private TextBox prevHighlightDisassemblyValue;
 
-    private final int maxMemoryWindowRows = 8;
+    private final int maxMemoryWindowRows = 5;
 
-    private final int maxDisassemblyRows = 11;
+    private final int maxDisassemblyRows = 8;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
