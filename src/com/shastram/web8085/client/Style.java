@@ -21,6 +21,8 @@ public class Style extends Composite {
         String currentInstructionHighlight();
 
         String registerTextBox();
+
+        String disassemblyTextBox();
     }
 
     @UiField

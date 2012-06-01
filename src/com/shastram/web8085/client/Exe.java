@@ -103,7 +103,12 @@ public class Exe {
     }
 
     private void addDebugInfo(ParseToken token) {
-        DebugLineInfo info = new DebugLineInfo(token.getToken(), token.getLineNumber(), 0, 0);
+        InstructionParser ix = token.getIx();
+        DebugLineInfo info = new DebugLineInfo(token.getToken(),
+                token.getLineNumber(),
+                0,
+                0,
+                ix == null ? 0 : ix.len);
         debugInfo.put(ip, info);
     }
 

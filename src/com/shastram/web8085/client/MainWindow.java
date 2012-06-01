@@ -85,6 +85,10 @@ public class MainWindow extends Composite {
 
     private TextBox prevHighlightValue;
 
+    private TextBox prevHighlightDisassemblyAddress;
+
+    private TextBox prevHighlightDisassemblyValue;
+
     private final int maxMemoryWindowRows = 8;
 
     private final int maxDisassemblyRows = 11;
@@ -131,7 +135,7 @@ public class MainWindow extends Composite {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             hp.add(addr);
-            TextBox value = createValueTextbox();
+            TextBox value = createValueTextbox(Style.style.css.disassemblyTextBox());
             hp.add(value);
             disassemblyWindow.add(hp);
         }
@@ -139,7 +143,6 @@ public class MainWindow extends Composite {
 
     private void fillDisassemblyWindow() {
         boolean followIp = true;
-        boolean highlight = true;
         if (followIp) {
             boolean changeMemoryStart =
                     memoryStart >= exe.ip &&
@@ -148,21 +151,26 @@ public class MainWindow extends Composite {
                 memoryStart = exe.ip;
             }
         }
-        removeFollowMemoryHighlight();
-        int start = memoryStart;
-        int addr = start;
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
+        int addr = memoryStart;
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
             HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
             addrBox.setText(" " + formatter.format(addr) + ":  ");
             TextBox valueBox = (TextBox) hp.getWidget(1);
             DebugLineInfo debugInfo = exe.getDebugInfo(addr);
+            if (addr == exe.ip) {
+                updateFollowMemoryHighlight(addrBox, valueBox);
+                prevHighlightDisassemblyAddress = addrBox;
+                prevHighlightDisassemblyValue = valueBox;
+            }
             if (debugInfo != null) {
                 valueBox.setText(debugInfo.getToken());
+                addr += debugInfo.getInstructionLength();
             } else {
                 valueBox.setText("nop");
+                ++addr;
             }
-            ++addr;
         }
     }
 
@@ -221,16 +229,16 @@ public class MainWindow extends Composite {
             TextBox addr = createMemoryAddressTextbox();
             memoryWindowAddress.add(addr);
             for (int j = 0; j < 8; ++j) {
-                TextBox value = createValueTextbox();
+                TextBox value = createValueTextbox(Style.style.css.memoryTextBox());
                 hp.add(value);
             }
             memoryWindow.add(hp);
         }
     }
 
-    public TextBox createValueTextbox() {
+    public TextBox createValueTextbox(String style) {
         TextBox addr = new TextBox();
-        addr.addStyleName(Style.style.css.memoryTextBox());
+        addr.addStyleName(style);
         return addr;
     }
 
@@ -256,7 +264,7 @@ public class MainWindow extends Composite {
                 memoryStart = exe.ip;
             }
         }
-        removeFollowMemoryHighlight();
+        removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
         int start = memoryStart;
         int addr = start;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
@@ -269,6 +277,8 @@ public class MainWindow extends Composite {
                 updateTextboxValue(newValue, valueTextbox, highlight);
                 if (addr == exe.ip) {
                     updateFollowMemoryHighlight(addrBox, valueTextbox);
+                    prevHighlightAddress = addrBox;
+                    prevHighlightValue = valueTextbox;
                 }
                 ++addr;
             }
@@ -280,19 +290,16 @@ public class MainWindow extends Composite {
     }
 
     private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
-        removeFollowMemoryHighlight();
-        prevHighlightAddress = addrBox;
-        prevHighlightValue = value;
         value.addStyleName(Style.style.css.currentInstructionHighlight());
         addrBox.addStyleName(Style.style.css.currentInstructionHighlight());
     }
 
-    public void removeFollowMemoryHighlight() {
-        if (prevHighlightAddress != null) {
-            prevHighlightAddress.removeStyleName(Style.style.css.currentInstructionHighlight());
+    public void removeFollowMemoryHighlight(TextBox prevAddr, TextBox prevValue) {
+        if (prevAddr != null) {
+            prevAddr.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
-        if (prevHighlightValue != null) {
-            prevHighlightValue.removeStyleName(Style.style.css.currentInstructionHighlight());
+        if (prevValue != null) {
+            prevValue.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
     }
 
