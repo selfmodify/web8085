@@ -3,7 +3,7 @@
   <ui:style field="css" src="Style.css" />
     
   <g:VerticalPanel>
-    <g:VerticalPanel>
+    <g:VerticalPanel  spacing="10">
       <g:HorizontalPanel>
         <g:VerticalPanel spacing="1">
           <g:Label addStyleNames="{css.bigLabel}">Enter code here</g:Label>

@@ -78,6 +78,7 @@ public class MainWindow extends Composite {
 
     private HashMap<String, HorizontalPanel> registerValueMap;
     private int memoryStart = 0;
+    private int disassemblyMemoryStart = 0;
 
     private HashMap<String, HorizontalPanel> flagValueMap;
 
@@ -145,14 +146,14 @@ public class MainWindow extends Composite {
         boolean followIp = true;
         if (followIp) {
             boolean changeMemoryStart =
-                    memoryStart >= exe.ip &&
-                            memoryStart <= memoryStart + memoryWindow.getWidgetCount();
+                    exe.ip < disassemblyMemoryStart ||
+                            exe.ip > disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
             if (changeMemoryStart) {
-                memoryStart = exe.ip;
+            	disassemblyMemoryStart = exe.ip;
             }
         }
         removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
-        int addr = memoryStart;
+        int addr = disassemblyMemoryStart;
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
             HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
