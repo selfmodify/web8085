@@ -73,4 +73,6 @@
 
 .debugButton {
 	font-weight: bold;
+	font-size: 150%;
+	width: 140px;
 }
