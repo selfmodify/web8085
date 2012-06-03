@@ -26,7 +26,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MainWindow extends Composite {
 
-    private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
+    private static final int NUM_MEMORY_ADDRESS_PER_ROW = 8;
+
+	private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
 
     interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
     }
@@ -147,7 +149,7 @@ public class MainWindow extends Composite {
         if (followIp) {
             boolean changeMemoryStart =
                     exe.ip < disassemblyMemoryStart ||
-                            exe.ip > disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
+                            exe.ip >= disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
             if (changeMemoryStart) {
             	disassemblyMemoryStart = exe.ip;
             }
@@ -229,7 +231,7 @@ public class MainWindow extends Composite {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             memoryWindowAddress.add(addr);
-            for (int j = 0; j < 8; ++j) {
+            for (int j = 0; j < NUM_MEMORY_ADDRESS_PER_ROW; ++j) {
                 TextBox value = createValueTextbox(Style.style.css.memoryTextBox());
                 hp.add(value);
             }
@@ -259,8 +261,8 @@ public class MainWindow extends Composite {
     private void fillMemoryWindow(boolean highlight, boolean followIp) {
         if (followIp) {
             boolean changeMemoryStart =
-                    memoryStart >= exe.ip &&
-                            memoryStart <= memoryStart + memoryWindow.getWidgetCount();
+                    exe.ip < memoryStart ||
+                            exe.ip >= memoryStart + memoryWindow.getWidgetCount() * NUM_MEMORY_ADDRESS_PER_ROW;
             if (changeMemoryStart) {
                 memoryStart = exe.ip;
             }
