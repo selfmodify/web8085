@@ -5,6 +5,7 @@
     font-family: courier;
     width: 60px;
     font-weight: bold;
+    font-size: 125%;
 }
 
 .memoryTextBox {
@@ -14,6 +15,7 @@
     font-family: courier;
     width: 30px;
     font-weight: bold;
+    font-size: 125%;
 }
 
 .disassemblyTextBox {
@@ -23,6 +25,7 @@
     font-family: courier;
     width: 120px;
     font-weight: bold;
+    font-size: 125%;
 }
 
 .bigLabel {
@@ -37,18 +40,21 @@
     font-family: courier;
     width: 30px;
     font-weight: bold;
+    font-size: 125%;
 }
 
 .memoryWindow {
 	border: 1px inset gray;
 	font-family: monospace;
 	font-weight: bold;
+    font-size: 125%;
 }
 
 .registerWindow {
     border: 1px inset gray;
     font-family: monospace;
     font-weight: bold;
+    font-size: 125%;
 }
 
 
@@ -63,8 +69,8 @@
 }
 
 .sourceCodeWindow {
-	font-family: monospace;
-	
+	font-family: monospace;	
+    font-size: 150%;
 }
 
 .border {

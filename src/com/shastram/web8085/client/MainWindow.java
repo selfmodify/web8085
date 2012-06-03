@@ -35,7 +35,7 @@ public class MainWindow extends Composite {
     Button compile;
 
     @UiField
-    RichTextArea sourceCode;
+    TextArea sourceCode;
 
     @UiField
     TextArea errorWindow;
@@ -97,7 +97,7 @@ public class MainWindow extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
         Style.style = style;
-        sourceCode.setHTML("mvi b,2</br>mov a,b</br>mov c,b");
+        sourceCode.setText("mvi b,2\nmov a,b\nmov c,b");
         createMemoryWindowItems(maxMemoryWindowRows);
         createDisassemblyWindowItems(maxDisassemblyRows);
         createRegisterWindowNames();
