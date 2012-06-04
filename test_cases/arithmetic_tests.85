@@ -31,4 +31,9 @@ adc d
 
 .assert cy=0, a=79h
 
+##################################
+# adi - Add immediate to accumulator
+mvi a,4ah
+adi 59h
+.assert s=1, z=0, ac=1, p=1, cy=0
 

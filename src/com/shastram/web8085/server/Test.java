@@ -51,10 +51,12 @@ public class Test {
 
     @org.junit.Test
     public void testAll() throws IOException {
-        String[] tests = { /*"arithmetic_tests.85",*/
+        String[] tests = { "arithmetic_tests.85",
+        		/*
                 "load_store.85",
                 "mov_tests.85",
-                "lxi_tests.85" };
+                "lxi_tests.85"
+                */ };
 
         for (String s : tests) {
             testFile(s);

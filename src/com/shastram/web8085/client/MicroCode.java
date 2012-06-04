@@ -354,6 +354,12 @@ public abstract class MicroCode {
      */
     private static void endAdd(Exe exe, int v, short carry, boolean setCarry) {
         int r = exe.a + v + carry;
+        // find if there is aux carry -
+        // This flag is set to a 1 by the instruction just ending
+        // if a carry occurred from bit 3 to bit 4 of the A Register
+        // during the instructionÕs execution
+        int auxSum = (exe.a & 0xf) + (v & 0xf);
+        
         exe.a = (0xff & r);
         if (setCarry) {
             if (r > 0xff) {
