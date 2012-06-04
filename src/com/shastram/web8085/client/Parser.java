@@ -14,6 +14,8 @@ public class Parser {
     private String[] source;
     private int lineNumber;
 
+	private String currentLine;
+
     /**
      * Parsers for the instructions
      * 
@@ -22,6 +24,7 @@ public class Parser {
     private static HashMap<String, InstructionParser> loadInstructions() {
         HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
         map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xCE, OperandParser.immediateByteOperand));
+        map.put("adc", new InstructionParser(InstructionParser.Mnemonic.ADC, 0x88, OperandParser.oneOperand));
         map.put("adi", new InstructionParser(InstructionParser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
         map.put("lda", new InstructionParser(InstructionParser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
@@ -59,7 +62,8 @@ public class Parser {
         if (lineNumber > source.length) {
             throw new Exception("Reached end of source code");
         }
-        return source[lineNumber++];
+        currentLine = source[lineNumber++];
+        return currentLine;
     }
 
     public void reset() {
@@ -110,4 +114,12 @@ public class Parser {
     public boolean hasNext() {
         return lineNumber < source.length;
     }
+
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	public String currentLine() {
+		return currentLine;
+	}
 }

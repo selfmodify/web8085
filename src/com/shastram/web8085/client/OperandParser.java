@@ -38,7 +38,7 @@ public abstract class OperandParser {
     public static String[] getTwoOperands(String operands) throws Exception {
         String[] parts = operands.split(",", 2);
         if (parts.length < 2) {
-            throw new Exception("Expected two operands");
+            throw new ParserException("Expected two operands");
         }
         return parts;
     }
@@ -52,7 +52,7 @@ public abstract class OperandParser {
             num = parseNumberAsByte(parts[1]);
             i.setImmediateByte(num);
         } catch (NumberFormatException e) {
-            throw new Exception("Not a valid number", e);
+            throw new ParserException("Not a valid number", e);
         }
     }
 
@@ -64,24 +64,26 @@ public abstract class OperandParser {
      * @throws Exception
      */
     public static Operand parseNormalRegister(String reg) throws Exception {
+    	reg = reg.trim();
         Operand op = map.get(reg);
         if (op == null) {
-            throw new Exception(reg + " is not a valid register");
+            throw new ParserException(reg + " is not a valid register");
         }
         if (op.ordinal() >= InstructionParser.Operand.B.ordinal() &&
                 op.ordinal() <= InstructionParser.Operand.A.ordinal()) {
             return op;
         }
-        throw new Exception(reg + " is not a valid register");
+        throw new ParserException(reg + " is not a valid register");
     }
 
     public static Operand parseRegisterForAssert(String reg) throws Exception {
+    	reg = reg.trim();
         Operand op = parseRegisterPairInternal(reg);
         if (op == null) {
             op = parseNormalRegister(reg);
         }
         if (op == null) {
-            throw new Exception("Invalid register " + reg);
+            throw new ParserException("Invalid register " + reg);
         }
         return op;
     }
@@ -94,6 +96,7 @@ public abstract class OperandParser {
      * @throws Exception
      */
     private static Operand parseRegisterPairInternal(String reg) throws Exception {
+    	reg = reg.trim();
         if (reg.equalsIgnoreCase("sp")) {
             return Operand.SP;
         }
@@ -122,7 +125,7 @@ public abstract class OperandParser {
     public static void parseMovOperands(InstructionParser i, String operands) throws Exception {
         parse2Register(i, operands);
         if (i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
-            throw new Exception("Mov operand cannot have both operand set to memory");
+            throw new ParserException("Mov operand cannot have both operand set to memory");
         }
         int value = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
         i.code = value;
@@ -203,7 +206,7 @@ public abstract class OperandParser {
                 throws Exception {
             Operand op = getOperand(line);
             if (op != Operand.B && op != Operand.D) {
-                throw new Exception(line + " is not a valid register. Expected B or D registers");
+                throw new ParserException(line + " is not a valid register. Expected B or D registers");
             }
             i.code = i.baseCode + ((op == Operand.D) ? 0x0 : 0x10);
         }
@@ -212,7 +215,7 @@ public abstract class OperandParser {
     private static Operand getOperand(String operands) throws Exception {
         Operand operand = map.get(operands.trim());
         if (operand == null) {
-            throw new Exception("Operand expected. " + operands);
+            throw new ParserException("Operand expected. " + operands);
         }
         return operand;
     }
@@ -237,7 +240,7 @@ public abstract class OperandParser {
         }
         num = Integer.parseInt(str, base);
         if (num < 0 || num > 65535) {
-            throw new Exception("Immediate number must be in the range 0-65535 " + str);
+            throw new ParserException("Immediate number must be in the range 0-65535 " + str);
         }
         return num;
     }
@@ -245,7 +248,7 @@ public abstract class OperandParser {
     public static byte parseNumberAsByte(String line) throws Exception {
         int num = parseNumber(line);
         if (num < 0 || num > 255) {
-            throw new Exception("Immediate number must be in the range 0-255 " + line);
+            throw new ParserException("Immediate number must be in the range 0-255 " + line);
         }
         return (byte) (num & 0xff);
     }

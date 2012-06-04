@@ -7,7 +7,7 @@
       <g:HorizontalPanel>
         <g:VerticalPanel spacing="1">
           <g:Label addStyleNames="{css.bigLabel}">Enter code here</g:Label>
-          <g:TextArea ui:field="sourceCode" width="100%" height="200px" addStyleNames="{css.sourceCodeWindow}"></g:TextArea>
+          <g:TextArea ui:field="sourceCode" width="400px" height="200px" addStyleNames="{css.sourceCodeWindow}"></g:TextArea>
         </g:VerticalPanel>
       </g:HorizontalPanel>
         <g:VerticalPanel>

@@ -160,7 +160,7 @@ public class Exe {
     }
 
     public void setRegOrMem(int i, int intValue) {
-        byte value = (byte) intValue;
+        int value =  intValue & 0xff;
         switch (i) {
         case 0:
             b = value;
@@ -355,18 +355,24 @@ public class Exe {
         reset();
         this.context = context;
         int startColumn = 0;
-        while (p.hasNext()) {
-            String l = p.nextLine();
-            startColumn += l.length();
-            ParseToken token = p.parseLine(l, ip, startColumn);
-            insert(token);
+        try {
+            while (p.hasNext()) {
+                String l = p.nextLine();
+                startColumn += l.length();
+                ParseToken token = p.parseLine(l, ip, startColumn);
+                insert(token);
+            }
+            insert(0x76); // hlt
+            // copy the assertion map from the parser
+            assertOperation = p.getAssertionMap();
+            logger.info("Finished compilation - " + context);
+            logger.info("---------------");
+            reset();
+        } catch(Exception e) {
+        	throw new ParserException("Parse error: Line "
+        			+ p.getLineNumber() + " " + e.getMessage()
+        			+ " Source: " + p.currentLine());
         }
-        insert(0x76); // hlt
-        // copy the assertion map from the parser
-        assertOperation = p.getAssertionMap();
-        logger.info("Finished compilation - " + context);
-        logger.info("---------------");
-        reset();
     }
 
     public String getAsertionAt(int ip) {

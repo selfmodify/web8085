@@ -6,14 +6,29 @@ add b
 .assert a=98h, s=1, z=0, ac=0, p=0, cy=0
 
 ##################################
-# adi - Add Immediate Data to Accumulator
+# aci  Add Immediate data to Accumulator Using Carry
 mvi a,26h
 stc
-adi 57h
+aci 57h
 .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0
 
 ##################################
-# aci  Add Immediate data to Accumulator Using Carry
-aci 6h
-.assert s=0, z=0, cy=1
+# adc - Add register to accumulator with carry
+# bc = 2498h
+# de = 54a1h
+# use add followed by adc to achieve this bc + de
+mvi b,24h
+mvi c,98h
+mvi d,54h
+mvi e,a1h
+
+# add c and e
+mov a,c
+add e
+.assert cy=1, a=39h
+mov a, b
+adc d
+
+.assert cy=0, a=79h
+
 

@@ -145,6 +145,15 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode adc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x88;
+            int op1 = exe.getRegOrMem(code % 8);
+            addWithCarry(exe, op1);
+        }
+    };
+
     public static MicroCode hlt = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
@@ -154,7 +163,7 @@ public abstract class MicroCode {
     };
 
     protected static void addWithoutCarry(Exe exe, int op1) {
-        endAdd(exe, op1, (short) 0, false);
+        endAdd(exe, op1, (short) 0, true);
     }
 
     public static MicroCode adi = new MicroCode() {
