@@ -2,8 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:style field="css" src="Style.css" />
     
-  <g:VerticalPanel>
-    <g:VerticalPanel  spacing="10">
+  <g:VerticalPanel spacing="15">
+    <g:VerticalPanel >
       <g:HorizontalPanel>
         <g:VerticalPanel spacing="1">
           <g:Label addStyleNames="{css.bigLabel}">Enter code here</g:Label>
@@ -30,7 +30,7 @@
             </g:HorizontalPanel>
             <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
           </g:VerticalPanel>
-
+          <g:Label width="15px"></g:Label>
           <g:VerticalPanel>
             <!-- Disassembly -->
             <g:Label addStyleNames="{css.bigLabel}">Disassembly</g:Label>
