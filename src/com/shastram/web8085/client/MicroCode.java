@@ -208,6 +208,15 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode sbb = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x98;
+            int op1 = exe.getRegOrMem(code % 8);
+            doSubtract(exe, op1, exe.getCarry(), true /* set carry */);
+        }
+    };
+
     public static MicroCode inra = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
@@ -354,16 +363,6 @@ public abstract class MicroCode {
     };
 
     /**
-     * helper add function.
-     * 
-     * @param exe
-     * @param r
-     */
-    private static void endAdd(Exe exe, int v, short carry) {
-        doAdd(exe, v, carry, true /* set carry*/);
-    }
-
-    /**
      * Do a = a+v, set Zero, Sign, set carry optionally and increment the ip.
      * 
      * @param exe
@@ -403,10 +402,9 @@ public abstract class MicroCode {
      */
     private static void doSubtract(Exe exe, int v, int carry, boolean setCarry) {
         // 2's complement
-        v = (~v) & 0xff;
-        v = v + 1;
         carry = carry & 0x1;
-        int other = v + carry;
+        v = (v & 0xff) + carry;
+        int other = ((~v) + 1) & 0xff;
         int r = exe.getA() + other;
         // find if there is aux carry -
         // This flag is set to a 1 by the instruction just ending

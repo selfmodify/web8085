@@ -10,6 +10,7 @@ public class InstructionParser {
         ADD,
         SUB,
         SUI,
+        SBB,
         ASSERT,
         MVI,
         LDA,

@@ -17,7 +17,6 @@ public class Test {
 
     private static Logger logger = Logger.getLogger(Test.class.getName());
 
-    @org.junit.Test
     public void testeArithmetic() throws Exception {
         String testArithmetic = "arithmetic_tests.85";
         String loadStoreTests = "load_store.85";
@@ -52,11 +51,11 @@ public class Test {
     @org.junit.Test
     public void testAll() throws IOException {
         String[] tests = { "arithmetic_tests.85",
-        		/*
+                /*
                 "load_store.85",
                 "mov_tests.85",
                 "lxi_tests.85"
-                */ };
+                */};
 
         for (String s : tests) {
             testFile(s);
