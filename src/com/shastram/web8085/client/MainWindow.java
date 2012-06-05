@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,7 +27,7 @@ public class MainWindow extends Composite {
 
     private static final int NUM_MEMORY_ADDRESS_PER_ROW = 8;
 
-	private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
+    private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
 
     interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
     }
@@ -151,7 +150,7 @@ public class MainWindow extends Composite {
                     exe.ip < disassemblyMemoryStart ||
                             exe.ip >= disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
             if (changeMemoryStart) {
-            	disassemblyMemoryStart = exe.ip;
+                disassemblyMemoryStart = exe.ip;
             }
         }
         removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
@@ -346,7 +345,7 @@ public class MainWindow extends Composite {
     }
 
     public void refreshRegistersAndFlags() {
-        updateTextboxValue(exe.a, registerValueMap.get("a"));
+        updateTextboxValue(exe.getA(), registerValueMap.get("a"));
         updateTextboxValue(exe.b, registerValueMap.get("b"));
         updateTextboxValue(exe.c, registerValueMap.get("c"));
         updateTextboxValue(exe.d, registerValueMap.get("d"));

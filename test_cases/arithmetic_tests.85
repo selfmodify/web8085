@@ -35,5 +35,19 @@ adc d
 # adi - Add immediate to accumulator
 mvi a,4ah
 adi 59h
-.assert s=1, z=0, ac=1, p=1, cy=0
+.assert a=a3h, s=1, z=0, ac=1, p=1, cy=0
 
+##################################
+# aci - Add immediate data to accumulator using carry
+mvi a,26h
+stc
+aci 57h
+.assert a=7eh, s=0, z=0, ac=0, p=1, cy=0
+
+
+##################################
+# sub - subtract from accumulator
+mvi c,40h
+mvi a,37h
+sub c
+.assert a=f7h, s=1, z=0, ac=0, p=0, cy=1

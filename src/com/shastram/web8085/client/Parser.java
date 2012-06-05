@@ -14,7 +14,7 @@ public class Parser {
     private String[] source;
     private int lineNumber;
 
-	private String currentLine;
+    private String currentLine;
 
     /**
      * Parsers for the instructions
@@ -27,6 +27,7 @@ public class Parser {
         map.put("adc", new InstructionParser(InstructionParser.Mnemonic.ADC, 0x88, OperandParser.oneOperand));
         map.put("adi", new InstructionParser(InstructionParser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
+        map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
         map.put("lda", new InstructionParser(InstructionParser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
         map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
         map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
@@ -115,11 +116,11 @@ public class Parser {
         return lineNumber < source.length;
     }
 
-	public int getLineNumber() {
-		return lineNumber;
-	}
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-	public String currentLine() {
-		return currentLine;
-	}
+    public String currentLine() {
+        return currentLine;
+    }
 }

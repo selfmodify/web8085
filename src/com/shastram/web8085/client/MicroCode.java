@@ -74,7 +74,7 @@ public abstract class MicroCode {
             }
         }
         if (Config.printAssertions) {
-            log.info("Assertion passed: " + line);
+            log.info("Assertion passed at ip=" + exe.ip + " " + line);
         }
         exe.nextIp();
     }
@@ -163,7 +163,7 @@ public abstract class MicroCode {
     };
 
     protected static void addWithoutCarry(Exe exe, int op1) {
-        endAdd(exe, op1, (short) 0, true);
+        doAdd(exe, op1, (short) 0, true);
     }
 
     public static MicroCode adi = new MicroCode() {
@@ -177,7 +177,7 @@ public abstract class MicroCode {
     };
 
     public void addWithCarry(Exe exe, int op1) {
-        endAdd(exe, op1, exe.getCarry(), true);
+        doAdd(exe, op1, exe.getCarry(), true);
     }
 
     public static MicroCode aci = new MicroCode() {
@@ -190,11 +190,19 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode sub = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x90;
+            int op1 = exe.getRegOrMem(code % 8);
+            doSubtract(exe, op1, 0, true /* set carry */);
+        }
+    };
     public static MicroCode inra = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             assert (exe.getOpcode() == 0x3C);
-            endAdd(exe, 1, (short) 0, false);
+            doAdd(exe, 1, (short) 0, false);
         }
     };
 
@@ -235,7 +243,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = exe.read16bit();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.a = exe.getMemory(addr);
+            exe.setA(exe.getMemory(addr));
         }
     };
 
@@ -246,7 +254,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = code == 0x0A ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.a = exe.getMemory(addr);
+            exe.setA(exe.getMemory(addr));
         }
     };
 
@@ -259,7 +267,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
             int addr = exe.read16bit();
-            exe.setMemoryByte(addr, (byte) exe.a);
+            exe.setMemoryByte(addr, (byte) exe.getA());
         }
     };
 
@@ -270,7 +278,7 @@ public abstract class MicroCode {
             exe.nextIp();
             int addr = code == 0x02 ? exe.readBc() : exe.readDe();
             // set the value of the accumulator with the value of memory at 'addr'
-            exe.setMemoryByte(addr, (byte) exe.a);
+            exe.setMemoryByte(addr, (byte) exe.getA());
         }
     };
 
@@ -342,7 +350,7 @@ public abstract class MicroCode {
      * @param r
      */
     private static void endAdd(Exe exe, int v, short carry) {
-        endAdd(exe, v, carry, true /* set carry*/);
+        doAdd(exe, v, carry, true /* set carry*/);
     }
 
     /**
@@ -352,20 +360,56 @@ public abstract class MicroCode {
      * @param v
      * @param setCarry
      */
-    private static void endAdd(Exe exe, int v, short carry, boolean setCarry) {
-        int r = exe.a + v + carry;
+    private static void doAdd(Exe exe, int v, int carry, boolean setCarry) {
+        carry = carry & 0x1;
+        int other = v + carry;
+        int r = exe.getA() + other;
         // find if there is aux carry -
         // This flag is set to a 1 by the instruction just ending
         // if a carry occurred from bit 3 to bit 4 of the A Register
-        // during the instructionÕs execution
-        int auxSum = (exe.a & 0xf) + (v & 0xf);
-        
-        exe.a = (0xff & r);
+        // during the instructions execution
+
+        exe.setAuxCarry(0xff & other);
+        exe.setA(0xff & r);
         if (setCarry) {
             if (r > 0xff) {
                 exe.setCarry();
             } else {
                 exe.resetCarry();
+            }
+        }
+        exe.setZSFlags();
+        exe.setParityFlags();
+        exe.nextIp();
+    }
+
+    /**
+     * Do a = v - a This is done as follows v = 2's complement of v a = v + a
+     * complement carry set Zero, Sign, and other flags.
+     * 
+     * @param exe
+     * @param v
+     * @param setCarry
+     */
+    private static void doSubtract(Exe exe, int v, int carry, boolean setCarry) {
+        // 2's complement
+        v = (~v) & 0xff;
+        v = v + 1;
+        carry = carry & 0x1;
+        int other = v + carry;
+        int r = exe.getA() + other;
+        // find if there is aux carry -
+        // This flag is set to a 1 by the instruction just ending
+        // if a carry occurred from bit 3 to bit 4 of the A Register
+        // during the instructions execution
+
+        exe.setAuxCarry(0xff & other);
+        exe.setA(0xff & r);
+        if (setCarry) {
+            if (r > 0xff) {
+                exe.resetCarry();
+            } else {
+                exe.setCarry();
             }
         }
         exe.setZSFlags();
