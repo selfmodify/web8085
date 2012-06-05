@@ -198,6 +198,16 @@ public abstract class MicroCode {
             doSubtract(exe, op1, 0, true /* set carry */);
         }
     };
+
+    public static MicroCode sui = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp(); // one for the immediate operand
+            int op1 = exe.getMemAtIp();
+            doSubtract(exe, op1, 0, true /* set carry */);
+        }
+    };
+
     public static MicroCode inra = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {

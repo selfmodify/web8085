@@ -51,3 +51,9 @@ mvi c,40h
 mvi a,37h
 sub c
 .assert a=f7h, s=1, z=0, ac=0, p=0, cy=1
+
+##################################
+# sui - subtract immediate data from accumulator
+mvi a,40h
+sui 37h
+.assert a=09h, s=0, z=0, ac=0, p=1, cy=0

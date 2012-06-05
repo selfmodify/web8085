@@ -9,6 +9,7 @@ public class InstructionParser {
         MOV,
         ADD,
         SUB,
+        SUI,
         ASSERT,
         MVI,
         LDA,

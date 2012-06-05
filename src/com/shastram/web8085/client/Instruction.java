@@ -307,7 +307,7 @@ public class Instruction {
             new OneInstruction("out", "out", noOperand, MicroCode.nop),
             new OneInstruction("cnc", "cnc", noOperand, MicroCode.nop),
             new OneInstruction("push", "push", noOperand, MicroCode.nop),
-            new OneInstruction("sui", "sui", noOperand, MicroCode.nop),
+            new OneInstruction("sui", "sui", byteOperand, MicroCode.sui),
             new OneInstruction("rst", "rst 2", noOperand, MicroCode.nop),
             new OneInstruction("rc", "rc", noOperand, MicroCode.nop),
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
