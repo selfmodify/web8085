@@ -13,6 +13,7 @@ lda 0
 .assert a=11
 
 # -----------------------------------------
+# ldax - Load Accumulator from Address in Register Pair
 # test ldax bc/de.
 # a = [bc] 
 mvi a,0
@@ -48,8 +49,9 @@ shld 0
 
 # -----------------------------------------
 # STAX : Store accumulator indirect
-# [BC] = A
-# [DE] = A
+# The contents of the accumulator are copied into the memory location specified
+# by the contents of the register pair.
+# [BC] = A or [DE] = A
 mvi b,0
 mvi c,0
 mvi a, 1

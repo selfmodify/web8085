@@ -81,3 +81,16 @@ cmc # complement carry to zero it out
 mvi d,ffh
 inr d
 .assert d=0, cy=0
+
+##################################
+# dcr - Decrement Specified Byte by One.  CY flag is not modified
+stc
+cmc # complement carry to zero it ou
+mvi b,00
+dcr b
+.assert b=ffh, cy=0
+# using dcr to decrement the contents of memory location 2085 which holds A0h
+mvi a,a0h
+sta 2085h
+dcr m
+.assert [2085]=9Fh, cy=0

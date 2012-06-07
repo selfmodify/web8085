@@ -201,6 +201,15 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode dcr = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x05;
+            int op1 = exe.getRegOrMem(code % 8);
+            doSubtract(exe, op1, 0, false);
+        }
+    };
+
     public static MicroCode sub = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
