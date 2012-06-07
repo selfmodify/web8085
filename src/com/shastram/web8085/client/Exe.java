@@ -450,8 +450,12 @@ public class Exe {
      * 
      * @param otherOperand
      */
-    public void setAuxCarry(int otherOperand) {
-        auxCarry = ((this.a & 0x8) != 0) && ((otherOperand & 0xA) != 0);
+    public void setAuxCarry(int op) {
+        int a1 = a & 0xf;
+        int op1 = op & 0xf;
+        int partSum = a1 + op1;
+
+        auxCarry = ((partSum & 0x10) != 0);
     }
 
     public int getRegOrMem(Operand op) {

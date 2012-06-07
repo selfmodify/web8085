@@ -217,6 +217,15 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode sbi = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp(); // one for the immediate operand
+            int op1 = exe.getMemAtIp();
+            doSubtract(exe, op1, exe.getCarry(), true /* set carry */);
+        }
+    };
+
     public static MicroCode inra = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {

@@ -11,6 +11,7 @@ public class InstructionParser {
         SUB,
         SUI,
         SBB,
+        SBI,
         ASSERT,
         MVI,
         LDA,

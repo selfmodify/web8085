@@ -315,7 +315,7 @@ public class Instruction {
             new OneInstruction("in", "in", byteOperand, MicroCode.nop),
             new OneInstruction("cc", "cc", wordOperand, MicroCode.nop),
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
-            new OneInstruction("sbi", "sbi", noOperand, MicroCode.nop),
+            new OneInstruction("sbi", "sbi", noOperand, MicroCode.sbi),
             new OneInstruction("rst", "rst 3", noOperand, MicroCode.nop),
             new OneInstruction("rpo", "rpo", noOperand, MicroCode.nop),
             new OneInstruction("pop", "pop h", noOperand, MicroCode.nop),

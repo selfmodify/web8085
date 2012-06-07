@@ -30,6 +30,7 @@ public class Parser {
         map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
         map.put("sui", new InstructionParser(InstructionParser.Mnemonic.SUI, 0xD6, OperandParser.immediateByteOperand));
         map.put("sbb", new InstructionParser(InstructionParser.Mnemonic.SBB, 0x98, OperandParser.oneOperand));
+        map.put("sbi", new InstructionParser(InstructionParser.Mnemonic.SBI, 0xDE, OperandParser.immediateByteOperand));
         map.put("lda", new InstructionParser(InstructionParser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
         map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
         map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
