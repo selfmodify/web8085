@@ -61,7 +61,6 @@ public class Exe {
     }
 
     public void insertCodeAnd16bit(int opcode, int immediate) {
-        //TODO: Change ip++ to use incrIp
         setMemoryByte(ip, (byte) opcode);
         incrIp();
         setMemoryByte(ip, (byte) (immediate & 0xff));
@@ -405,18 +404,36 @@ public class Exe {
         return value;
     }
 
-    public int readBc() {
-        int value = (b << 8) + c;
-        return value;
-    }
-
-    public int readDe() {
-        int value = (d << 8) + e;
-        return value;
-    }
-
     public boolean hltExecuted() {
         return hltExecuted;
+    }
+
+    public void setB(int value) {
+        b = value & 0xff;
+    }
+
+    public void setC(int value) {
+        c = value & 0xff;
+    }
+
+    public void setD(int value) {
+        d = value & 0xff;
+    }
+
+    public void setE(int value) {
+        e = value & 0xff;
+    }
+
+    public void setH(int value) {
+        h = value & 0xff;
+    }
+
+    public void setL(int value) {
+        l = value & 0xff;
+    }
+
+    public void setA(int value) {
+        a = value & 0xff;
     }
 
     /**
@@ -431,17 +448,48 @@ public class Exe {
     }
 
     public int getHL() {
-        int hl = (h & 0xff) << 8 + (l & 0xff);
-        hl = hl & 0xffff;
-        return hl;
+        int value = ((h & 0xff) << 8 + (l & 0xff)) & 0xffff;
+        return value;
+    }
+
+    public void setHL(int value) {
+        value = value & 0xffff;
+        setH(value >> 8);
+        setL(value & 0xff);
+    }
+
+    public int getBC() {
+        int value = ((b & 0xff) << 8 + (c & 0xff)) & 0xffff;
+        return value;
+    }
+
+    public void setBC(int value) {
+        value = value & 0xffff;
+        setB(value >> 8);
+        setC(value & 0xff);
+    }
+
+    public int getDE() {
+        int value = ((d & 0xff) << 8 + (e & 0xff)) & 0xffff;
+        return value;
+    }
+
+    public void setDE(int value) {
+        value = value & 0xffff;
+        setD(value >> 8);
+        setE(value & 0xff);
     }
 
     public int getA() {
         return a;
     }
 
-    public void setA(int a) {
-        this.a = a;
+    public int getSP() {
+        return sp;
+    }
+
+    public void setSP(int value) {
+        this.sp = value & 0xffff;
     }
 
     /**
@@ -523,5 +571,58 @@ public class Exe {
             v = v >> 1;
         }
         parity = count1s % 2 == 0 ? true : false;
+    }
+
+    public void incrementRegisterPair(Operand op) {
+        int value = 0;
+        switch (op) {
+        case B:
+            value = getHL() + 1;
+            setHL(value);
+            break;
+        case D:
+            value = getDE() + 1;
+            setDE(value);
+            break;
+        case H:
+            value = getHL() + 1;
+            setHL(value);
+            break;
+        case SP:
+            value = getSP() + 1;
+            setSP(value);
+            break;
+        default:
+            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+        }
+    }
+
+    /**
+     * convert from integer opcode to Operand
+     * 
+     * @param i
+     * @return
+     */
+    public Operand toOperand(int i) {
+        switch (i) {
+        case 0:
+            return Operand.B;
+        case 1:
+            return Operand.C;
+        case 2:
+            return Operand.D;
+        case 3:
+            return Operand.E;
+        case 4:
+            return Operand.H;
+        case 5:
+            return Operand.L;
+        case 6:
+            return Operand.M;
+        case 7:
+            return Operand.A;
+        default:
+            throw new IllegalStateException("Invalid register index in " + i);
+        }
     }
 }

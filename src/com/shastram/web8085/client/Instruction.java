@@ -71,7 +71,7 @@ public class Instruction {
             new OneInstruction("nop", "nop", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi b", wordOperand, MicroCode.lxi),
             new OneInstruction("stax", "stax b", noOperand, MicroCode.stax),
-            new OneInstruction("inx", "inx b", noOperand, MicroCode.nop),
+            new OneInstruction("inx", "inx b", noOperand, MicroCode.inx),
             new OneInstruction("inr", "inr b", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr b", noOperand, MicroCode.nop),
             new OneInstruction("mvi", "mvi b", byteOperand, MicroCode.mvi),
@@ -89,7 +89,7 @@ public class Instruction {
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi d", wordOperand, MicroCode.lxi),
             new OneInstruction("stax", "stax d", noOperand, MicroCode.stax),
-            new OneInstruction("inx", "inx d", noOperand, MicroCode.nop),
+            new OneInstruction("inx", "inx d", noOperand, MicroCode.inx),
             new OneInstruction("inr", "inr d", noOperand, MicroCode.nop),
             //21
             new OneInstruction("dcr", "dcr d", noOperand, MicroCode.nop),
@@ -107,7 +107,7 @@ public class Instruction {
             new OneInstruction("rim", "rim", noOperand, MicroCode.nop),
             new OneInstruction("lxi", "lxi h", wordOperand, MicroCode.lxi),
             new OneInstruction("shld", "shld", wordOperand, MicroCode.shld),
-            new OneInstruction("inx", "inx h", noOperand, MicroCode.nop),
+            new OneInstruction("inx", "inx h", noOperand, MicroCode.inx),
             new OneInstruction("inr", "inr h", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr h", noOperand, MicroCode.nop),
             new OneInstruction("mvi", "mvi h", byteOperand, MicroCode.mvi),
@@ -125,7 +125,7 @@ public class Instruction {
             new OneInstruction("lxi", "lxi sp", wordOperand, MicroCode.lxi),
             //51
             new OneInstruction("sta", "sta", wordOperand, MicroCode.sta),
-            new OneInstruction("inx", "inx sp", noOperand, MicroCode.nop),
+            new OneInstruction("inx", "inx sp", noOperand, MicroCode.inx),
             new OneInstruction("inr", "inr m", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr m", noOperand, MicroCode.nop),
             new OneInstruction("mvi", "mvi m", byteOperand, MicroCode.mvi),
@@ -138,7 +138,7 @@ public class Instruction {
             new OneInstruction("inr", "inr a", noOperand, MicroCode.nop),
             new OneInstruction("dcr", "dcr a", noOperand, MicroCode.nop),
             new OneInstruction("mvi", "mvi a", byteOperand, MicroCode.mvi),
-            new OneInstruction("cmd", "cmd", noOperand, MicroCode.nop),
+            new OneInstruction("cmc", "cmc", noOperand, MicroCode.cmc),
 
             //65
             new OneInstruction("mov", "mov b,b", noOperand, MicroCode.move),
@@ -365,7 +365,8 @@ public class Instruction {
         MicroCode m = ix.microCode;
         if (Config.printInstructions) {
             String s = ix.longName;
-            logger.info("Executing " + s);
+            DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
+            logger.info("Executing " + s + " " + (debugInfo != null ? "Line=" + debugInfo.line : ""));
         }
         m.execute(exe, ix);
     }

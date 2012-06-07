@@ -151,6 +151,18 @@ public abstract class OperandParser {
         }
     };
 
+    public static OperandParser inxOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+            Operand op = parseRegisterPairInternal(operands);
+            if (op == Operand.SP) {
+                i.code = 0x33;
+            } else {
+                i.code = i.baseCode + op.ordinal() * 8;
+            }
+        }
+    };
+
     /**
      * Parse an immediate value operand. The value must be within 16 bits.
      */
@@ -163,6 +175,9 @@ public abstract class OperandParser {
         }
     };
 
+    /**
+     * one of b, d, h, sp are allowed as the first operand
+     */
     public static OperandParser lxiOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {

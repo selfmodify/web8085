@@ -198,6 +198,7 @@ public abstract class MicroCode {
             } else {
                 exe.setCarry();
             }
+            exe.nextIp();
         }
     };
 
@@ -207,6 +208,7 @@ public abstract class MicroCode {
             int code = exe.getOpcode() - 0x05;
             int op1 = exe.getRegOrMem(code % 8);
             doSubtract(exe, op1, 0, false);
+            exe.nextIp();
         }
     };
 
@@ -252,6 +254,15 @@ public abstract class MicroCode {
             int code = exe.getOpcode() - 0x04;
             int op1 = exe.getRegOrMem(code % 8);
             doAdd(exe, op1, 0, false);
+        }
+    };
+
+    public static MicroCode inx = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x03;
+            exe.incrementRegisterPair(exe.toOperand(code / 8));
+            exe.nextIp();
         }
     };
 
@@ -301,7 +312,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getMemAtIp();
             exe.nextIp();
-            int addr = code == 0x0A ? exe.readBc() : exe.readDe();
+            int addr = code == 0x0A ? exe.getBC() : exe.getDE();
             // set the value of the accumulator with the value of memory at 'addr'
             exe.setA(exe.getMemory(addr));
         }
@@ -325,7 +336,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getMemAtIp();
             exe.nextIp();
-            int addr = code == 0x02 ? exe.readBc() : exe.readDe();
+            int addr = code == 0x02 ? exe.getBC() : exe.getDE();
             // set the value of the accumulator with the value of memory at 'addr'
             exe.setMemoryByte(addr, (byte) exe.getA());
         }

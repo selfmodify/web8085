@@ -94,3 +94,13 @@ mvi a,a0h
 sta 2085h
 dcr m
 .assert [2085]=9Fh, cy=0
+
+##################################
+# inx - Increment register pair(b,d,h,sp) by 1.  No flags are affected
+lxi h, 9fffh
+inx h
+inx sp
+inx b
+inx h
+.assert h=a0h, l=00
+

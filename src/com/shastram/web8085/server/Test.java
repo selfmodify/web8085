@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.mortbay.log.Log;
 
 import com.shastram.web8085.client.Exe;
@@ -17,7 +18,8 @@ public class Test {
 
     private static Logger logger = Logger.getLogger(Test.class.getName());
 
-    public void testeArithmetic() throws Exception {
+    @Ignore
+    public void testArithmetic() throws Exception {
         String testArithmetic = "arithmetic_tests.85";
         String loadStoreTests = "load_store.85";
         String testMov = "mov_tests.85";
@@ -50,7 +52,9 @@ public class Test {
 
     @org.junit.Test
     public void testAll() throws IOException {
-        String[] tests = { "arithmetic_tests.85",
+        String[] tests = {
+                //"inx_test.85"
+                "arithmetic_tests.85",
                 /*
                 "load_store.85",
                 "mov_tests.85",
