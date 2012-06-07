@@ -64,7 +64,7 @@ public abstract class OperandParser {
      * @throws Exception
      */
     public static Operand parseNormalRegister(String reg) throws Exception {
-    	reg = reg.trim();
+        reg = reg.trim();
         Operand op = map.get(reg);
         if (op == null) {
             throw new ParserException(reg + " is not a valid register");
@@ -77,7 +77,7 @@ public abstract class OperandParser {
     }
 
     public static Operand parseRegisterForAssert(String reg) throws Exception {
-    	reg = reg.trim();
+        reg = reg.trim();
         Operand op = parseRegisterPairInternal(reg);
         if (op == null) {
             op = parseNormalRegister(reg);
@@ -96,7 +96,7 @@ public abstract class OperandParser {
      * @throws Exception
      */
     private static Operand parseRegisterPairInternal(String reg) throws Exception {
-    	reg = reg.trim();
+        reg = reg.trim();
         if (reg.equalsIgnoreCase("sp")) {
             return Operand.SP;
         }

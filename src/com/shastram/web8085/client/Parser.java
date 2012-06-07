@@ -27,6 +27,8 @@ public class Parser {
         map.put("adc", new InstructionParser(InstructionParser.Mnemonic.ADC, 0x88, OperandParser.oneOperand));
         map.put("adi", new InstructionParser(InstructionParser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
+        map.put("cmc", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
+        map.put("inr", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x04, OperandParser.oneOperand));
         map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
         map.put("sui", new InstructionParser(InstructionParser.Mnemonic.SUI, 0xD6, OperandParser.immediateByteOperand));
         map.put("sbb", new InstructionParser(InstructionParser.Mnemonic.SBB, 0x98, OperandParser.oneOperand));

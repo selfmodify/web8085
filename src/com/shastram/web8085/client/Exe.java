@@ -318,36 +318,36 @@ public class Exe {
     /**
      * @return 1 if the carry is set else return 0
      */
-    public short getCarry() {
-        return (short) (carry ? 1 : 0);
+    public int getCarry() {
+        return carry ? 1 : 0;
     }
 
     /**
      * @return 1 if the sign is set else return 0
      */
-    public short getSign() {
-        return (short) (sign ? 1 : 0);
+    public int getSign() {
+        return (sign ? 1 : 0);
     }
 
     /**
      * @return 1 if the zero is set else return 0
      */
-    public short getZero() {
-        return (short) (zero ? 1 : 0);
+    public int getZero() {
+        return (zero ? 1 : 0);
     }
 
     /**
      * @return 1 if the parity is set else return 0
      */
-    public short getParity() {
-        return (short) (parity ? 1 : 0);
+    public int getParity() {
+        return (parity ? 1 : 0);
     }
 
     /**
      * @return 1 if the aux carry is set else return 0
      */
-    public short getAuxCarry() {
-        return (short) (auxCarry ? 1 : 0);
+    public int getAuxCarry() {
+        return (auxCarry ? 1 : 0);
     }
 
     public void compileCode(String text, String context) throws Exception {

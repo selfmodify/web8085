@@ -74,3 +74,10 @@ mvi a,37h
 sbi 25h
 .assert a=11h, s=0, z=0, ac=1, p=1, cy=0
 
+##################################
+# inr - Increment Specified Byte by One
+stc
+cmc # complement carry to zero it out
+mvi d,ffh
+inr d
+.assert d=0, cy=0

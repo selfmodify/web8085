@@ -190,6 +190,17 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode cmc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            if (exe.getCarry() == 1) {
+                exe.resetCarry();
+            } else {
+                exe.setCarry();
+            }
+        }
+    };
+
     public static MicroCode sub = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
@@ -226,11 +237,12 @@ public abstract class MicroCode {
         }
     };
 
-    public static MicroCode inra = new MicroCode() {
+    public static MicroCode inr = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            assert (exe.getOpcode() == 0x3C);
-            doAdd(exe, 1, (short) 0, false);
+            int code = exe.getOpcode() - 0x04;
+            int op1 = exe.getRegOrMem(code % 8);
+            doAdd(exe, op1, 0, false);
         }
     };
 

@@ -5,6 +5,7 @@ public class InstructionParser {
         ACI,
         ADC,
         ADI,
+        CMC,
         NONE,
         MOV,
         ADD,
