@@ -376,8 +376,7 @@ public class Exe {
             insert(0x76); // hlt
             // copy the assertion map from the parser
             assertOperation = p.getAssertionMap();
-            logger.info("Finished compilation - " + context);
-            logger.info("---------------");
+            logger.info("Finished compilation ---------- " + context);
             reset();
         } catch (Exception e) {
             throw new ParserException("Parse error: Line "

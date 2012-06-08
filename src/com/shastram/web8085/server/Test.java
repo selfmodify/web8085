@@ -43,7 +43,6 @@ public class Test {
             while (!exe.hltExecuted()) {
                 exe.step();
             }
-            Log.info("Finished");
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed with ", e);
             Assert.fail(e.getMessage());
@@ -55,14 +54,14 @@ public class Test {
         String[] tests = {
                 //"temp_test.85",
                 "arithmetic_tests.85",
-                /*
                 "load_store.85",
                 "mov_tests.85",
-                "lxi_tests.85"
-                */};
+                "lxi_tests.85",
+        };
 
         for (String s : tests) {
             testFile(s);
         }
+        Log.info("Finished All tests");
     }
 }

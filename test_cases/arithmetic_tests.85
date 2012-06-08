@@ -79,7 +79,6 @@ sbi 25h
 stc
 cmc # complement carry to zero it out
 mvi d,ffh
-.break
 inr d
 .assert d=0, cy=0
 
@@ -92,7 +91,6 @@ dcr b
 .assert b=ffh, cy=0
 # using dcr to decrement the contents of memory location 2085 which holds A0h
 lxi h, 2085h
-.break
 mvi m, a0h
 dcr m
 .assert [2085h]=9Fh, cy=0
@@ -111,3 +109,4 @@ inx sp
 lxi d,2000h
 dcx d
 .assert d=1fh, e=ffh
+

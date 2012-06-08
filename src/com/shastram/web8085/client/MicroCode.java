@@ -165,7 +165,9 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.hltExecuted = true;
-            log.info("HLT executed. " + exe.getRegisterValues());
+            if (Config.showHltExecuted) {
+                log.info("HLT executed. " + exe.getRegisterValues());
+            }
         }
     };
 

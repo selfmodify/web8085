@@ -1,0 +1,2 @@
+lxi h, 2085h
+mvi m, a0h
