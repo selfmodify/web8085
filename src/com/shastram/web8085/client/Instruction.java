@@ -81,7 +81,7 @@ public class Instruction {
             new OneInstruction("ldax", "ldax b", noOperand, MicroCode.ldax),
 
             // 11 thru 20
-            new OneInstruction("dcx", "dcx b", noOperand, MicroCode.nop),
+            new OneInstruction("dcx", "dcx b", noOperand, MicroCode.dcx),
             new OneInstruction("inr", "inr c", noOperand, MicroCode.inr),
             new OneInstruction("dcr", "dcr c", noOperand, MicroCode.dcr),
             new OneInstruction("mvi", "mvi c", byteOperand, MicroCode.mvi),
@@ -98,7 +98,7 @@ public class Instruction {
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("dad", "dad d", noOperand, MicroCode.nop),
             new OneInstruction("ldax", "ldax d", noOperand, MicroCode.ldax),
-            new OneInstruction("dcx", "dcx d", noOperand, MicroCode.nop),
+            new OneInstruction("dcx", "dcx d", noOperand, MicroCode.dcx),
             new OneInstruction("inr", "inr e", noOperand, MicroCode.inr),
             new OneInstruction("dcr", "dcr e", noOperand, MicroCode.dcr),
             new OneInstruction("mvi", "mvi e", byteOperand, MicroCode.mvi),
@@ -116,7 +116,7 @@ public class Instruction {
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("dad", "dad h", noOperand, MicroCode.nop),
             new OneInstruction("lhld", "lhld", wordOperand, MicroCode.lhld),
-            new OneInstruction("dcx", "dcx h", noOperand, MicroCode.nop),
+            new OneInstruction("dcx", "dcx h", noOperand, MicroCode.dcx),
             new OneInstruction("inr", "inr l", noOperand, MicroCode.inr),
             new OneInstruction("dcr", "dcr l", noOperand, MicroCode.dcr),
             new OneInstruction("mvi", "mvi l", byteOperand, MicroCode.mvi),
@@ -133,7 +133,7 @@ public class Instruction {
             new OneInstruction("", "invalid", noOperand, MicroCode.nop),
             new OneInstruction("dad", "dad sp", noOperand, MicroCode.nop),
             new OneInstruction("lda", "lda", wordOperand, MicroCode.lda),
-            new OneInstruction("dcx", "dcx sp", noOperand, MicroCode.nop),
+            new OneInstruction("dcx", "dcx sp", noOperand, MicroCode.dcx),
             //61
             new OneInstruction("inr", "inr a", noOperand, MicroCode.inr),
             new OneInstruction("dcr", "dcr a", noOperand, MicroCode.dcr),

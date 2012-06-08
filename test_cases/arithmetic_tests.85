@@ -106,3 +106,8 @@ inx d
 inx sp
 .assert h=a0h, l=00
 
+##################################
+# dcx - Decrement register pair(b,d,h,sp) by 1.  No flags are affected
+lxi d,2000h
+dcx d
+.assert d=1fh, e=ffh

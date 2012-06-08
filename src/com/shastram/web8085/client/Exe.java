@@ -614,6 +614,32 @@ public class Exe {
         }
     }
 
+    public void decrementRegisterPair(Operand op) {
+        int value = 0;
+        switch (op) {
+        case B:
+            value = getBC() - 1;
+            setBC(value);
+            break;
+        case D:
+            value = getDE() - 1;
+            setDE(value);
+            break;
+        case H:
+            value = getHL() - 1;
+            setHL(value);
+            break;
+        case M:
+        case SP:
+            // special case we treat M as SP
+            value = getSP() - 1;
+            setSP(value);
+            break;
+        default:
+            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+        }
+    }
+
     /**
      * convert from integer opcode to Operand
      * 

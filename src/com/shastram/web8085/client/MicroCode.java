@@ -218,6 +218,16 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode dcx = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x0B;
+            Operand op = exe.toOperand(code / 8);
+            exe.decrementRegisterPair(op);
+            exe.nextIp();
+        }
+    };
+
     public static MicroCode sub = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {

@@ -29,6 +29,7 @@ public class Parser {
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
         map.put("cmc", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
         map.put("dcr", new InstructionParser(InstructionParser.Mnemonic.DCR, 0x05, OperandParser.oneOperandSpacedBy8));
+        map.put("dcx", new InstructionParser(InstructionParser.Mnemonic.DCX, 0x0B, OperandParser.dcxOperand));
         map.put("inr", new InstructionParser(InstructionParser.Mnemonic.INR, 0x04, OperandParser.oneOperandSpacedBy8));
         map.put("inx", new InstructionParser(InstructionParser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
         map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
