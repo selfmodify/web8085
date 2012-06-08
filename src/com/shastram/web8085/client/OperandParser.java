@@ -175,6 +175,18 @@ public abstract class OperandParser {
         }
     };
 
+    public static OperandParser dadOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+            Operand op = parseRegisterPairInternal(operands);
+            if (op == Operand.SP) {
+                i.code = 0x39;
+            } else {
+                i.code = i.baseCode + op.ordinal() * 8;
+            }
+        }
+    };
+
     public static OperandParser dcxOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String operands) throws Exception {

@@ -6,6 +6,7 @@ public class InstructionParser {
         ADC,
         ADI,
         CMC,
+        DAD,
         DCR,
         DCX,
         INR,

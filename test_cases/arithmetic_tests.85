@@ -110,3 +110,13 @@ lxi d,2000h
 dcx d
 .assert d=1fh, e=ffh
 
+##################################
+# dad - add register pair to HL
+lxi h,0242h
+dad H
+.assert h=04h, l=84h
+dad b
+dad d
+dad sp
+
+

@@ -211,6 +211,22 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode dad = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0x09;
+            int op1 = exe.getRegOrMemPair(code / 8);
+            int finalValue = exe.getHL() + op1;
+            if (finalValue > 0xffff) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
+            exe.setHL(finalValue);
+            exe.nextIp();
+        }
+    };
+
     public static MicroCode dcr = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {

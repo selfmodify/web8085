@@ -667,4 +667,25 @@ public class Exe {
             throw new IllegalStateException("Invalid register index in " + i);
         }
     }
+
+    public int getRegOrMemPair(int op) {
+        return getRegOrMemPair(toOperand(op));
+    }
+
+    public int getRegOrMemPair(Operand op) {
+        switch (op) {
+        case B:
+            return getBC();
+        case D:
+            return getDE();
+        case H:
+            return getHL();
+        case M:
+        case SP:
+            // special case we treat M as SP
+            return getSP();
+        default:
+            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+        }
+    }
 }
