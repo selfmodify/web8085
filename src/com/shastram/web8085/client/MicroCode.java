@@ -106,6 +106,13 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode breakRunner = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.showDialog("At breakpoint");
+        }
+
+    };
     /**
      * Move instruction
      */
@@ -207,8 +214,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x05;
             int op1 = exe.getRegOrMem(code % 8);
-            doSubtract(exe, op1, 0, false);
-            exe.nextIp();
+            doSubtract(exe, 1, 0, false, code / 8);
         }
     };
 
@@ -252,8 +258,8 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x04;
-            int op1 = exe.getRegOrMem(code % 8);
-            doAdd(exe, op1, 0, false);
+            int op1 = exe.getRegOrMem(code / 8);
+            doAdd(exe, 1, 0, false, code / 8);
         }
     };
 
@@ -261,7 +267,8 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x03;
-            exe.incrementRegisterPair(exe.toOperand(code / 8));
+            Operand op = exe.toOperand(code / 8);
+            exe.incrementRegisterPair(op);
             exe.nextIp();
         }
     };
@@ -382,10 +389,10 @@ public abstract class MicroCode {
             int l = exe.getRegOrMem(Operand.L);
             int d = exe.getRegOrMem(Operand.D);
             int e = exe.getRegOrMem(Operand.E);
-            exe.setRegOrMem(h, Operand.D);
-            exe.setRegOrMem(l, Operand.E);
-            exe.setRegOrMem(d, Operand.H);
-            exe.setRegOrMem(e, Operand.L);
+            exe.setRegOrMem(Operand.D, h);
+            exe.setRegOrMem(Operand.E, l);
+            exe.setRegOrMem(Operand.H, d);
+            exe.setRegOrMem(Operand.L, e);
         }
     };
 
@@ -398,8 +405,8 @@ public abstract class MicroCode {
             int sp = exe.getRegOrMem(Operand.SP);
             int h = exe.getMemory(sp);
             int l = exe.getMemory(sp + 1);
-            exe.setRegOrMem(h, Operand.H);
-            exe.setRegOrMem(l, Operand.L);
+            exe.setRegOrMem(Operand.H, h);
+            exe.setRegOrMem(Operand.L, l);
         }
     };
 
@@ -411,18 +418,40 @@ public abstract class MicroCode {
      * @param setCarry
      */
     private static void doAdd(Exe exe, int v, int carry, boolean setCarry) {
+        doAdd(exe, v, carry, setCarry, Operand.A.ordinal());
+    }
+
+    /**
+     * perform the add operation
+     * 
+     * @param exe
+     *            : executable context
+     * @param v
+     *            : The value to be added
+     * @param carry
+     *            : The carry/borrow to be added
+     * @param setCarry
+     *            : Should the carry flag be set after this operation is done
+     * @param register
+     *            : Which register should be set? Typically this is the
+     *            accumulator but it can be other reg/mem in case of inr
+     */
+    private static void doAdd(Exe exe, int v, int carry, boolean setCarry, int regOrMem) {
+        int regOrMemValue = exe.getRegOrMem(regOrMem);
         carry = carry & 0x1;
         int other = v + carry;
-        int r = exe.getA() + other;
-        // find if there is aux carry -
-        // This flag is set to a 1 by the instruction just ending
-        // if a carry occurred from bit 3 to bit 4 of the A Register
-        // during the instructions execution
+        int finalValue = regOrMemValue + other;
 
-        exe.setAuxCarry(0xff & other);
-        exe.setA(0xff & r);
+        if (regOrMem == Operand.A.ordinal()) {
+            // find if there is aux carry -
+            // This flag is set to a 1 by the instruction just ending
+            // if a carry occurred from bit 3 to bit 4 of the A Register
+            // during the instructions execution
+            exe.setAuxCarry(0xff & other);
+        }
+        exe.setRegOrMem(regOrMem, finalValue);
         if (setCarry) {
-            if (r > 0xff) {
+            if (finalValue > 0xff) {
                 exe.setCarry();
             } else {
                 exe.resetCarry();
@@ -456,6 +485,34 @@ public abstract class MicroCode {
         exe.setA(0xff & r);
         if (setCarry) {
             if (r > 0xff) {
+                exe.resetCarry();
+            } else {
+                exe.setCarry();
+            }
+        }
+        exe.setZSFlags();
+        exe.setParityFlags();
+        exe.nextIp();
+    }
+
+    private static void doSubtract(Exe exe, int v, int carry, boolean setCarry, int regOrMem) {
+        int regOrMemValue = exe.getRegOrMem(regOrMem);
+        // 2's complement
+        carry = carry & 0x1;
+        v = (v & 0xff) + carry;
+        int other = ((~v) + 1) & 0xff;
+        int finalValue = regOrMemValue + other;
+
+        if (regOrMem == Operand.A.ordinal()) {
+            // find if there is aux carry -
+            // This flag is set to a 1 by the instruction just ending
+            // if a carry occurred from bit 3 to bit 4 of the A Register
+            // during the instructions execution
+            exe.setAuxCarry(0xff & other);
+        }
+        exe.setRegOrMem(regOrMem, 0xff & finalValue);
+        if (setCarry) {
+            if (finalValue > 0xff) {
                 exe.resetCarry();
             } else {
                 exe.setCarry();

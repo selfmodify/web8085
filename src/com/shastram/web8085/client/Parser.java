@@ -28,8 +28,8 @@ public class Parser {
         map.put("adi", new InstructionParser(InstructionParser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
         map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
         map.put("cmc", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
-        map.put("dcr", new InstructionParser(InstructionParser.Mnemonic.DCR, 0x05, OperandParser.oneOperand));
-        map.put("inr", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x04, OperandParser.oneOperand));
+        map.put("dcr", new InstructionParser(InstructionParser.Mnemonic.DCR, 0x05, OperandParser.oneOperandSpacedBy8));
+        map.put("inr", new InstructionParser(InstructionParser.Mnemonic.INR, 0x04, OperandParser.oneOperandSpacedBy8));
         map.put("inx", new InstructionParser(InstructionParser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
         map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
         map.put("sui", new InstructionParser(InstructionParser.Mnemonic.SUI, 0xD6, OperandParser.immediateByteOperand));
@@ -45,6 +45,7 @@ public class Parser {
         map.put("lxi", new InstructionParser(InstructionParser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
         map.put("xchg", new InstructionParser(InstructionParser.Mnemonic.XCHG, 0x01, OperandParser.noOperand));
         map.put(".assert", new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
+        map.put(".break", new InstructionParser(InstructionParser.Mnemonic.BREAK, 0x10, OperandParser.breakOperand));
         map.put("stc", new InstructionParser(InstructionParser.Mnemonic.STC, 0x37, OperandParser.noOperand));
         map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40, new OperandParser() {
             @Override

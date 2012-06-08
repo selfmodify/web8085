@@ -50,7 +50,7 @@ public abstract class OperandParser {
         int num = 0;
         try {
             num = parseNumberAsByte(parts[1]);
-            i.setImmediateByte(num);
+            i.setImmediate8Bit(num);
         } catch (NumberFormatException e) {
             throw new ParserException("Not a valid number", e);
         }
@@ -151,6 +151,18 @@ public abstract class OperandParser {
         }
     };
 
+    /**
+     * instructions op codes are separated by a value of 8 e.g. dcr b is 0x5 and
+     * dcr c is 0x0d and so on.
+     */
+    public static OperandParser oneOperandSpacedBy8 = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+            i.op1 = parseNormalRegister(operands);
+            i.code = i.baseCode + i.op1.ordinal() * 8;
+        }
+    };
+
     public static OperandParser inxOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
@@ -170,7 +182,7 @@ public abstract class OperandParser {
         @Override
         public void parse(Parser parser, InstructionParser i, String line)
                 throws Exception {
-            i.setImmediate(parseNumber(line));
+            i.setImmediate16Bit(parseNumber(line));
             i.code = i.baseCode;
         }
     };
@@ -186,7 +198,7 @@ public abstract class OperandParser {
                 throw new Exception("Incorrect number of operands to LXI.  Expected 2 got " + parts.length);
             }
             i.op1 = parseRegisterPair(parts[0].trim());
-            i.setImmediate(parseNumber(parts[1]));
+            i.setImmediate16Bit(parseNumber(parts[1]));
             if (i.op1 == Operand.SP) {
                 i.code = 0x31;
             } else {
@@ -199,7 +211,7 @@ public abstract class OperandParser {
         @Override
         public void parse(Parser parser, InstructionParser i, String line)
                 throws Exception {
-            i.setImmediateByte(parseNumberAsByte(line));
+            i.setImmediate8Bit(parseNumberAsByte(line));
             i.code = i.baseCode;
         }
     };
@@ -209,6 +221,13 @@ public abstract class OperandParser {
         public void parse(Parser parser, InstructionParser i, String line) throws Exception {
             parser.insertAssertion(i.ip, line);
             i.code = i.baseCode;
+        }
+    };
+
+    public static OperandParser breakOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+            remainingLine.parse(parser, i, line);
         }
     };
 
@@ -260,11 +279,11 @@ public abstract class OperandParser {
         return num;
     }
 
-    public static byte parseNumberAsByte(String line) throws Exception {
+    public static int parseNumberAsByte(String line) throws Exception {
         int num = parseNumber(line);
         if (num < 0 || num > 255) {
             throw new ParserException("Immediate number must be in the range 0-255 " + line);
         }
-        return (byte) (num & 0xff);
+        return (num & 0xff);
     }
 }

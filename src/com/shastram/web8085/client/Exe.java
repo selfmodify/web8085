@@ -125,10 +125,9 @@ public class Exe {
         return str;
     }
 
-    public short getRegOrMem(int i) {
-        int v =
-                getRegOrMemInternal(i);
-        return (short) v;
+    public int getRegOrMem(int i) {
+        int v = getRegOrMemInternal(i) & 0xff;
+        return v;
     }
 
     private int getRegOrMemInternal(int i) {
@@ -146,7 +145,7 @@ public class Exe {
         case 5:
             return l;
         case 6:
-            return getMemAtIp();
+            return getMemAtHL();
         case 7:
             return getA();
         default:
@@ -154,13 +153,21 @@ public class Exe {
         }
     }
 
-    public void setRegOrMem(int i, Operand op) {
-        setRegOrMem(i, op.ordinal());
+    public void setRegOrMem(Operand op, int value) {
+        setRegOrMem(op.ordinal(), value);
     }
 
-    public void setRegOrMem(int i, int intValue) {
-        int value = intValue & 0xff;
-        switch (i) {
+    /**
+     * Set the value of a register or memory pointed by hl
+     * 
+     * @param regOrMem
+     *            : 0 = b, 1=c ... 6=[M], 7=A
+     * @param intValue
+     *            : The byte value to be set
+     */
+    public void setRegOrMem(int regOrMem, int value) {
+        value = value & 0xff;
+        switch (regOrMem) {
         case 0:
             b = value;
             break;
@@ -188,7 +195,7 @@ public class Exe {
             setA(value);
             break;
         default:
-            throw new IllegalStateException("Invalid register index in set " + i);
+            throw new IllegalStateException("Invalid register index in set " + regOrMem);
         }
     }
 
@@ -314,6 +321,11 @@ public class Exe {
         return value;
     }
 
+    public int getMemAtHL() {
+        int value = getMemory(getHL());
+        return value;
+    }
+
     /**
      * @return 1 if the carry is set else return 0
      */
@@ -378,9 +390,12 @@ public class Exe {
         return assertOperation.get(ip);
     }
 
-    public void showDialog(String string) {
-        // TODO Auto-generated method stub
-
+    public void showDialog(String msg) {
+        DebugLineInfo info = getDebugInfo(ip);
+        String str = msg + " ip=" + ip
+                + info == null ? "" : " (Source line=" + info.line + ") ";
+        logger.info(str);
+        nextIp();
     }
 
     public void assertionFailed(String reason) throws Exception {
@@ -448,7 +463,7 @@ public class Exe {
     }
 
     public int getHL() {
-        int value = ((h & 0xff) << 8 + (l & 0xff)) & 0xffff;
+        int value = (((h & 0xff) << 8) + (l & 0xff)) & 0xffff;
         return value;
     }
 
@@ -459,7 +474,7 @@ public class Exe {
     }
 
     public int getBC() {
-        int value = ((b & 0xff) << 8 + (c & 0xff)) & 0xffff;
+        int value = (((b & 0xff) << 8) + (c & 0xff)) & 0xffff;
         return value;
     }
 
@@ -545,7 +560,7 @@ public class Exe {
     }
 
     private int normalizeMemoryAddress(int addr) {
-        return addr % 65536;
+        return (addr % 65536) & 0xffff;
     }
 
     public void setMemoryByte(int addr, int value) {
@@ -577,8 +592,8 @@ public class Exe {
         int value = 0;
         switch (op) {
         case B:
-            value = getHL() + 1;
-            setHL(value);
+            value = getBC() + 1;
+            setBC(value);
             break;
         case D:
             value = getDE() + 1;
@@ -588,7 +603,9 @@ public class Exe {
             value = getHL() + 1;
             setHL(value);
             break;
+        case M:
         case SP:
+            // special case we treat M as SP
             value = getSP() + 1;
             setSP(value);
             break;

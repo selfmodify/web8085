@@ -79,6 +79,7 @@ sbi 25h
 stc
 cmc # complement carry to zero it out
 mvi d,ffh
+.break
 inr d
 .assert d=0, cy=0
 
@@ -90,17 +91,18 @@ mvi b,00
 dcr b
 .assert b=ffh, cy=0
 # using dcr to decrement the contents of memory location 2085 which holds A0h
-mvi a,a0h
-sta 2085h
+lxi h, 2085h
+.break
+mvi m, a0h
 dcr m
-.assert [2085]=9Fh, cy=0
+.assert [2085h]=9Fh, cy=0
 
 ##################################
 # inx - Increment register pair(b,d,h,sp) by 1.  No flags are affected
 lxi h, 9fffh
 inx h
-inx sp
 inx b
-inx h
+inx d
+inx sp
 .assert h=a0h, l=00
 

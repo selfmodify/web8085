@@ -53,7 +53,7 @@ public class Test {
     @org.junit.Test
     public void testAll() throws IOException {
         String[] tests = {
-                //"inx_test.85"
+                //"temp_test.85",
                 "arithmetic_tests.85",
                 /*
                 "load_store.85",

@@ -7,6 +7,7 @@ public class InstructionParser {
         ADI,
         CMC,
         DCR,
+        INR,
         INX,
         NONE,
         MOV,
@@ -16,6 +17,7 @@ public class InstructionParser {
         SBB,
         SBI,
         ASSERT,
+        BREAK,
         MVI,
         LDA,
         LDAX,
@@ -60,9 +62,9 @@ public class InstructionParser {
         oparser.parse(parser, this, operands);
     }
 
-    public void setImmediate(int num) {
+    public void setImmediate16Bit(int num) {
         hasImmediate = true;
-        immediate = num;
+        immediate = num & 0xffff;
         len = 3;
     }
 
@@ -77,9 +79,9 @@ public class InstructionParser {
         return hasImmediate;
     }
 
-    public void setImmediateByte(int num) {
+    public void setImmediate8Bit(int num) {
         hasImmediate = true;
-        immediate = num;
+        immediate = num & 0xff;
         len = 2;
     }
 }
