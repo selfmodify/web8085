@@ -1,0 +1,57 @@
+##################################
+# ANA: Logical AND with accumulator
+mvi a,54h
+mvi d,82h
+ana d
+.assert a=0, s=0, z=1, p=1, ac=1, cy=0
+ana b
+ana c
+ana d
+ana e
+ana h
+ana l
+ana m
+ana a
+
+##################################
+# ANI: AND immediate with accumulator
+mvi a,a3h
+ani 97h
+.assert a=83h, s=1, z=0, p=0, ac=1, cy=0
+
+##################################
+# ORA: Logical OR with accumulator
+mvi a,03h
+mvi c, 81h
+ora c
+.assert s=1, z=0, p=0, cy=0, ac=0
+ora b
+ora c
+ora d
+ora e
+ora h
+ora l
+ora m
+ora a
+
+
+##################################
+# ORI: Logical OR immediate with accumulator
+mvi a,03h
+ori 81h
+.assert s=1, z=0, p=0, cy=0, ac=0
+
+##################################
+# XRA: Logical XOR with accumulator
+mvi a,77h
+mvi d, 56h
+xra d
+.assert s=0, z=0, p=1, cy=0, ac=0
+xra b
+xra c
+xra d
+xra e
+xra h
+xra l
+xra m
+xra a

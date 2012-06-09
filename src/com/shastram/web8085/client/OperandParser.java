@@ -2,23 +2,24 @@ package com.shastram.web8085.client;
 
 import java.util.HashMap;
 
-import com.shastram.web8085.client.InstructionParser.Operand;
+import com.shastram.web8085.client.Parser.PerInstructionToken;
+import com.shastram.web8085.client.Parser.Operand;
 
 public abstract class OperandParser {
-    private static HashMap<String, InstructionParser.Operand> map = createOperandMap();
+    private static HashMap<String, Operand> map = createOperandMap();
 
-    public abstract void parse(Parser parser, InstructionParser i, String line) throws Exception;
+    public abstract void parse(Parser parser, PerInstructionToken i, String line) throws Exception;
 
     private static HashMap<String, Operand> createOperandMap() {
         HashMap<String, Operand> map = new HashMap<String, Operand>();
-        map.put("a", InstructionParser.Operand.A);
-        map.put("b", InstructionParser.Operand.B);
-        map.put("c", InstructionParser.Operand.C);
-        map.put("d", InstructionParser.Operand.D);
-        map.put("e", InstructionParser.Operand.E);
-        map.put("h", InstructionParser.Operand.H);
-        map.put("l", InstructionParser.Operand.L);
-        map.put("m", InstructionParser.Operand.M);
+        map.put("a", Parser.Operand.A);
+        map.put("b", Parser.Operand.B);
+        map.put("c", Parser.Operand.C);
+        map.put("d", Parser.Operand.D);
+        map.put("e", Parser.Operand.E);
+        map.put("h", Parser.Operand.H);
+        map.put("l", Parser.Operand.L);
+        map.put("m", Parser.Operand.M);
         return map;
     }
 
@@ -29,7 +30,7 @@ public abstract class OperandParser {
      * @param operands
      * @throws Exception
      */
-    public static void parse2Register(InstructionParser i, String operands) throws Exception {
+    public static void parse2Register(PerInstructionToken i, String operands) throws Exception {
         String[] parts = getTwoOperands(operands);
         i.op1 = parseNormalRegister(parts[0]);
         i.op2 = parseNormalRegister(parts[1]);
@@ -43,7 +44,7 @@ public abstract class OperandParser {
         return parts;
     }
 
-    public static void parseRegAndByteImmediate(InstructionParser i, String operands) throws Exception {
+    public static void parseRegAndByteImmediate(PerInstructionToken i, String operands) throws Exception {
         String[] parts = getTwoOperands(operands);
         i.op1 = parseNormalRegister(parts[0]);
 
@@ -69,8 +70,8 @@ public abstract class OperandParser {
         if (op == null) {
             throw new ParserException(reg + " is not a valid register");
         }
-        if (op.ordinal() >= InstructionParser.Operand.B.ordinal() &&
-                op.ordinal() <= InstructionParser.Operand.A.ordinal()) {
+        if (op.ordinal() >= Parser.Operand.B.ordinal() &&
+                op.ordinal() <= Parser.Operand.A.ordinal()) {
             return op;
         }
         throw new ParserException(reg + " is not a valid register");
@@ -122,30 +123,30 @@ public abstract class OperandParser {
         throw new Exception(reg + " is not a register pair");
     }
 
-    public static void parseMovOperands(InstructionParser i, String operands) throws Exception {
+    public static void parseMovOperands(PerInstructionToken i, String operands) throws Exception {
         parse2Register(i, operands);
-        if (i.op1 == InstructionParser.Operand.M && i.op2 == InstructionParser.Operand.M) {
+        if (i.op1 == Parser.Operand.M && i.op2 == Parser.Operand.M) {
             throw new ParserException("Mov operand cannot have both operand set to memory");
         }
         int value = 0x40 + i.op1.ordinal() * 8 + i.op2.ordinal();
         i.code = value;
     }
 
-    protected static void parseMviOperands(InstructionParser i, String operands) throws Exception {
+    protected static void parseMviOperands(PerInstructionToken i, String operands) throws Exception {
         parseRegAndByteImmediate(i, operands);
         i.code = i.op1.ordinal() * 8 + 6;
     }
 
     public static OperandParser noOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String line) throws Exception {
             i.code = i.baseCode;
         }
     };
 
     public static OperandParser oneOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
             i.op1 = parseNormalRegister(operands);
             i.code = i.baseCode + i.op1.ordinal();
         }
@@ -157,7 +158,7 @@ public abstract class OperandParser {
      */
     public static OperandParser oneOperandSpacedBy8 = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
             i.op1 = parseNormalRegister(operands);
             i.code = i.baseCode + i.op1.ordinal() * 8;
         }
@@ -165,7 +166,7 @@ public abstract class OperandParser {
 
     public static OperandParser inxOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
             Operand op = parseRegisterPairInternal(operands);
             if (op == Operand.SP) {
                 i.code = 0x33;
@@ -177,7 +178,7 @@ public abstract class OperandParser {
 
     public static OperandParser dadOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
             Operand op = parseRegisterPairInternal(operands);
             if (op == Operand.SP) {
                 i.code = 0x39;
@@ -189,7 +190,7 @@ public abstract class OperandParser {
 
     public static OperandParser dcxOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
             Operand op = parseRegisterPairInternal(operands);
             if (op == Operand.SP) {
                 i.code = 0x3B;
@@ -204,7 +205,7 @@ public abstract class OperandParser {
      */
     public static OperandParser immediateOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line)
+        public void parse(Parser parser, PerInstructionToken i, String line)
                 throws Exception {
             i.setImmediate16Bit(parseNumber(line));
             i.code = i.baseCode;
@@ -216,7 +217,7 @@ public abstract class OperandParser {
      */
     public static OperandParser lxiOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String line) throws Exception {
             String[] parts = line.split(",");
             if (parts.length != 2) {
                 throw new Exception("Incorrect number of operands to LXI.  Expected 2 got " + parts.length);
@@ -233,7 +234,7 @@ public abstract class OperandParser {
 
     public static OperandParser immediateByteOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line)
+        public void parse(Parser parser, PerInstructionToken i, String line)
                 throws Exception {
             i.setImmediate8Bit(parseNumberAsByte(line));
             i.code = i.baseCode;
@@ -242,7 +243,7 @@ public abstract class OperandParser {
 
     public static OperandParser remainingLine = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String line) throws Exception {
             parser.insertAssertion(i.ip, line);
             i.code = i.baseCode;
         }
@@ -250,7 +251,7 @@ public abstract class OperandParser {
 
     public static OperandParser breakOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line) throws Exception {
+        public void parse(Parser parser, PerInstructionToken i, String line) throws Exception {
             remainingLine.parse(parser, i, line);
         }
     };
@@ -260,7 +261,7 @@ public abstract class OperandParser {
      */
     public static OperandParser ldaxOrStaxOperand = new OperandParser() {
         @Override
-        public void parse(Parser parser, InstructionParser i, String line)
+        public void parse(Parser parser, PerInstructionToken i, String line)
                 throws Exception {
             Operand op = getOperand(line);
             if (op != Operand.B && op != Operand.D) {

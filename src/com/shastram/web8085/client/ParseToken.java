@@ -1,14 +1,16 @@
 package com.shastram.web8085.client;
 
+import com.shastram.web8085.client.Parser.PerInstructionToken;
+
 public class ParseToken {
-    private InstructionParser ix;
+    private Parser.PerInstructionToken ix;
     private Type type;
     private String token;
     private int lineNumber;
     private int startColumn;
     private int endColumn;
 
-    public ParseToken(InstructionParser instruction,
+    public ParseToken(Parser.PerInstructionToken instruction,
             String token,
             int line,
             int startColumn,
@@ -43,11 +45,11 @@ public class ParseToken {
         this.token = token;
     }
 
-    public InstructionParser getIx() {
+    public PerInstructionToken getIx() {
         return ix;
     }
 
-    public void setIx(InstructionParser ix) {
+    public void setIx(PerInstructionToken ix) {
         this.ix = ix;
     }
 

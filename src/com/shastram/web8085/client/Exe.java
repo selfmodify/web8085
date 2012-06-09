@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.shastram.web8085.client.InstructionParser.Operand;
+import com.shastram.web8085.client.Parser.Operand;
+import com.shastram.web8085.client.Parser.PerInstructionToken;
 
 public class Exe {
     private static Logger logger = Logger.getLogger(Exe.class.getName());
@@ -74,7 +75,7 @@ public class Exe {
     }
 
     public void insert(ParseToken token) throws ParserException {
-        InstructionParser i = token.getIx();
+        PerInstructionToken i = token.getIx();
         addDebugInfo(token);
         switch (token.getType()) {
         case INSTRUCTION:
@@ -102,7 +103,7 @@ public class Exe {
     }
 
     private void addDebugInfo(ParseToken token) {
-        InstructionParser ix = token.getIx();
+        PerInstructionToken ix = token.getIx();
         DebugLineInfo info = new DebugLineInfo(token.getToken(),
                 token.getLineNumber(),
                 0,
@@ -149,7 +150,7 @@ public class Exe {
         case 7:
             return getA();
         default:
-            throw new IllegalStateException("Invalid register index in get" + i);
+            throw new IllegalStateException("Invalid register index in get " + i);
         }
     }
 
@@ -520,7 +521,15 @@ public class Exe {
         auxCarry = ((partSum & 0x10) != 0);
     }
 
-    public int getRegOrMem(Operand op) {
+    public void setAuxCarry() {
+        auxCarry = true;
+    }
+
+    public void resetAuxCarry() {
+        auxCarry = false;
+    }
+
+    public int getRegOrMem(Parser.Operand op) {
         switch (op) {
         case B:
             return b;

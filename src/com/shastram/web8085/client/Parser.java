@@ -5,7 +5,107 @@ import java.util.logging.Logger;
 
 public class Parser {
 
-    private static HashMap<String, InstructionParser> instructions = loadInstructions();
+    public enum Mnemonic {
+        ANA,
+        ACI,
+        ADC,
+        ADI,
+        ANI,
+        CMC,
+        DAD,
+        DCR,
+        DCX,
+        INR,
+        INX,
+        MOV,
+        NONE,
+        ORA,
+        ORI,
+        ADD,
+        SUB,
+        SUI,
+        SBB,
+        SBI,
+        ASSERT,
+        BREAK,
+        MVI,
+        LDA,
+        LDAX,
+        LHLD,
+        SHLD,
+        STA,
+        STAX,
+        LXI,
+        XCHG,
+        STC,
+        XRA,
+        XRI,
+    }
+
+    public enum Operand {
+        B, C, D, E, H, L, M, A, PSW, SP
+    }
+
+    /**
+     * Per instruction tokenizer
+     * 
+     * @author vijay
+     * 
+     */
+    public static class PerInstructionToken {
+        public Operand op1 = null;
+        public Operand op2 = null;
+        public Mnemonic mnemonic = Mnemonic.NONE;
+        public int baseCode = -1;
+        public int code = -1;
+        public String name;
+        private final OperandParser oparser;
+        public int ip;
+        private int immediate;
+        private boolean hasImmediate;
+        int len = 1;
+
+        public PerInstructionToken(Mnemonic type, int code, OperandParser oparser) {
+            this.mnemonic = type;
+            this.name = type.name().toLowerCase();
+            this.baseCode = code;
+            this.oparser = oparser;
+        }
+
+        public Mnemonic getMnemonic() {
+            return mnemonic;
+        }
+
+        public void parseOperands(Parser parser, String operands, int ip) throws Exception {
+            this.ip = ip;
+            oparser.parse(parser, this, operands);
+        }
+
+        public void setImmediate16Bit(int num) {
+            hasImmediate = true;
+            immediate = num & 0xffff;
+            len = 3;
+        }
+
+        public int getImmediate() throws ParserException {
+            if (!hasImmediate) {
+                throw new ParserException("Instruction does not have an immediate operand.");
+            }
+            return immediate;
+        }
+
+        public boolean hasImmediate() {
+            return hasImmediate;
+        }
+
+        public void setImmediate8Bit(int num) {
+            hasImmediate = true;
+            immediate = num & 0xff;
+            len = 2;
+        }
+    }
+
+    private static HashMap<String, PerInstructionToken> instructions = loadInstructions();
 
     private static Logger logger = Logger.getLogger(Parser.class.getName());
 
@@ -21,47 +121,92 @@ public class Parser {
      * 
      * @return
      */
-    private static HashMap<String, InstructionParser> loadInstructions() {
-        HashMap<String, InstructionParser> map = new HashMap<String, InstructionParser>();
-        map.put("aci", new InstructionParser(InstructionParser.Mnemonic.ACI, 0xCE, OperandParser.immediateByteOperand));
-        map.put("adc", new InstructionParser(InstructionParser.Mnemonic.ADC, 0x88, OperandParser.oneOperand));
-        map.put("adi", new InstructionParser(InstructionParser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
-        map.put("add", new InstructionParser(InstructionParser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
-        map.put("cmc", new InstructionParser(InstructionParser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
-        map.put("dad", new InstructionParser(InstructionParser.Mnemonic.DAD, 0x09, OperandParser.dadOperand));
-        map.put("dcr", new InstructionParser(InstructionParser.Mnemonic.DCR, 0x05, OperandParser.oneOperandSpacedBy8));
-        map.put("dcx", new InstructionParser(InstructionParser.Mnemonic.DCX, 0x0B, OperandParser.dcxOperand));
-        map.put("inr", new InstructionParser(InstructionParser.Mnemonic.INR, 0x04, OperandParser.oneOperandSpacedBy8));
-        map.put("inx", new InstructionParser(InstructionParser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
-        map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
-        map.put("sui", new InstructionParser(InstructionParser.Mnemonic.SUI, 0xD6, OperandParser.immediateByteOperand));
-        map.put("sbb", new InstructionParser(InstructionParser.Mnemonic.SBB, 0x98, OperandParser.oneOperand));
-        map.put("sbi", new InstructionParser(InstructionParser.Mnemonic.SBI, 0xDE, OperandParser.immediateByteOperand));
-        map.put("lda", new InstructionParser(InstructionParser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
-        map.put("sta", new InstructionParser(InstructionParser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
-        map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
-        map.put("ldax", new InstructionParser(InstructionParser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
-        map.put("stax", new InstructionParser(InstructionParser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
-        map.put("lhld", new InstructionParser(InstructionParser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
-        map.put("shld", new InstructionParser(InstructionParser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
-        map.put("lxi", new InstructionParser(InstructionParser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
-        map.put("xchg", new InstructionParser(InstructionParser.Mnemonic.XCHG, 0x01, OperandParser.noOperand));
-        map.put(".assert", new InstructionParser(InstructionParser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
-        map.put(".break", new InstructionParser(InstructionParser.Mnemonic.BREAK, 0x10, OperandParser.breakOperand));
-        map.put("stc", new InstructionParser(InstructionParser.Mnemonic.STC, 0x37, OperandParser.noOperand));
-        map.put("mov", new InstructionParser(InstructionParser.Mnemonic.MOV, 0x40, new OperandParser() {
-            @Override
-            public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
-                parseMovOperands(i, operands);
-            }
-        }));
-        map.put("mvi", new InstructionParser(InstructionParser.Mnemonic.MVI, 0x0, new OperandParser() {
-            @Override
-            public void parse(Parser parser, InstructionParser i, String operands) throws Exception {
-                parseMviOperands(i, operands);
-            }
-        }));
-        map.put("sub", new InstructionParser(InstructionParser.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
+    private static HashMap<String, PerInstructionToken> loadInstructions() {
+        HashMap<String, PerInstructionToken> map = new HashMap<String, PerInstructionToken>();
+
+        map.put("ana",
+                new PerInstructionToken(Parser.Mnemonic.ANA, 0xA0, OperandParser.oneOperand));
+        map.put("aci",
+                new PerInstructionToken(Parser.Mnemonic.ACI, 0xCE, OperandParser.immediateByteOperand));
+        map.put("adc",
+                new PerInstructionToken(Parser.Mnemonic.ADC, 0x88, OperandParser.oneOperand));
+        map.put("adi",
+                new PerInstructionToken(Parser.Mnemonic.ADI, 0xC6, OperandParser.immediateByteOperand));
+        map.put("add",
+                new PerInstructionToken(Parser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
+        map.put("ani",
+                new PerInstructionToken(Parser.Mnemonic.ANI, 0xE6, OperandParser.immediateByteOperand));
+        map.put("cmc",
+                new PerInstructionToken(Parser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
+        map.put("dad",
+                new PerInstructionToken(Parser.Mnemonic.DAD, 0x09, OperandParser.dadOperand));
+        map.put("dcr",
+                new PerInstructionToken(Parser.Mnemonic.DCR, 0x05, OperandParser.oneOperandSpacedBy8));
+        map.put("dcx",
+                new PerInstructionToken(Parser.Mnemonic.DCX, 0x0B, OperandParser.dcxOperand));
+        map.put("inr",
+                new PerInstructionToken(Parser.Mnemonic.INR, 0x04, OperandParser.oneOperandSpacedBy8));
+        map.put("inx",
+                new PerInstructionToken(Parser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
+        map.put("ora",
+                new PerInstructionToken(Parser.Mnemonic.ORA, 0xB0, OperandParser.oneOperand));
+        map.put("ori",
+                new PerInstructionToken(Parser.Mnemonic.ORI, 0xF6, OperandParser.immediateByteOperand));
+        map.put("sub",
+                new PerInstructionToken(Parser.Mnemonic.SUB, 0x91, OperandParser.oneOperand));
+        map.put("sui",
+                new PerInstructionToken(Parser.Mnemonic.SUI, 0xD6, OperandParser.immediateByteOperand));
+        map.put("sbb",
+                new PerInstructionToken(Parser.Mnemonic.SBB, 0x98, OperandParser.oneOperand));
+        map.put("sbi",
+                new PerInstructionToken(Parser.Mnemonic.SBI, 0xDE, OperandParser.immediateByteOperand));
+        map.put("lda",
+                new PerInstructionToken(Parser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
+        map.put("sta",
+                new PerInstructionToken(Parser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
+        map.put("stax",
+                new PerInstructionToken(Parser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
+        map.put("ldax",
+                new PerInstructionToken(Parser.Mnemonic.LDAX, 0x0A, OperandParser.ldaxOrStaxOperand));
+        map.put("stax",
+                new PerInstructionToken(Parser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
+        map.put("lhld",
+                new PerInstructionToken(Parser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
+        map.put("shld",
+                new PerInstructionToken(Parser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
+        map.put("lxi",
+                new PerInstructionToken(Parser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
+        map.put("xchg",
+                new PerInstructionToken(Parser.Mnemonic.XCHG, 0x01, OperandParser.noOperand));
+        map.put(".assert",
+                new PerInstructionToken(Parser.Mnemonic.ASSERT, 0x8, OperandParser.remainingLine));
+        map.put(".break",
+                new PerInstructionToken(Parser.Mnemonic.BREAK, 0x10, OperandParser.breakOperand));
+        map.put("stc",
+                new PerInstructionToken(Parser.Mnemonic.STC, 0x37, OperandParser.noOperand));
+        map.put("mov",
+                new PerInstructionToken(Parser.Mnemonic.MOV, 0x40,
+                        new OperandParser() {
+                            @Override
+                            public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
+                                parseMovOperands(i, operands);
+                            }
+                        }));
+        map.put("mvi",
+                new PerInstructionToken(Parser.Mnemonic.MVI, 0x0,
+                        new OperandParser() {
+                            @Override
+                            public void parse(Parser parser, PerInstructionToken i, String operands) throws Exception {
+                                parseMviOperands(i, operands);
+                            }
+                        }));
+        map.put("sub",
+                new PerInstructionToken(Parser.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
+        map.put("xra",
+                new PerInstructionToken(Parser.Mnemonic.XRA, 0xA8, OperandParser.oneOperand));
+        map.put("xri",
+                new PerInstructionToken(Parser.Mnemonic.XRI, 0xEE, OperandParser.immediateByteOperand));
+
         return map;
     }
 
@@ -106,7 +251,7 @@ public class Parser {
             line = line.substring(0, commentStart);
         }
         String[] parts = line.split("[\t ]", 2);
-        InstructionParser ix = instructions.get(parts[0]);
+        PerInstructionToken ix = instructions.get(parts[0]);
         if (ix == null) {
             Character ch = line.charAt(0);
             if (ch == '\u00a0') {
