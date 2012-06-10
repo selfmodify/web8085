@@ -272,7 +272,8 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x90;
-            doSubtract(exe, exe.getA(), 0, true /* set carry */, code % 8);
+            int op1 = exe.getRegOrMem(code % 8);
+            doSubtractAndSetRegisterA(exe, op1, 0);
         }
     };
 
@@ -281,7 +282,7 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
-            doSubtract(exe, op1, 0, true /* set carry */);
+            doSubtractAndSetRegisterA(exe, op1, 0);
         }
     };
 
@@ -289,7 +290,8 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x98;
-            doSubtract(exe, exe.getA(), exe.getCarry(), true /* set carry */, code % 8);
+            int op1 = exe.getRegOrMem(code % 8);
+            doSubtractAndSetRegisterA(exe, op1, exe.getCarry());
         }
     };
 
@@ -298,7 +300,8 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
-            doSubtract(exe, op1, exe.getCarry(), true /* set carry */);
+            int finalValue = doSubtract(exe, op1, exe.getCarry(), true, exe.getA(), true);
+            exe.setA(finalValue);
         }
     };
 
@@ -306,7 +309,6 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x04;
-            int op1 = exe.getRegOrMem(code / 8);
             doAdd(exe, 1, 0, false, code / 8);
         }
     };
@@ -607,35 +609,19 @@ public abstract class MicroCode {
     }
 
     /**
-     * Do a = v - a This is done as follows v = 2's complement of v a = v + a
-     * complement carry set Zero, Sign, and other flags.
-     * 
-     * @param exe
-     * @param v
-     * @param setCarry
-     */
-    private static void doSubtract(Exe exe, int v, int carry, boolean setCarry) {
-        doSubtract(exe, v, carry, setCarry, Operand.A.ordinal());
-    }
-
-    /**
      * Only use for subtract/dcr instructions. Do not use for compare as this
-     * will set the value of the register
+     * will set the value of the register A.
+     * Carry is always set.
+     * A = A - v
      * 
      * @param exe
-     * @param v
+     * @param other
      *            - operand1
      * @param carry
      *            - The value of the carry 0/1
-     * @param setCarry
-     *            - Should the carry flag be set after the operation.
-     * @param regOrMem
-     *            - The code for register or memory
      */
-    private static void doSubtract(Exe exe, int v, int carry, boolean setCarry, int regOrMem) {
-        int regOrMemValue = exe.getRegOrMem(regOrMem);
-        int finalValue = doSubtract(exe, v, carry, setCarry, regOrMemValue, true);
-        // for compare instructions we skip this part
+    private static void doSubtractAndSetRegisterA(Exe exe, int other, int carry) {
+        int finalValue = doSubtract(exe, other, carry, true /* set carry */, exe.getA(), true);
         exe.setA(0xff & finalValue);
     }
 
@@ -680,7 +666,8 @@ public abstract class MicroCode {
         exe.setZSFlags(finalValue);
         exe.setParityFlags(finalValue);
         exe.nextIp();
-        return finalValue & 0xff;
+        finalValue = finalValue & 0xff;
+        return finalValue;
     }
 
     protected void addWithCarry(Exe exe, int op1) {
