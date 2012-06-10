@@ -301,16 +301,16 @@ public class Exe {
         return carry;
     }
 
-    public void setZSFlags() {
+    protected void setZSFlags(int value) {
         // set the zero bit
-        if (getA() == 0) {
+        if (value == 0) {
             setZero();
         } else {
             resetZero();
         }
 
         // set the sign bit
-        if ((getA() & 0x80) == 0x80) {
+        if ((value & 0x80) == 0x80) {
             setSign();
         } else {
             resetSign();
@@ -584,8 +584,8 @@ public class Exe {
         return context;
     }
 
-    public void setParityFlags() {
-        int v = getA() & 0xff;
+    public void setParityFlags(int value) {
+        int v = value & 0xff;
         int count1s = 0;
         while (v != 0) {
             if ((v & 0x1) == 1) {

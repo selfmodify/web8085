@@ -12,6 +12,8 @@ public class Parser {
         ADI,
         ANI,
         CMC,
+        CMP,
+        CPI,
         DAD,
         DCR,
         DCX,
@@ -138,6 +140,10 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.ANI, 0xE6, OperandParser.immediateByteOperand));
         map.put("cmc",
                 new PerInstructionToken(Parser.Mnemonic.CMC, 0x3f, OperandParser.noOperand));
+        map.put("cmp",
+                new PerInstructionToken(Parser.Mnemonic.CMP, 0xB8, OperandParser.oneOperand));
+        map.put("cpi",
+                new PerInstructionToken(Parser.Mnemonic.CPI, 0xFE, OperandParser.immediateByteOperand));
         map.put("dad",
                 new PerInstructionToken(Parser.Mnemonic.DAD, 0x09, OperandParser.dadOperand));
         map.put("dcr",

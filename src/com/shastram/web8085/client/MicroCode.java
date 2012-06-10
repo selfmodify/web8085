@@ -32,6 +32,39 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode cmp = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0xb8;
+            int op1 = exe.getRegOrMem(code);
+            doCompare(exe, op1);
+        }
+    };
+
+    public static MicroCode cpi = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+            doCompare(exe, exe.getMemAtIp());
+        }
+    };
+
+    public static void doCompare(Exe exe, int value) {
+        value = value & 0xff;
+        doSubtract(exe, value, 0, false, exe.getA(), true);
+        int a = exe.getA();
+        if (a < value) {
+            exe.setCarry();
+            exe.resetZero();
+        } else if (a == value) {
+            exe.setZero();
+            exe.resetCarry();
+        } else {
+            exe.resetCarry();
+            exe.resetZero();
+        }
+    }
+
     public static MicroCode ora = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
@@ -218,8 +251,10 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x05;
-            int op1 = exe.getRegOrMem(code % 8);
-            doSubtract(exe, 1, 0, false, code / 8);
+            int op1 = exe.getRegOrMem(code / 8);
+            boolean setAuxCarry = (op1 == Operand.A.ordinal());
+            int finalValue = doSubtract(exe, 1, 0, false, op1, setAuxCarry);
+            exe.setRegOrMem(code / 8, finalValue);
         }
     };
 
@@ -237,8 +272,7 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x90;
-            int op1 = exe.getRegOrMem(code % 8);
-            doSubtract(exe, op1, 0, true /* set carry */);
+            doSubtract(exe, exe.getA(), 0, true /* set carry */, code % 8);
         }
     };
 
@@ -255,8 +289,7 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0x98;
-            int op1 = exe.getRegOrMem(code % 8);
-            doSubtract(exe, op1, exe.getCarry(), true /* set carry */);
+            doSubtract(exe, exe.getA(), exe.getCarry(), true /* set carry */, code % 8);
         }
     };
 
@@ -538,16 +571,16 @@ public abstract class MicroCode {
                 exe.resetCarry();
             }
         }
-        exe.setZSFlags();
-        exe.setParityFlags();
+        exe.setZSFlags(exe.getA());
+        exe.setParityFlags(exe.getA());
         exe.nextIp();
     }
 
     private static void doAnd(Exe exe, int value) {
         value = value & 0xff;
         exe.setA(exe.getA() & value);
-        exe.setZSFlags();
-        exe.setParityFlags();
+        exe.setZSFlags(exe.getA());
+        exe.setParityFlags(exe.getA());
 
         exe.resetCarry();
         exe.setAuxCarry();
@@ -556,8 +589,8 @@ public abstract class MicroCode {
     private static void doOr(Exe exe, int value) {
         value = value & 0xff;
         exe.setA(exe.getA() | value);
-        exe.setZSFlags();
-        exe.setParityFlags();
+        exe.setZSFlags(exe.getA());
+        exe.setParityFlags(exe.getA());
 
         exe.resetCarry();
         exe.resetAuxCarry();
@@ -566,8 +599,8 @@ public abstract class MicroCode {
     private static void doXOr(Exe exe, int value) {
         value = value & 0xff;
         exe.setA(exe.getA() ^ value);
-        exe.setZSFlags();
-        exe.setParityFlags();
+        exe.setZSFlags(exe.getA());
+        exe.setParityFlags(exe.getA());
 
         exe.resetCarry();
         exe.resetAuxCarry();
@@ -582,46 +615,61 @@ public abstract class MicroCode {
      * @param setCarry
      */
     private static void doSubtract(Exe exe, int v, int carry, boolean setCarry) {
-        // 2's complement
-        carry = carry & 0x1;
-        v = (v & 0xff) + carry;
-        int other = ((~v) + 1) & 0xff;
-        int r = exe.getA() + other;
-        // find if there is aux carry -
-        // This flag is set to a 1 by the instruction just ending
-        // if a carry occurred from bit 3 to bit 4 of the A Register
-        // during the instructions execution
-
-        exe.setAuxCarry(0xff & other);
-        exe.setA(0xff & r);
-        if (setCarry) {
-            if (r > 0xff) {
-                exe.resetCarry();
-            } else {
-                exe.setCarry();
-            }
-        }
-        exe.setZSFlags();
-        exe.setParityFlags();
-        exe.nextIp();
+        doSubtract(exe, v, carry, setCarry, Operand.A.ordinal());
     }
 
+    /**
+     * Only use for subtract/dcr instructions. Do not use for compare as this
+     * will set the value of the register
+     * 
+     * @param exe
+     * @param v
+     *            - operand1
+     * @param carry
+     *            - The value of the carry 0/1
+     * @param setCarry
+     *            - Should the carry flag be set after the operation.
+     * @param regOrMem
+     *            - The code for register or memory
+     */
     private static void doSubtract(Exe exe, int v, int carry, boolean setCarry, int regOrMem) {
         int regOrMemValue = exe.getRegOrMem(regOrMem);
+        int finalValue = doSubtract(exe, v, carry, setCarry, regOrMemValue, true);
+        // for compare instructions we skip this part
+        exe.setA(0xff & finalValue);
+    }
+
+    /**
+     * Do subtraction without affecting any registers
+     * 
+     * @param exe
+     * @param v
+     *            - operand1
+     * @param carry
+     *            - The value of the carry 0/1
+     * @param setCarry
+     *            - Should the carry flag be set after the operation.
+     * @param regOrMemValue
+     *            - operand
+     * @param setAuxCarry
+     *            - Should the aux carry be set based on the result.
+     * @return: ( 2's complement of (v + carry)) + op1
+     */
+    private static int doSubtract(Exe exe, int v, int carry, boolean setCarry, int regOrMemValue,
+            boolean setAuxCarry) {
         // 2's complement
         carry = carry & 0x1;
         v = (v & 0xff) + carry;
         int other = ((~v) + 1) & 0xff;
         int finalValue = regOrMemValue + other;
 
-        if (regOrMem == Operand.A.ordinal()) {
+        if (setAuxCarry) {
             // find if there is aux carry -
             // This flag is set to a 1 by the instruction just ending
             // if a carry occurred from bit 3 to bit 4 of the A Register
             // during the instructions execution
             exe.setAuxCarry(0xff & other);
         }
-        exe.setRegOrMem(regOrMem, 0xff & finalValue);
         if (setCarry) {
             if (finalValue > 0xff) {
                 exe.resetCarry();
@@ -629,9 +677,10 @@ public abstract class MicroCode {
                 exe.setCarry();
             }
         }
-        exe.setZSFlags();
-        exe.setParityFlags();
+        exe.setZSFlags(finalValue);
+        exe.setParityFlags(finalValue);
         exe.nextIp();
+        return finalValue & 0xff;
     }
 
     protected void addWithCarry(Exe exe, int op1) {

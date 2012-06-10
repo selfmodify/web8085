@@ -1,0 +1,22 @@
+##################################
+# CMP: Compare with accumulator
+mvi b,62h
+mvi a,57h
+cmp b
+.assert a=57h, b=62h, s=1, z=0, ac=1, p=1, cy=1
+cmp c
+cmp d
+cmp e
+cmp h
+cmp l
+cmp m
+cmp a
+
+##################################
+# CPI: Compare immediate with accumulator
+mvi a,c2h
+cpi 98h
+.assert a=c2h, s=0, ac=0, p=0, z=0, cy=0 
+
+cpi c2h
+.assert a=c2h, s=0, ac=1, p=1, z=1, cy=0 
