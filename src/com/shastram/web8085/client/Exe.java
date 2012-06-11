@@ -121,7 +121,7 @@ public class Exe {
         if (ix < 0) {
             ix = 256 + ix;
         }
-        String str = Instruction.toString(ix, 0);
+        String str = MicroCode.toString(ix, 0);
         counter++; // this is buggy must be incremented by length of instruction
         return str;
     }
@@ -209,7 +209,7 @@ public class Exe {
     }
 
     public void step() throws Exception {
-        Instruction.execute(this);
+        MicroCode.execute(this);
         if (Config.printRegisters) {
             String str = this.getRegisterValues();
             logger.info(str);
