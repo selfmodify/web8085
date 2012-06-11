@@ -411,12 +411,12 @@ public class Exe {
      * @return Read the 16 bit immediate from ip, ip+1. Also increment the ip by
      *         2.
      */
-    public int read16bit() {
+    public int getMemAtIp16bit() {
         int value = getMemAtIp();
         incrIp();
         value = ((getMemAtIp() << 8) & 0xff00) + value;
         incrIp();
-        return value;
+        return value & 0xffff;
     }
 
     public boolean hltExecuted() {
@@ -500,7 +500,7 @@ public class Exe {
     }
 
     public int getSP() {
-        return sp;
+        return sp & 0xff;
     }
 
     public void setSP(int value) {
@@ -696,5 +696,9 @@ public class Exe {
         default:
             throw new IllegalStateException("Invalid register pair specified " + op.toString());
         }
+    }
+
+    public void setIp(int location) {
+        this.ip = (location & 0xffff);
     }
 }

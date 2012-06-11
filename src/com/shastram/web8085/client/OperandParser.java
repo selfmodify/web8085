@@ -203,7 +203,7 @@ public abstract class OperandParser {
     /**
      * Parse an immediate value operand. The value must be within 16 bits.
      */
-    public static OperandParser immediateOperand = new OperandParser() {
+    public static OperandParser immediate16BitOperand = new OperandParser() {
         @Override
         public void parse(Parser parser, PerInstructionToken i, String line)
                 throws Exception {

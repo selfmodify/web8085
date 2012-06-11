@@ -6,11 +6,15 @@ import java.util.logging.Logger;
 public class Parser {
 
     public enum Mnemonic {
-        ANA,
         ACI,
         ADC,
+        ADD,
         ADI,
+        ANA,
         ANI,
+        ASSERT,
+        BREAK,
+        CALL,
         CMA,
         CMC,
         CMP,
@@ -20,31 +24,29 @@ public class Parser {
         DCX,
         INR,
         INX,
-        MOV,
-        NONE,
-        ORA,
-        ORI,
-        ADD,
-        SUB,
-        SUI,
-        SBB,
-        SBI,
-        ASSERT,
-        BREAK,
-        MVI,
+        JMP,
         LDA,
         LDAX,
         LHLD,
+        LXI,
+        MOV,
+        MVI,
+        NONE,
+        ORA,
+        ORI,
         RAL,
         RAR,
-        RRC,
         RLC,
+        RRC,
+        SBB,
+        SBI,
         SHLD,
         STA,
         STAX,
-        LXI,
-        XCHG,
         STC,
+        SUB,
+        SUI,
+        XCHG,
         XRA,
         XRI,
     }
@@ -60,17 +62,17 @@ public class Parser {
      * 
      */
     public static class PerInstructionToken {
-        public Operand op1 = null;
-        public Operand op2 = null;
-        public Mnemonic mnemonic = Mnemonic.NONE;
         public int baseCode = -1;
         public int code = -1;
-        public String name;
-        private final OperandParser oparser;
-        public int ip;
-        private int immediate;
         private boolean hasImmediate;
+        private int immediate;
+        public int ip;
         int len = 1;
+        public Mnemonic mnemonic = Mnemonic.NONE;
+        public String name;
+        public Operand op1 = null;
+        public Operand op2 = null;
+        private final OperandParser oparser;
 
         public PerInstructionToken(Mnemonic type, int code, OperandParser oparser) {
             this.mnemonic = type;
@@ -79,8 +81,19 @@ public class Parser {
             this.oparser = oparser;
         }
 
+        public int getImmediate() throws ParserException {
+            if (!hasImmediate) {
+                throw new ParserException("Instruction does not have an immediate operand.");
+            }
+            return immediate;
+        }
+
         public Mnemonic getMnemonic() {
             return mnemonic;
+        }
+
+        public boolean hasImmediate() {
+            return hasImmediate;
         }
 
         public void parseOperands(Parser parser, String operands, int ip) throws Exception {
@@ -94,17 +107,6 @@ public class Parser {
             len = 3;
         }
 
-        public int getImmediate() throws ParserException {
-            if (!hasImmediate) {
-                throw new ParserException("Instruction does not have an immediate operand.");
-            }
-            return immediate;
-        }
-
-        public boolean hasImmediate() {
-            return hasImmediate;
-        }
-
         public void setImmediate8Bit(int num) {
             hasImmediate = true;
             immediate = num & 0xff;
@@ -115,13 +117,6 @@ public class Parser {
     private static HashMap<String, PerInstructionToken> instructions = loadInstructions();
 
     private static Logger logger = Logger.getLogger(Parser.class.getName());
-
-    private final HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
-
-    private String[] source;
-    private int lineNumber;
-
-    private String currentLine;
 
     /**
      * Parsers for the instructions
@@ -143,6 +138,8 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.ADD, 0x80, OperandParser.oneOperand));
         map.put("ani",
                 new PerInstructionToken(Parser.Mnemonic.ANI, 0xE6, OperandParser.immediateByteOperand));
+        map.put("call",
+                new PerInstructionToken(Parser.Mnemonic.CALL, 0xCD, OperandParser.immediate16BitOperand));
         map.put("cma",
                 new PerInstructionToken(Parser.Mnemonic.CMA, 0x2F, OperandParser.noOperand));
         map.put("cmc",
@@ -174,9 +171,9 @@ public class Parser {
         map.put("sbi",
                 new PerInstructionToken(Parser.Mnemonic.SBI, 0xDE, OperandParser.immediateByteOperand));
         map.put("lda",
-                new PerInstructionToken(Parser.Mnemonic.LDA, 0x3A, OperandParser.immediateOperand));
+                new PerInstructionToken(Parser.Mnemonic.LDA, 0x3A, OperandParser.immediate16BitOperand));
         map.put("sta",
-                new PerInstructionToken(Parser.Mnemonic.STA, 0x32, OperandParser.immediateOperand));
+                new PerInstructionToken(Parser.Mnemonic.STA, 0x32, OperandParser.immediate16BitOperand));
         map.put("stax",
                 new PerInstructionToken(Parser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("ldax",
@@ -184,9 +181,9 @@ public class Parser {
         map.put("stax",
                 new PerInstructionToken(Parser.Mnemonic.STAX, 0x02, OperandParser.ldaxOrStaxOperand));
         map.put("lhld",
-                new PerInstructionToken(Parser.Mnemonic.LHLD, 0x2A, OperandParser.immediateOperand));
+                new PerInstructionToken(Parser.Mnemonic.LHLD, 0x2A, OperandParser.immediate16BitOperand));
         map.put("shld",
-                new PerInstructionToken(Parser.Mnemonic.SHLD, 0xDE, OperandParser.immediateOperand));
+                new PerInstructionToken(Parser.Mnemonic.SHLD, 0xDE, OperandParser.immediate16BitOperand));
         map.put("lxi",
                 new PerInstructionToken(Parser.Mnemonic.LXI, 0x01, OperandParser.lxiOperand));
         map.put("xchg",
@@ -231,26 +228,19 @@ public class Parser {
         return map;
     }
 
+    private final HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
+    private String currentLine;
+
+    private int lineNumber;
+
+    private String[] source;
+
     public Parser(String text) {
         this.source = text.split("\n");
     }
 
-    public String nextLine() throws Exception {
-        if (lineNumber > source.length) {
-            throw new Exception("Reached end of source code");
-        }
-        currentLine = source[lineNumber++];
+    public String currentLine() {
         return currentLine;
-    }
-
-    public void reset() {
-        lineNumber = 0;
-        source = new String[] {};
-        assertOperation.clear();
-    }
-
-    public void insertAssertion(int ip, String assertion) {
-        assertOperation.put(ip, assertion);
     }
 
     public String getAssertion(int ip) {
@@ -259,6 +249,26 @@ public class Parser {
 
     public HashMap<Integer, String> getAssertionMap() {
         return assertOperation;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public boolean hasNext() {
+        return lineNumber < source.length;
+    }
+
+    public void insertAssertion(int ip, String assertion) {
+        assertOperation.put(ip, assertion);
+    }
+
+    public String nextLine() throws Exception {
+        if (lineNumber > source.length) {
+            throw new Exception("Reached end of source code");
+        }
+        currentLine = source[lineNumber++];
+        return currentLine;
     }
 
     public ParseToken parseLine(String line, int ip, int startColumn) throws Exception {
@@ -288,15 +298,9 @@ public class Parser {
         return t;
     }
 
-    public boolean hasNext() {
-        return lineNumber < source.length;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public String currentLine() {
-        return currentLine;
+    public void reset() {
+        lineNumber = 0;
+        source = new String[] {};
+        assertOperation.clear();
     }
 }

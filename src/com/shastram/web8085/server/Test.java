@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.mortbay.log.Log;
 
 import com.shastram.web8085.client.Exe;
+import com.shastram.web8085.client.MicroCode;
 
 public class Test {
 
@@ -53,7 +54,8 @@ public class Test {
     public void testAll() throws IOException {
         String[] tests = {
                 //"temp_test.85",
-                "complement_test.85",
+                "branch_test.85",
+                //"complement_test.85",
                 //"rotate_test.85",
                 /*                "logical_test.85",
                                 "compare_test.85",
@@ -62,7 +64,7 @@ public class Test {
                                 "mov_tests.85",
                                 "lxi_tests.85",
                 */};
-
+        MicroCode.selfTest();
         for (String s : tests) {
             testFile(s);
         }

@@ -1,0 +1,8 @@
+##################################
+# STC: Set carry
+mvi a, 3
+mvi b,3
+call ah
+mvi b, 0
+add b
+.assert a=6h
