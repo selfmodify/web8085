@@ -32,6 +32,15 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode cma = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int value = (~exe.getA()) & 0xff;
+            exe.setA(value);
+            exe.nextIp();
+        }
+    };
+
     public static MicroCode cmp = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {

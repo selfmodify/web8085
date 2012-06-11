@@ -1,0 +1,16 @@
+##################################
+# STC: Set carry
+stc
+.assert cy=1
+
+##################################
+# CMA: Complement accumulator
+mvi a,89h
+cma
+
+##################################
+# CMC: Complement carry
+stc
+cmc
+.assert cy=0
+

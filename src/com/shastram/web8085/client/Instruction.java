@@ -2,6 +2,12 @@ package com.shastram.web8085.client;
 
 import java.util.logging.Logger;
 
+/**
+ * maps the opcode in memory to actual runtime function pointers
+ * 
+ * @author vijay
+ * 
+ */
 public class Instruction {
     private static Logger logger = Logger.getLogger(Instruction.class.getName());
 
@@ -118,7 +124,7 @@ public class Instruction {
             new OneInstruction(0x2c, "inr", "inr l", noOperand, MicroCode.inr),
             new OneInstruction(0x2d, "dcr", "dcr l", noOperand, MicroCode.dcr),
             new OneInstruction(0x2e, "mvi", "mvi l", byteOperand, MicroCode.mvi),
-            new OneInstruction(0x2f, "cma", "cma", noOperand, MicroCode.nop),
+            new OneInstruction(0x2f, "cma", "cma", noOperand, MicroCode.cma),
 
             new OneInstruction(0x30, "sim", "sim", noOperand, MicroCode.nop),
             new OneInstruction(0x31, "lxi", "lxi sp", wordOperand, MicroCode.lxi),
