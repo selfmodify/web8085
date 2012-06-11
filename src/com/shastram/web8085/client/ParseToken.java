@@ -18,7 +18,7 @@ public class ParseToken {
         this.ix = instruction;
         this.token = token;
         this.setLineNumber(line);
-        this.startColumn = startColumn;
+        this.setStartColumn(startColumn);
         this.endColumn = endColumn;
         // TODO: Maybe there is a better way to differentiate between asserts and instructions?
         type = instruction.name.equalsIgnoreCase("assert") ? Type.ASSERT : Type.INSTRUCTION;
@@ -59,5 +59,13 @@ public class ParseToken {
 
     public void setLineNumber(int line) {
         this.lineNumber = line;
+    }
+
+    public int getStartColumn() {
+        return startColumn;
+    }
+
+    public void setStartColumn(int startColumn) {
+        this.startColumn = startColumn;
     }
 }

@@ -1,0 +1,31 @@
+##################################
+# RAL: Rotate accumulator left through carry
+stc
+cmc
+mvi a,a7h
+ral
+.assert cy=1, a=4eh
+
+##################################
+# RLC: Rotate accumulator left
+stc
+cmc
+mvi a,a7h
+rlc
+.assert cy=1, a=4fh
+
+
+##################################
+# RAR: Rotate accumulator right through carry
+mvi a,a7h
+stc
+cmc
+rar
+.assert cy=1, a=53h
+
+##################################
+# RRC: Rotate accumulator right
+mvi a,a7h
+stc
+rrc
+.assert cy=1, a=d3h

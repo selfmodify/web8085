@@ -53,13 +53,14 @@ public class Test {
     public void testAll() throws IOException {
         String[] tests = {
                 //"temp_test.85",
-                "logical_test.85",
-                "compare_test.85",
-                "arithmetic_tests.85",
-                "load_store.85",
-                "mov_tests.85",
-                "lxi_tests.85",
-        };
+                "rotate_test.85",
+                /*                "logical_test.85",
+                                "compare_test.85",
+                                "arithmetic_tests.85",
+                                "load_store.85",
+                                "mov_tests.85",
+                                "lxi_tests.85",
+                */};
 
         for (String s : tests) {
             testFile(s);

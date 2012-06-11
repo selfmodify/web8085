@@ -49,7 +49,7 @@ public abstract class MicroCode {
         }
     };
 
-    public static void doCompare(Exe exe, int value) {
+    private static void doCompare(Exe exe, int value) {
         value = value & 0xff;
         doSubtract(exe, value, 0, false, exe.getA(), true);
         int a = exe.getA();
@@ -305,6 +305,87 @@ public abstract class MicroCode {
         }
     };
 
+    /**
+     * Rotate accumulator left through carry. Each binary bit of the accumulator
+     * is rotated left by one position through the carry flag. Bit D7 is placed
+     * in the bit in the carry flag and carry flag is placed in the least
+     * significant position D0.
+     */
+    public static MicroCode ral = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int value = (exe.getA() & 0xff) << 1;
+            int aValue = (value | exe.getCarry()) & 0xff;
+            exe.setA(aValue);
+            if ((value & 0x100) == 0x100) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
+            exe.nextIp();
+        }
+    };
+
+    /**
+     * Each binary bit of the accumulator is rotated left by one position. Bit
+     * D7 is placed in the position of D0 as well as in the Carry flag.
+     */
+    public static MicroCode rlc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int value = (exe.getA() & 0xff) << 1;
+            int lsb = value >> 8;
+            value = (value | lsb) & 0xff;
+            if ((lsb & 0x1) == 1) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
+            exe.setA(value);
+            exe.nextIp();
+        }
+    };
+
+    /**
+     * RAR - Rotate accumulator right through carry. Each binary bit of the
+     * accumulator is rotated right by one position through the carry flag. Bit
+     * D0 is placed in the carry flag and the bit in the carry flag is placed in
+     * the most significant position, D7.
+     */
+    public static MicroCode rar = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int aValue = exe.getA() & 0xff;
+            int lsb = aValue & 0x1;
+            exe.setA((aValue >> 1) | (exe.getCarry() << 8));
+            if (lsb == 1) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
+            exe.nextIp();
+        }
+    };
+
+    /**
+     * Each binary bit of the accumulator is rotated right by one position. Bit
+     * D0 is placed in the position of D7 as well as in the carry flag.
+     */
+    public static MicroCode rrc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int aValue = exe.getA() & 0xff;
+            int value = aValue & 1;
+            if ((value & 0x1) == 1) {
+                exe.setCarry();
+            } else {
+                exe.resetCarry();
+            }
+            exe.setA((aValue >> 1) | (value << 7));
+            exe.nextIp();
+        }
+    };
+
     public static MicroCode inr = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
@@ -491,27 +572,27 @@ public abstract class MicroCode {
             String lhs = p[0].trim().toLowerCase();
             Operand op;
             if ("s".equals(lhs)) {
-                compare(exe, num, exe.getSign(), "Expected Sign=");
+                assertCompare(exe, num, exe.getSign(), "Expected Sign=");
             } else if ("z".equals(lhs)) {
-                compare(exe, num, exe.getZero(), "Expected Zero=");
+                assertCompare(exe, num, exe.getZero(), "Expected Zero=");
             } else if ("cy".equals(lhs)) {
-                compare(exe, num, exe.getCarry(), "Expected Carry=");
+                assertCompare(exe, num, exe.getCarry(), "Expected Carry=");
             } else if ("ac".equals(lhs)) {
-                compare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
+                assertCompare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
             } else if ("p".equals(lhs)) {
-                compare(exe, num, exe.getParity(), "Expected Parity=");
+                assertCompare(exe, num, exe.getParity(), "Expected Parity=");
             } else if (lhs.startsWith("[")) {
                 // parse [<memory address>]=number
                 String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
                 int addr = OperandParser.parseNumber(n);
                 int value = exe.getMemory(addr);
-                compare(exe, value, num, "Expected memory at address [" + addr + "] = ");
+                assertCompare(exe, value, num, "Expected memory at address [" + addr + "] = ");
             } else {
                 // try to parse it as a register. 
                 op = OperandParser.parseRegisterForAssert(lhs);
                 String msg = "Expected " + op.toString() + "=";
                 int got = exe.getRegOrMem(op);
-                compare(exe, num, got, msg);
+                assertCompare(exe, num, got, msg);
             }
         }
         if (Config.printAssertions) {
@@ -520,7 +601,7 @@ public abstract class MicroCode {
         exe.nextIp();
     }
 
-    private static void compare(Exe exe, int expected, int got, String msg) throws Exception {
+    private static void assertCompare(Exe exe, int expected, int got, String msg) throws Exception {
         if (expected != got) {
             exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got=" + Integer.toHexString(got) + "h");
         }
@@ -610,9 +691,7 @@ public abstract class MicroCode {
 
     /**
      * Only use for subtract/dcr instructions. Do not use for compare as this
-     * will set the value of the register A.
-     * Carry is always set.
-     * A = A - v
+     * will set the value of the register A. Carry is always set. A = A - v
      * 
      * @param exe
      * @param other
@@ -626,7 +705,8 @@ public abstract class MicroCode {
     }
 
     /**
-     * Do subtraction without affecting any registers
+     * Do subtraction without affecting any registers. Cy / AuxCy may be set
+     * depending on the parameters passed.
      * 
      * @param exe
      * @param v

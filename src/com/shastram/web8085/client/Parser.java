@@ -34,6 +34,10 @@ public class Parser {
         LDA,
         LDAX,
         LHLD,
+        RAL,
+        RAR,
+        RRC,
+        RLC,
         SHLD,
         STA,
         STAX,
@@ -206,6 +210,14 @@ public class Parser {
                                 parseMviOperands(i, operands);
                             }
                         }));
+        map.put("ral",
+                new PerInstructionToken(Parser.Mnemonic.RAL, 0x17, OperandParser.noOperand));
+        map.put("rar",
+                new PerInstructionToken(Parser.Mnemonic.RAR, 0x1F, OperandParser.noOperand));
+        map.put("rlc",
+                new PerInstructionToken(Parser.Mnemonic.RLC, 0x07, OperandParser.noOperand));
+        map.put("rrc",
+                new PerInstructionToken(Parser.Mnemonic.RRC, 0x0F, OperandParser.noOperand));
         map.put("sub",
                 new PerInstructionToken(Parser.Mnemonic.SUB, 0x90, OperandParser.oneOperand));
         map.put("xra",
