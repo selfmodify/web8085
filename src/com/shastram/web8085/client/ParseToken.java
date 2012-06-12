@@ -9,15 +9,19 @@ public class ParseToken {
     private int lineNumber;
     private int startColumn;
     private int endColumn;
+    private String firstToken;
+    private int ip;
 
     public ParseToken(Parser.PerInstructionToken instruction,
-            String token,
-            int line,
+            String firstToken,
+            String lineStr,
+            int lineNumber,
             int startColumn,
             int endColumn) {
         this.ix = instruction;
-        this.token = token;
-        this.setLineNumber(line);
+        this.firstToken = firstToken;
+        this.token = lineStr;
+        this.setLineNumber(lineNumber);
         this.setStartColumn(startColumn);
         this.endColumn = endColumn;
         // TODO: Maybe there is a better way to differentiate between asserts and instructions?
@@ -27,6 +31,13 @@ public class ParseToken {
     public ParseToken(Type type, String token) {
         this.type = type;
         this.token = token;
+    }
+
+    public ParseToken(int lineNumber, Type type, int ip, String firstToken, String[] allTokens) {
+        this.lineNumber = lineNumber;
+        this.firstToken = firstToken;
+        this.ip = ip;
+        this.type = type;
     }
 
     public Type getType() {
@@ -67,5 +78,13 @@ public class ParseToken {
 
     public void setStartColumn(int startColumn) {
         this.startColumn = startColumn;
+    }
+
+    public String getFirstToken() {
+        return firstToken;
+    }
+
+    public int getIp() {
+        return ip;
     }
 }

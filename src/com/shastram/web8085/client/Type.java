@@ -4,6 +4,7 @@ public enum Type {
     COMMENT,
     INSTRUCTION,
     DIRECTIVE,
+    LABEL,
     SYNTAX_ERROR,
     ASSERT,
 }

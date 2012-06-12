@@ -241,6 +241,21 @@ public abstract class OperandParser {
         }
     };
 
+    public static OperandParser immediate16BitOrLabelOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, PerInstructionToken i, String line)
+                throws Exception {
+            i.code = i.baseCode;
+            try {
+                i.setImmediate16Bit(parseNumber(line));
+            } catch (Exception e) {
+                // this must be a label then.
+                i.setImmediate16Bit(0);
+                parser.rememberLabelUse(i.ip, line);
+            }
+        }
+    };
+
     public static OperandParser remainingLine = new OperandParser() {
         @Override
         public void parse(Parser parser, PerInstructionToken i, String line) throws Exception {

@@ -1,8 +1,10 @@
 ##################################
-# STC: Set carry
+# call: 
 mvi a, 3
 mvi b,3
-call ah
+call label1
 mvi b, 0
+
+label1:
 add b
 .assert a=6h

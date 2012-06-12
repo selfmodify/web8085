@@ -34,6 +34,7 @@ public class Exe {
      */
     public HashMap<Integer, String> assertOperation = new HashMap<Integer, String>();
     private final HashMap<Integer, DebugLineInfo> debugInfo = new HashMap<Integer, DebugLineInfo>();
+    private final HashMap<String, ParseToken> labelMap = new HashMap<String, ParseToken>();
     public boolean hltExecuted = false;
 
     private String context;
@@ -64,10 +65,18 @@ public class Exe {
     public void insertCodeAnd16bit(int opcode, int immediate) {
         setMemoryByte(ip, (byte) opcode);
         incrIp();
-        setMemoryByte(ip, (byte) (immediate & 0xff));
-        incrIp();
-        setMemoryByte(ip, (byte) ((immediate & 0xff00) >> 8));
-        incrIp();
+        setMemory16BitAndIncrementIp(immediate);
+    }
+
+    public void setMemory16BitAndIncrementIp(int immediate) {
+        setMemory16Bit(ip, immediate);
+        incrIp(2);
+    }
+
+    public void setMemory16Bit(int address, int immediate) {
+        setMemoryByte(address, (byte) (immediate & 0xff));
+        address = normalizeMemoryAddress(++address);
+        setMemoryByte(address, (byte) ((immediate & 0xff00) >> 8));
     }
 
     public void insert(int opcode, byte immediate) {
@@ -79,6 +88,10 @@ public class Exe {
         addDebugInfo(token);
         switch (token.getType()) {
         case INSTRUCTION:
+            if (i.code == -1) {
+                throw new ParserException("Internal error: Invalid microcode " + i.code + " set at line="
+                        + token.getLineNumber());
+            }
             if (i.hasImmediate()) {
                 if (i.len == 3) {
                     insertCodeAnd16bit(i.code, i.getImmediate());
@@ -94,12 +107,27 @@ public class Exe {
                 insert(i.code);
             }
             break;
+        case LABEL:
+            insertLabel(token);
+            break;
+
         case SYNTAX_ERROR: {
             String msg = "Sytax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
             logger.log(Level.SEVERE, msg);
             throw new ParserException(msg);
         }
         }
+    }
+
+    private void insertLabel(ParseToken token) throws ParserException {
+        //TODO: Separate parser from exe
+        String tokenName = token.getFirstToken().trim().replaceAll(":$", "").toLowerCase();
+        ParseToken oldToken = labelMap.get(tokenName);
+        if (oldToken != null) {
+            throw new ParserException("Label '" + token.getFirstToken() + "' already defined at line="
+                    + token.getLineNumber());
+        }
+        labelMap.put(tokenName, token);
     }
 
     private void addDebugInfo(ParseToken token) {
@@ -262,7 +290,7 @@ public class Exe {
 
     private void incrIp(int i) {
         ip += i;
-        ip = ip % 65536;
+        ip = normalizeMemoryAddress(ip);
     }
 
     public void setZero() {
@@ -377,6 +405,7 @@ public class Exe {
             insert(0x76); // hlt
             // copy the assertion map from the parser
             assertOperation = p.getAssertionMap();
+            patchLabelUse(p);
             logger.info("Finished compilation ---------- " + context);
             reset();
         } catch (Exception e) {
@@ -384,6 +413,24 @@ public class Exe {
                     + p.getLineNumber() + " " + e.getMessage()
                     + " Source: " + p.currentLine());
         }
+    }
+
+    private void patchLabelUse(Parser p) throws ParserException {
+        for (Integer ip : p.getLabelUses().keySet()) {
+            String labelName = p.getLabelUses().get(ip);
+            ParseToken parseToken = getParseTokenForLabel(labelName);
+            if (parseToken == null) {
+                throw new ParserException("Token '" + labelName + "' does not exist at ip=" + ip);
+            }
+            int patchAddress = parseToken.getIp();
+            int address = normalizeMemoryAddress(ip + 1);
+            setMemory16Bit(address, patchAddress);
+        }
+    }
+
+    private ParseToken getParseTokenForLabel(String label) {
+        String labelName = label.replaceAll(":$", "").toLowerCase();
+        return labelMap.get(labelName);
     }
 
     public String getAsertionAt(int ip) {

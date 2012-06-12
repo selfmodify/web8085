@@ -72,6 +72,7 @@ public class Parser {
         public String name;
         public Operand op1 = null;
         public Operand op2 = null;
+        private String label;
         private final OperandParser oparser;
 
         public PerInstructionToken(Mnemonic type, int code, OperandParser oparser) {
@@ -112,10 +113,19 @@ public class Parser {
             immediate = num & 0xff;
             len = 2;
         }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return this.label;
+        }
     }
 
     private static HashMap<String, PerInstructionToken> instructions = loadInstructions();
 
+    private final HashMap<Integer, String> labelUse = new HashMap<Integer, String>();
     private static Logger logger = Logger.getLogger(Parser.class.getName());
 
     /**
@@ -139,7 +149,7 @@ public class Parser {
         map.put("ani",
                 new PerInstructionToken(Parser.Mnemonic.ANI, 0xE6, OperandParser.immediateByteOperand));
         map.put("call",
-                new PerInstructionToken(Parser.Mnemonic.CALL, 0xCD, OperandParser.immediate16BitOperand));
+                new PerInstructionToken(Parser.Mnemonic.CALL, 0xCD, OperandParser.immediate16BitOrLabelOperand));
         map.put("cma",
                 new PerInstructionToken(Parser.Mnemonic.CMA, 0x2F, OperandParser.noOperand));
         map.put("cmc",
@@ -282,7 +292,8 @@ public class Parser {
             line = line.substring(0, commentStart);
         }
         String[] parts = line.split("[\t ]", 2);
-        PerInstructionToken ix = instructions.get(parts[0]);
+        String firstToken = parts[0].trim();
+        PerInstructionToken ix = instructions.get(firstToken);
         if (ix == null) {
             Character ch = line.charAt(0);
             if (ch == '\u00a0') {
@@ -290,11 +301,14 @@ public class Parser {
                 // from web ui.
                 return new ParseToken(Type.COMMENT, line);
             }
+            if (firstToken.endsWith(":")) {
+                return new ParseToken(lineNumber, Type.LABEL, ip, firstToken, parts);
+            }
             return new ParseToken(Type.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
         int endColumn = startColumn + line.length();
-        ParseToken t = new ParseToken(ix, line, lineNumber, startColumn, endColumn);
+        ParseToken t = new ParseToken(ix, firstToken, line, lineNumber, startColumn, endColumn);
         return t;
     }
 
@@ -302,5 +316,13 @@ public class Parser {
         lineNumber = 0;
         source = new String[] {};
         assertOperation.clear();
+    }
+
+    public void rememberLabelUse(int ip, String label) {
+        labelUse.put(ip, label);
+    }
+
+    public HashMap<Integer, String> getLabelUses() {
+        return labelUse;
     }
 }
