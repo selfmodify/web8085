@@ -80,7 +80,8 @@ public abstract class MicroCode {
     static WordOperand wordOperand = new WordOperand();
 
     public static String toString(int opcode, int op1) {
-        String str = opcode >= 0 && opcode < MicrocodeTable.table.length ? MicrocodeTable.table[opcode].toString(op1) : "";
+        String str = opcode >= 0 && opcode < MicrocodeTable.table.length ? MicrocodeTable.table[opcode].toString(op1)
+                : "";
         return str;
     }
 
@@ -562,6 +563,7 @@ public abstract class MicroCode {
     public static MicroCode call = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
             int location = exe.getMemAtIp16bit();
             push16BitToStack(exe, exe.getIp());
             exe.setIp(location);
@@ -601,19 +603,16 @@ public abstract class MicroCode {
             int high = (value & 0xff00) >> 8;
             switch (code) {
             case 0x1:
-                exe.b = high;
-                exe.c = low;
+                exe.setBC(value);
                 break;
             case 0x11:
-                exe.d = high;
-                exe.e = low;
+                exe.setDE(value);
                 break;
             case 0x21:
-                exe.h = high;
-                exe.l = low;
+                exe.setHL(value);
                 break;
             case 0x31:
-                exe.sp = value;
+                exe.setSP(value);
                 break;
             default:
                 throw new Exception("Invalid microcode " + code + " interpreted as lxi.");
@@ -697,7 +696,7 @@ public abstract class MicroCode {
                 String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
                 int addr = OperandParser.parseNumber(n);
                 int value = exe.getMemory(addr);
-                assertCompare(exe, value, num, "Expected memory at address [" + addr + "] = ");
+                assertCompare(exe, num, value, "Expected memory at address [" + Integer.toHexString(addr) + "h] = ");
             } else {
                 // try to parse it as a register. 
                 op = OperandParser.parseRegisterForAssert(lhs);
