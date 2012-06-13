@@ -420,7 +420,8 @@ public class Exe {
             String labelName = p.getLabelUses().get(ip);
             ParseToken parseToken = getParseTokenForLabel(labelName);
             if (parseToken == null) {
-                throw new ParserException("Token '" + labelName + "' does not exist at ip=" + ip);
+                String debugStr = getDebugInfoStr(ip);
+                throw new ParserException("Token '" + labelName + "' does not exist at ip=" + ip + " " + debugStr);
             }
             int patchAddress = parseToken.getIp();
             int address = normalizeMemoryAddress(ip + 1);
@@ -459,11 +460,18 @@ public class Exe {
      *         2.
      */
     public int getMemAtIp16bit() {
-        int value = getMemAtIp();
+        int value = getMemoryAt16Bit(ip);
         incrIp();
-        value = ((getMemAtIp() << 8) & 0xff00) + value;
         incrIp();
-        return value & 0xffff;
+        return value;
+    }
+
+    public int getMemoryAt16Bit(int addr) {
+        addr = addr & 0xffff;
+        int value = getMemory(addr);
+        addr = normalizeMemoryAddress(addr + 1);
+        value = (((getMemory(addr) << 8) & 0xff00) + value) & 0xffff;
+        return value;
     }
 
     public boolean hltExecuted() {
@@ -623,6 +631,13 @@ public class Exe {
         memory[addr] = (byte) (value & 0xff);
     }
 
+    public String getDebugInfoStr(int ip) {
+        DebugLineInfo info = getDebugInfo(ip);
+        String str =
+                info == null ? "" : " (Source line=" + info.line + ") ";
+        return str;
+    }
+
     public DebugLineInfo getDebugInfo(int ip) {
         return debugInfo.get(ip);
     }
@@ -747,5 +762,9 @@ public class Exe {
 
     public void setIp(int location) {
         this.ip = (location & 0xffff);
+    }
+
+    public int getMemoryAtSp() {
+        return getMemoryAt16Bit(getSP());
     }
 }

@@ -1,10 +1,32 @@
 ##################################
+# JMP
+mvi a,6h
+jmp jmp_label
+# the next assert will fail if jmp fails
+.assert a=0h
+jmp_label:
+.assert a=6h
+
+##################################
 # call: 
 mvi a, 3
 mvi b,3
-call label1
-mvi b, 0
-
-label1:
+call call_label1
+# the next assert will fail if call fails
+.assert a=6h
+call_label1:
 add b
 .assert a=6h
+
+##################################
+# call+ret: 
+mvi a,5h
+call ret_label2
+adi 1h
+.assert a=6h
+jmp ret_label2
+ret_label1:
+ret
+
+ret_label2:
+

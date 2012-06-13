@@ -312,7 +312,11 @@ public abstract class OperandParser {
             base = 16;
             str = str.substring(0, str.length() - 1);
         }
-        num = Integer.parseInt(str, base);
+        try {
+            num = Integer.parseInt(str, base);
+        } catch (NumberFormatException ex) {
+            throw new ParserException(str + " is not a valid number");
+        }
         if (num < 0 || num > 65535) {
             throw new ParserException("Immediate number must be in the range 0-65535 " + str);
         }

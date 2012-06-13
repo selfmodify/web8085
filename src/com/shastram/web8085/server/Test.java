@@ -55,6 +55,7 @@ public class Test {
         String[] tests = {
                 //"temp_test.85",
                 "branch_test.85",
+                /*
                 "complement_test.85",
                 "rotate_test.85",
                 "logical_test.85",
@@ -63,6 +64,7 @@ public class Test {
                 "load_store.85",
                 "mov_tests.85",
                 "lxi_tests.85",
+                */
         };
         MicroCode.selfTest();
         for (String s : tests) {

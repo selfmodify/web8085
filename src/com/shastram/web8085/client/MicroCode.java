@@ -401,6 +401,16 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode ret = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int value = exe.getMemoryAtSp();
+            exe.incrementRegisterPair(Operand.SP);
+            exe.incrementRegisterPair(Operand.SP);
+            exe.setIp(value);
+        }
+    };
+
     /**
      * Rotate accumulator left through carry. Each binary bit of the accumulator
      * is rotated left by one position through the carry flag. Bit D7 is placed

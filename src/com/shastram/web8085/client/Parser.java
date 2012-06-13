@@ -36,6 +36,7 @@ public class Parser {
         ORI,
         RAL,
         RAR,
+        RET,
         RLC,
         RRC,
         SBB,
@@ -168,6 +169,8 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.INR, 0x04, OperandParser.oneOperandSpacedBy8));
         map.put("inx",
                 new PerInstructionToken(Parser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
+        map.put("jmp",
+                new PerInstructionToken(Parser.Mnemonic.JMP, 0xC3, OperandParser.immediate16BitOrLabelOperand));
         map.put("ora",
                 new PerInstructionToken(Parser.Mnemonic.ORA, 0xB0, OperandParser.oneOperand));
         map.put("ori",
@@ -220,6 +223,8 @@ public class Parser {
                                 parseMviOperands(i, operands);
                             }
                         }));
+        map.put("ret",
+                new PerInstructionToken(Parser.Mnemonic.RET, 0xC9, OperandParser.noOperand));
         map.put("ral",
                 new PerInstructionToken(Parser.Mnemonic.RAL, 0x17, OperandParser.noOperand));
         map.put("rar",
