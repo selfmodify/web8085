@@ -112,7 +112,7 @@ public class Exe {
             break;
 
         case SYNTAX_ERROR: {
-            String msg = "Sytax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
+            String msg = "Syntax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
             logger.log(Level.SEVERE, msg);
             throw new ParserException(msg);
         }

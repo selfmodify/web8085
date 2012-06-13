@@ -565,6 +565,7 @@ public abstract class MicroCode {
     public static MicroCode jmp = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
             int location = exe.getMemAtIp16bit();
             exe.setIp(location);
         }
@@ -573,12 +574,28 @@ public abstract class MicroCode {
     public static MicroCode call = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            exe.nextIp();
-            int location = exe.getMemAtIp16bit();
-            push16BitToStack(exe, exe.getIp());
-            exe.setIp(location);
+            doCall(exe);
         }
     };
+
+    protected void doCall(Exe exe) {
+        exe.nextIp();
+        int location = exe.getMemAtIp16bit();
+        push16BitToStack(exe, exe.getIp());
+        exe.setIp(location);
+    }
+
+    public static MicroCode cc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            if (exe.isCarry()) {
+                doCall(exe);
+            } else {
+                exe.nextIp2(2);
+            }
+        }
+    };
+
     /**
      * The contents of the accumulator are stored in the memory location
      * specified

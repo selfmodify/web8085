@@ -239,7 +239,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xd9, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xda, "jc", "jc", MicroCode.wordOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xdb, "in", "in", MicroCode.byteOperand, MicroCode.nop),
-            new MicroCode.OneInstruction(0xdc, "cc", "cc", MicroCode.wordOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xdc, "cc", "cc", MicroCode.wordOperand, MicroCode.cc),
             new MicroCode.OneInstruction(0xdd, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xde, "sbi", "sbi", MicroCode.noOperand, MicroCode.sbi),
             new MicroCode.OneInstruction(0xdf, "rst", "rst 3", MicroCode.noOperand, MicroCode.nop),

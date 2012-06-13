@@ -30,3 +30,11 @@ ret
 
 ret_label2:
 
+##################################
+# cc - call on carry
+mvi a,0h
+stc
+cc cc_label1
+mvi a,1h
+cc_label1:
+.assert a=0h

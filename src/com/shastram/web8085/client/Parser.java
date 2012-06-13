@@ -15,6 +15,14 @@ public class Parser {
         ASSERT,
         BREAK,
         CALL,
+        CC,
+        CNC,
+        CP,
+        CM,
+        CPE,
+        CPO,
+        CZ,
+        CNZ,
         CMA,
         CMC,
         CMP,
@@ -151,6 +159,22 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.ANI, 0xE6, OperandParser.immediateByteOperand));
         map.put("call",
                 new PerInstructionToken(Parser.Mnemonic.CALL, 0xCD, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cc",
+                new PerInstructionToken(Parser.Mnemonic.CC, 0xDC, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cnc",
+                new PerInstructionToken(Parser.Mnemonic.CNC, 0xD4, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cp",
+                new PerInstructionToken(Parser.Mnemonic.CP, 0xF4, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cm",
+                new PerInstructionToken(Parser.Mnemonic.CM, 0xFC, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cpe",
+                new PerInstructionToken(Parser.Mnemonic.CPE, 0xEC, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cpo",
+                new PerInstructionToken(Parser.Mnemonic.CPO, 0xE4, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cz",
+                new PerInstructionToken(Parser.Mnemonic.CZ, 0xCC, OperandParser.immediate16BitOrLabelOperand));
+        map.put("cnz",
+                new PerInstructionToken(Parser.Mnemonic.CNZ, 0xC4, OperandParser.immediate16BitOrLabelOperand));
         map.put("cma",
                 new PerInstructionToken(Parser.Mnemonic.CMA, 0x2F, OperandParser.noOperand));
         map.put("cmc",
