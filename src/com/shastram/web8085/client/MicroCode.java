@@ -401,16 +401,90 @@ public abstract class MicroCode {
         }
     };
 
+    /**
+     * RET Family of instructions
+     */
     public static MicroCode ret = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, true);
+        }
+    };
+
+    private static void doRetOnCondition(Exe exe, boolean condition) {
+        if (condition) {
             int value = exe.getMemoryAtSp();
             exe.incrementRegisterPair(Operand.SP);
             exe.incrementRegisterPair(Operand.SP);
             exe.setIp(value);
+        } else {
+            exe.nextIp();
+        }
+    }
+
+    public static MicroCode rc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, exe.isCarry());
         }
     };
 
+    public static MicroCode rnc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, !exe.isCarry());
+        }
+    };
+
+    public static MicroCode rp = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, !exe.isSign());
+        }
+    };
+
+    public static MicroCode rm = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, exe.isSign());
+        }
+    };
+
+    public static MicroCode rpe = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, exe.getParity() == 1);
+        }
+    };
+
+    public static MicroCode rpo = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, exe.getParity() == 0);
+        }
+    };
+
+    public static MicroCode rz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, exe.isZero());
+        }
+    };
+
+    public static MicroCode rnz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doRetOnCondition(exe, !exe.isZero());
+        }
+    };
+
+    public static MicroCode pchl = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int value = exe.getHL();
+            exe.setIp(value);
+        }
+    };
     /**
      * Rotate accumulator left through carry. Each binary bit of the accumulator
      * is rotated left by one position through the carry flag. Bit D7 is placed
@@ -562,12 +636,79 @@ public abstract class MicroCode {
         }
     };
 
+    /**
+     * JMP Family of instructions
+     */
     public static MicroCode jmp = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, true);
+        }
+    };
+
+    private static void doJmpOnCondition(Exe exe, boolean condition) {
+        if (condition) {
             exe.nextIp();
             int location = exe.getMemAtIp16bit();
             exe.setIp(location);
+        } else {
+            exe.nextIp2(2);
+        }
+    }
+
+    public static MicroCode jc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, exe.isCarry());
+        }
+    };
+
+    public static MicroCode jnc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, !exe.isCarry());
+        }
+    };
+
+    public static MicroCode jp = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, !exe.isSign());
+        }
+    };
+
+    public static MicroCode jm = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, exe.isSign());
+        }
+    };
+
+    public static MicroCode jpe = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, exe.getParity() == 1);
+        }
+    };
+
+    public static MicroCode jpo = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, exe.getParity() == 0);
+        }
+    };
+
+    public static MicroCode jz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, exe.isZero());
+        }
+    };
+
+    public static MicroCode jnz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doJmpOnCondition(exe, !exe.isZero());
         }
     };
 
@@ -588,11 +729,73 @@ public abstract class MicroCode {
     public static MicroCode cc = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            if (exe.isCarry()) {
-                doCall(exe);
-            } else {
-                exe.nextIp2(2);
-            }
+            doCallOnFlag(exe, exe.isCarry());
+        }
+    };
+
+    public static MicroCode cnc = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, !exe.isCarry());
+        }
+    };
+
+    public static MicroCode cp = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, !exe.isSign());
+        }
+    };
+
+    public static MicroCode cm = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, exe.isSign());
+        }
+    };
+
+    public static MicroCode cpe = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, exe.getParity() == 1);
+        }
+    };
+
+    public static MicroCode cpo = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, exe.getParity() == 0);
+        }
+    };
+
+    public static MicroCode cz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, exe.isZero());
+        }
+    };
+
+    public static MicroCode cnz = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            doCallOnFlag(exe, !exe.isZero());
+        }
+    };
+
+    protected void doCallOnFlag(Exe exe, boolean flag) {
+        if (flag) {
+            doCall(exe);
+        } else {
+            exe.nextIp2(2);
+        }
+    }
+
+    public static MicroCode push = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0xC5;
+            int value = exe.getRegOrMemPair(code / 8);
+            push16BitToStack(exe, value);
         }
     };
 
@@ -898,6 +1101,7 @@ public abstract class MicroCode {
      * @param value
      */
     protected void push16BitToStack(Exe exe, int value) {
+        value = value & 0xffff;
         exe.setMemoryByte(exe.getSP(), (value >> 8));
         exe.decrementRegisterPair(Operand.SP);
         exe.setMemoryByte(exe.getSP(), (value & 0xf));

@@ -30,9 +30,21 @@ public class Parser {
         DAD,
         DCR,
         DCX,
+        DI,
+        EI,
+        HLT,
+        IN,
         INR,
         INX,
         JMP,
+        JC,
+        JNC,
+        JP,
+        JM,
+        JPE,
+        JPO,
+        JZ,
+        JNZ,
         LDA,
         LDAX,
         LHLD,
@@ -40,13 +52,27 @@ public class Parser {
         MOV,
         MVI,
         NONE,
+        NOP,
+        OUT,
         ORA,
         ORI,
+        PUSH,
+        POP,
+        PCHL,
         RAL,
         RAR,
         RET,
+        RC,
+        RNC,
+        RP,
+        RM,
+        RPE,
+        RPO,
+        RZ,
+        RNZ,
         RLC,
         RRC,
+        RST,
         SBB,
         SBI,
         SHLD,
@@ -55,10 +81,12 @@ public class Parser {
         STC,
         SUB,
         SUI,
+        SPHL,
         XCHG,
         XRA,
         XRI,
-    }
+        XTHL,
+    };
 
     public enum Operand {
         B, C, D, E, H, L, M, A, PSW, SP
@@ -195,6 +223,22 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.INX, 0x03, OperandParser.inxOperand));
         map.put("jmp",
                 new PerInstructionToken(Parser.Mnemonic.JMP, 0xC3, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jc",
+                new PerInstructionToken(Parser.Mnemonic.JC, 0xDA, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jnc",
+                new PerInstructionToken(Parser.Mnemonic.JNC, 0xD2, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jp",
+                new PerInstructionToken(Parser.Mnemonic.JP, 0xF2, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jm",
+                new PerInstructionToken(Parser.Mnemonic.JM, 0xFA, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jpe",
+                new PerInstructionToken(Parser.Mnemonic.JPE, 0xEA, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jpo",
+                new PerInstructionToken(Parser.Mnemonic.JPO, 0xE2, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jz",
+                new PerInstructionToken(Parser.Mnemonic.JZ, 0xCA, OperandParser.immediate16BitOrLabelOperand));
+        map.put("jnz",
+                new PerInstructionToken(Parser.Mnemonic.JNZ, 0xC2, OperandParser.immediate16BitOrLabelOperand));
         map.put("ora",
                 new PerInstructionToken(Parser.Mnemonic.ORA, 0xB0, OperandParser.oneOperand));
         map.put("ori",
@@ -249,6 +293,22 @@ public class Parser {
                         }));
         map.put("ret",
                 new PerInstructionToken(Parser.Mnemonic.RET, 0xC9, OperandParser.noOperand));
+        map.put("rc",
+                new PerInstructionToken(Parser.Mnemonic.RC, 0xD8, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rnc",
+                new PerInstructionToken(Parser.Mnemonic.RNC, 0xD0, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rp",
+                new PerInstructionToken(Parser.Mnemonic.RP, 0xF0, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rm",
+                new PerInstructionToken(Parser.Mnemonic.RM, 0xF8, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rpe",
+                new PerInstructionToken(Parser.Mnemonic.RPE, 0xE8, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rpo",
+                new PerInstructionToken(Parser.Mnemonic.RPO, 0xE0, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rz",
+                new PerInstructionToken(Parser.Mnemonic.RZ, 0xC8, OperandParser.immediate16BitOrLabelOperand));
+        map.put("rnz",
+                new PerInstructionToken(Parser.Mnemonic.RNZ, 0xC0, OperandParser.immediate16BitOrLabelOperand));
         map.put("ral",
                 new PerInstructionToken(Parser.Mnemonic.RAL, 0x17, OperandParser.noOperand));
         map.put("rar",
@@ -263,6 +323,8 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.XRA, 0xA8, OperandParser.oneOperand));
         map.put("xri",
                 new PerInstructionToken(Parser.Mnemonic.XRI, 0xEE, OperandParser.immediateByteOperand));
+        map.put("pchl",
+                new PerInstructionToken(Parser.Mnemonic.PCHL, 0xE9, OperandParser.noOperand));
 
         return map;
     }
