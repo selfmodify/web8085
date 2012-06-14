@@ -1,6 +1,5 @@
 ##################################
 # push
-pop psw
 lxi sp,2099h
 mvi b,32h
 mvi c,57h
@@ -12,3 +11,8 @@ pop b
 .assert sp=2099h, b=32h,c=57h
 pop d
 pop h
+pop psw
+
+push d
+push h
+push psw
