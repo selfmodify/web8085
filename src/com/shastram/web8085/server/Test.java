@@ -54,7 +54,8 @@ public class Test {
     public void testAll() throws IOException {
         String[] tests = {
                 //"temp_test.85",
-                "branch_test.85",
+                "stack_test.85",
+                //"branch_test.85",
                 /*
                 "complement_test.85",
                 "rotate_test.85",

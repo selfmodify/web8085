@@ -33,6 +33,14 @@
             <g:Button width="100%" ui:field="memoryScrollDown">Down</g:Button>
           </g:VerticalPanel>
           <g:Label width="15px"></g:Label>
+          <g:VerticalPanel>
+              <g:Label addStyleNames="{css.bigLabel}">Stack</g:Label>
+            <g:HorizontalPanel addStyleNames="{css.stackWindow}" horizontalAlignment="ALIGN_CENTER"
+              width="100%">
+              <g:VerticalPanel ui:field="stackWindowAddress" spacing="0"></g:VerticalPanel>
+              <g:VerticalPanel ui:field="stackWindow" spacing="0"></g:VerticalPanel>
+            </g:HorizontalPanel>
+          </g:VerticalPanel>
         </g:HorizontalPanel>
       </g:HorizontalPanel>
 

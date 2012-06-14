@@ -22,6 +22,7 @@ public class Exe {
     public int h;
     public int l;
     public int sp;
+    public int psw;
 
     public boolean sign;
     public boolean zero;
@@ -276,6 +277,13 @@ public class Exe {
         setA(b = c = d = e = h = l = 0);
         sp = 0;
         counter = 0;
+        psw = 0;
+    }
+
+    public void clearMemory() {
+        for (int i = 0; i < memory.length; ++i) {
+            memory[i] = 0;
+        }
     }
 
     public void clearFlags() {
@@ -395,6 +403,7 @@ public class Exe {
         reset();
         this.context = context;
         int startColumn = 0;
+        clearMemory();
         try {
             while (p.hasNext()) {
                 String l = p.nextLine();
@@ -555,7 +564,7 @@ public class Exe {
     }
 
     public int getSP() {
-        return sp & 0xff;
+        return sp & 0xffff;
     }
 
     public void setSP(int value) {
@@ -755,9 +764,15 @@ public class Exe {
         case SP:
             // special case we treat M as SP
             return getSP();
+        case PSW:
+            return getPSW();
         default:
             throw new IllegalStateException("Invalid register pair specified " + op.toString());
         }
+    }
+
+    private int getPSW() {
+        return psw & 0xffff;
     }
 
     public void setIp(int location) {
@@ -766,5 +781,62 @@ public class Exe {
 
     public int getMemoryAtSp() {
         return getMemoryAt16Bit(getSP());
+    }
+
+    public void setRegPair(Operand op, int value) {
+        value = value & 0xffff;
+        switch (op) {
+        case B:
+            setBC(value);
+            break;
+        case D:
+            setDE(value);
+            break;
+        case H:
+            setHL(value);
+            break;
+        case SP:
+            setSP(value);
+            break;
+        case PSW:
+            setPSW(value);
+            break;
+        default:
+            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+        }
+    }
+
+    private void setPSW(int value) {
+        psw = (value & 0xffff);
+    }
+
+    public Operand getRegPairForPushPop(int i) {
+        switch (i) {
+        case 0:
+            return Operand.B;
+        case 2:
+            return Operand.D;
+        case 4:
+            return Operand.H;
+        case 6:
+            return Operand.PSW;
+        default:
+            throw new IllegalStateException("Invalid register index in " + i);
+        }
+    }
+
+    public int getRegPairForPushPopValue(int i) {
+        switch (i) {
+        case 0:
+            return getBC();
+        case 2:
+            return getDE();
+        case 4:
+            return getHL();
+        case 6:
+            return getPSW();
+        default:
+            throw new IllegalStateException("Invalid register index in " + i);
+        }
     }
 }

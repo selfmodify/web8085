@@ -73,6 +73,11 @@ public class MainWindow extends Composite {
     @UiField
     VerticalPanel disassemblyWindow;
 
+    @UiField
+    VerticalPanel stackWindowAddress;
+
+    @UiField
+    VerticalPanel stackWindow;
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
     private final NumberFormat formatter = NumberFormat.getFormat("0000");
@@ -102,11 +107,13 @@ public class MainWindow extends Composite {
         sourceCode.setText("mvi b,2\nmov a,b\nmov c,b");
         createMemoryWindowItems(maxMemoryWindowRows);
         createDisassemblyWindowItems(maxDisassemblyRows);
+        createStackWindowItems(maxMemoryWindowRows);
         createRegisterWindowNames();
         createFlagWindow();
         refreshRegistersAndFlags();
         fillMemoryWindow(false);
         fillDisassemblyWindow();
+        fillStackWindow(false);
         // refresh the register and memory window to remove the red highlight
         refreshRegistersAndFlags();
         // mouse UP/DOWN handler
@@ -158,7 +165,7 @@ public class MainWindow extends Composite {
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
             HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
-            addrBox.setText(" " + formatter.format(addr) + ":  ");
+            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
             TextBox valueBox = (TextBox) hp.getWidget(1);
             DebugLineInfo debugInfo = exe.getDebugInfo(addr);
             if (addr == exe.ip) {
@@ -238,6 +245,19 @@ public class MainWindow extends Composite {
         }
     }
 
+    private void createStackWindowItems(int maxRows) {
+        stackWindow.clear();
+        stackWindowAddress.clear();
+        for (int i = 0; i < maxRows; ++i) {
+            HorizontalPanel hp = new HorizontalPanel();
+            TextBox addr = createMemoryAddressTextbox();
+            stackWindowAddress.add(addr);
+            TextBox value = createValueTextbox(Style.style.css.memoryAddressTextBox());
+            hp.add(value);
+            stackWindow.add(hp);
+        }
+    }
+
     public TextBox createValueTextbox(String style) {
         TextBox addr = new TextBox();
         addr.addStyleName(style);
@@ -271,11 +291,11 @@ public class MainWindow extends Composite {
         int addr = start;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
-            addrBox.setText(" " + formatter.format(addr) + ":  ");
+            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
             HorizontalPanel hp = (HorizontalPanel) memoryWindow.getWidget(i);
             for (int j = 0; j < hp.getWidgetCount(); ++j) {
                 TextBox valueTextbox = (TextBox) hp.getWidget(j);
-                String newValue = toHex(exe.getMemory(addr));
+                String newValue = toHex2Digits(exe.getMemory(addr));
                 updateTextboxValue(newValue, valueTextbox, highlight);
                 if (addr == exe.ip) {
                     updateFollowMemoryHighlight(addrBox, valueTextbox);
@@ -289,6 +309,24 @@ public class MainWindow extends Composite {
 
     private void fillMemoryWindow(boolean highlight) {
         fillMemoryWindow(highlight, memoryFollowIp.getValue());
+    }
+
+    private void fillStackWindow(boolean highlight) {
+        int addr = exe.getSP();
+        for (int i = 0; i < stackWindow.getWidgetCount(); ++i) {
+            TextBox addrBox = (TextBox) stackWindowAddress.getWidget(i);
+            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
+            HorizontalPanel hp = (HorizontalPanel) stackWindow.getWidget(i);
+            TextBox valueTextbox = (TextBox) hp.getWidget(0);
+            String newValue = toHex4Digits(exe.getMemory(addr));
+            updateTextboxValue(newValue, valueTextbox, highlight);
+            if (addr == exe.sp) {
+                updateFollowMemoryHighlight(addrBox, valueTextbox);
+                prevHighlightAddress = addrBox;
+                prevHighlightValue = valueTextbox;
+            }
+            ++addr;
+        }
     }
 
     private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
@@ -316,6 +354,7 @@ public class MainWindow extends Composite {
             refreshRegistersAndFlags();
             fillMemoryWindow(false);
             fillDisassemblyWindow();
+            fillStackWindow(false);
             // refresh the register and memory window to remove the red highlight
             refreshRegistersAndFlags();
         } catch (Exception ex) {
@@ -341,6 +380,7 @@ public class MainWindow extends Composite {
             refreshRegistersAndFlags();
             fillMemoryWindow(true);
             fillDisassemblyWindow();
+            fillStackWindow(true);
         }
     }
 
@@ -352,8 +392,8 @@ public class MainWindow extends Composite {
         updateTextboxValue(exe.e, registerValueMap.get("e"));
         updateTextboxValue(exe.h, registerValueMap.get("h"));
         updateTextboxValue(exe.l, registerValueMap.get("l"));
-        updateTextboxValue(exe.l, registerValueMap.get("sp"));
-        updateTextboxValue(exe.l, registerValueMap.get("psw"));
+        updateTextboxValue(exe.sp, registerValueMap.get("sp"));
+        updateTextboxValue(exe.psw, registerValueMap.get("psw"));
         updateTextboxValue(exe.ip, registerValueMap.get("ip"));
 
         // refresh flags
@@ -395,11 +435,11 @@ public class MainWindow extends Composite {
     }
 
     private void updateTextboxValue(int v, TextBox textBox) {
-        String newValue = toHex(v);
+        String newValue = toHex2Digits(v);
         updateTextboxValue(newValue, textBox, true);
     }
 
-    private String toHex(int i) {
+    private String toHex2Digits(int i) {
         String str = Integer.toHexString(i);
         if (str.length() == 1) {
             str = "0" + str;
@@ -415,5 +455,16 @@ public class MainWindow extends Composite {
                 " stc\n" +
                 " aci 57h\n" +
                 " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
+    }
+
+    public String toHex4Digits(int value) {
+        String[] zeroPrefixStr = new String[] { "", "0", "00", "000", "0000" };
+        value = value & 0xffff;
+        String str = Integer.toHexString(value);
+        int zeroPrefix = 4 - str.length();
+        if (zeroPrefix > 0) {
+            str = zeroPrefixStr[zeroPrefix] + str;
+        }
+        return str;
     }
 }

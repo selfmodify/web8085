@@ -794,8 +794,19 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int code = exe.getOpcode() - 0xC5;
-            int value = exe.getRegOrMemPair(code / 8);
+            int value = exe.getRegPairForPushPopValue(code / 8);
             push16BitToStack(exe, value);
+            exe.nextIp();
+        }
+    };
+
+    public static MicroCode pop = new MicroCode() {
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int code = exe.getOpcode() - 0xC1;
+            Operand regPair = exe.getRegPairForPushPop(code / 8);
+            pop16BitFromStack(exe, regPair);
+            exe.nextIp();
         }
     };
 
@@ -1102,10 +1113,17 @@ public abstract class MicroCode {
      */
     protected void push16BitToStack(Exe exe, int value) {
         value = value & 0xffff;
+        exe.decrementRegisterPair(Operand.SP);
         exe.setMemoryByte(exe.getSP(), (value >> 8));
         exe.decrementRegisterPair(Operand.SP);
-        exe.setMemoryByte(exe.getSP(), (value & 0xf));
-        exe.decrementRegisterPair(Operand.SP);
+        exe.setMemoryByte(exe.getSP(), (value & 0xff));
+    }
+
+    protected void pop16BitFromStack(Exe exe, Operand regPair) {
+        int value = exe.getMemoryAt16Bit(exe.getSP());
+        exe.incrementRegisterPair(Operand.SP);
+        exe.incrementRegisterPair(Operand.SP);
+        exe.setRegPair(regPair, value);
     }
 
     public abstract void execute(Exe exe, OneInstruction i) throws Exception;

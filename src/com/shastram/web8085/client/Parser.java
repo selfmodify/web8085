@@ -325,7 +325,10 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.XRI, 0xEE, OperandParser.immediateByteOperand));
         map.put("pchl",
                 new PerInstructionToken(Parser.Mnemonic.PCHL, 0xE9, OperandParser.noOperand));
-
+        map.put("push",
+                new PerInstructionToken(Parser.Mnemonic.PUSH, 0xC5, OperandParser.pushOperand));
+        map.put("pop",
+                new PerInstructionToken(Parser.Mnemonic.POP, 0xC1, OperandParser.popOperand));
         return map;
     }
 

@@ -1,0 +1,14 @@
+##################################
+# push
+pop psw
+lxi sp,2099h
+mvi b,32h
+mvi c,57h
+push b
+.assert sp=2097h, [2097h]=57h,[2098h]=32h
+mvi b,0h
+mvi c,0h
+pop b
+.assert sp=2099h, b=32h,c=57h
+pop d
+pop h

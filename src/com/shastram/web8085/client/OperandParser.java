@@ -6,7 +6,7 @@ import com.shastram.web8085.client.Parser.Operand;
 import com.shastram.web8085.client.Parser.PerInstructionToken;
 
 public abstract class OperandParser {
-    private static HashMap<String, Operand> map = createOperandMap();
+    private static HashMap<String, Operand> registerMap = createOperandMap();
 
     public abstract void parse(Parser parser, PerInstructionToken i, String line) throws Exception;
 
@@ -66,7 +66,7 @@ public abstract class OperandParser {
      */
     public static Operand parseNormalRegister(String reg) throws Exception {
         reg = reg.trim();
-        Operand op = map.get(reg);
+        Operand op = registerMap.get(reg);
         if (op == null) {
             throw new ParserException(reg + " is not a valid register");
         }
@@ -286,8 +286,44 @@ public abstract class OperandParser {
         }
     };
 
+    private static Operand pushOrPopOperand(String reg) throws Exception {
+        reg = reg.toLowerCase().trim();
+        if (reg.equalsIgnoreCase("psw")) {
+            return Operand.PSW;
+        }
+        Operand op = parseNormalRegister(reg);
+        if (op == Operand.B || op == Operand.D || op == Operand.H) {
+            return op;
+        }
+        throw new ParserException(reg + " is not a valid operand.  Must be one of B,D,H,PSW.");
+    }
+
+    public static OperandParser pushOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, PerInstructionToken i, String reg) throws Exception {
+            Operand op = pushOrPopOperand(reg);
+            if (op == Operand.PSW) {
+                i.code = 0xF5;
+            } else {
+                i.code = i.baseCode + 8 * op.ordinal();
+            }
+        }
+    };
+
+    public static OperandParser popOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, PerInstructionToken i, String reg) throws Exception {
+            Operand op = pushOrPopOperand(reg);
+            if (op == Operand.PSW) {
+                i.code = 0xF1;
+            } else {
+                i.code = i.baseCode + 8 * op.ordinal();
+            }
+        }
+    };
+
     private static Operand getOperand(String operands) throws Exception {
-        Operand operand = map.get(operands.trim());
+        Operand operand = registerMap.get(operands.trim());
         if (operand == null) {
             throw new ParserException("Operand expected. " + operands);
         }

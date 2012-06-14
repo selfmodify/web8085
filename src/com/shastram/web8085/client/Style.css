@@ -38,7 +38,7 @@
     margin: 0px;
     border: 0px;
     font-family: courier;
-    width: 35px;
+    width: 40px;
     font-weight: bold;
     font-size: 125%;
 }
@@ -47,6 +47,13 @@
 	border: 1px inset gray;
 	font-family: monospace;
 	font-weight: bold;
+    font-size: 125%;
+}
+
+.stackWindow {
+    border: 1px inset gray;
+    font-family: monospace;
+    font-weight: bold;
     font-size: 125%;
 }
 
