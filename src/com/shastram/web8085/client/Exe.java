@@ -111,7 +111,9 @@ public class Exe {
         case LABEL:
             insertLabel(token);
             break;
-
+        case ORG:
+            changeIp(token);
+            break;
         case SYNTAX_ERROR: {
             String msg = "Syntax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
             logger.log(Level.SEVERE, msg);
@@ -120,7 +122,16 @@ public class Exe {
         }
     }
 
-    private void insertLabel(ParseToken token) throws ParserException {
+    private void changeIp(ParseToken token) throws ParserException {
+    	String[] parts = token.getTokenParts();
+    	if (parts.length < 2) {
+    		throw new ParserException(".org needs a numeric parameter");
+    	}
+    	int location = OperandParser.parseNumber(parts[1]);
+    	setIp(location);
+	}
+
+	private void insertLabel(ParseToken token) throws ParserException {
         //TODO: Separate parser from exe
         String tokenName = token.getFirstToken().trim().replaceAll(":$", "").toLowerCase();
         ParseToken oldToken = labelMap.get(tokenName);

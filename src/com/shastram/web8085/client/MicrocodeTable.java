@@ -23,7 +23,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0x0e, "mvi", "mvi c", MicroCode.byteOperand, MicroCode.mvi),
             new MicroCode.OneInstruction(0x0f, "rrc", "rrc", MicroCode.noOperand, MicroCode.rrc),
 
-            new MicroCode.OneInstruction(0x10, ".break", "invalid", MicroCode.noOperand, MicroCode.breakRunner),
+            new MicroCode.OneInstruction(0x10, ".break", ".break", MicroCode.noOperand, MicroCode.breakRunner),
             new MicroCode.OneInstruction(0x11, "lxi", "lxi d", MicroCode.wordOperand, MicroCode.lxi),
             new MicroCode.OneInstruction(0x12, "stax", "stax d", MicroCode.noOperand, MicroCode.stax),
             new MicroCode.OneInstruction(0x13, "inx", "inx d", MicroCode.noOperand, MicroCode.inx),
@@ -217,7 +217,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xc4, "cnz", "cnz", MicroCode.wordOperand, MicroCode.cnz),
             new MicroCode.OneInstruction(0xc5, "push", "push b", MicroCode.noOperand, MicroCode.push),
             new MicroCode.OneInstruction(0xc6, "adi", "adi", MicroCode.byteOperand, MicroCode.adi),
-            new MicroCode.OneInstruction(0xc7, "rst", "rst 0", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xc7, "rst", "rst 0", MicroCode.noOperand, MicroCode.rst),
             new MicroCode.OneInstruction(0xc8, "rz", "rz", MicroCode.noOperand, MicroCode.rz),
             new MicroCode.OneInstruction(0xc9, "ret", "ret", MicroCode.noOperand, MicroCode.ret),
             new MicroCode.OneInstruction(0xca, "jz", "jz", MicroCode.wordOperand, MicroCode.jz),
@@ -225,7 +225,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xcc, "cz", "cz", MicroCode.wordOperand, MicroCode.cz),
             new MicroCode.OneInstruction(0xcd, "call", "call", MicroCode.wordOperand, MicroCode.call),
             new MicroCode.OneInstruction(0xce, "aci", "aci", MicroCode.byteOperand, MicroCode.aci),
-            new MicroCode.OneInstruction(0xcf, "rst", "rst 1", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xcf, "rst", "rst 1", MicroCode.noOperand, MicroCode.rst),
 
             new MicroCode.OneInstruction(0xd0, "rnc", "rnc", MicroCode.noOperand, MicroCode.rnc),
             new MicroCode.OneInstruction(0xd1, "pop", "pop d", MicroCode.noOperand, MicroCode.pop),
@@ -234,7 +234,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xd4, "cnc", "cnc", MicroCode.noOperand, MicroCode.cnc),
             new MicroCode.OneInstruction(0xd5, "push", "push", MicroCode.noOperand, MicroCode.push),
             new MicroCode.OneInstruction(0xd6, "sui", "sui", MicroCode.byteOperand, MicroCode.sui),
-            new MicroCode.OneInstruction(0xd7, "rst", "rst 2", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xd7, "rst", "rst 2", MicroCode.noOperand, MicroCode.rst),
             new MicroCode.OneInstruction(0xd8, "rc", "rc", MicroCode.noOperand, MicroCode.rnc),
             new MicroCode.OneInstruction(0xd9, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xda, "jc", "jc", MicroCode.wordOperand, MicroCode.jc),
@@ -242,7 +242,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xdc, "cc", "cc", MicroCode.wordOperand, MicroCode.cc),
             new MicroCode.OneInstruction(0xdd, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xde, "sbi", "sbi", MicroCode.noOperand, MicroCode.sbi),
-            new MicroCode.OneInstruction(0xdf, "rst", "rst 3", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xdf, "rst", "rst 3", MicroCode.noOperand, MicroCode.rst),
 
             new MicroCode.OneInstruction(0xe0, "rpo", "rpo", MicroCode.noOperand, MicroCode.rpo),
             new MicroCode.OneInstruction(0xe1, "pop", "pop h", MicroCode.noOperand, MicroCode.pop),
@@ -251,7 +251,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xe4, "cpo", "cpo", MicroCode.wordOperand, MicroCode.cpo),
             new MicroCode.OneInstruction(0xe5, "push", "push h", MicroCode.noOperand, MicroCode.push),
             new MicroCode.OneInstruction(0xe6, "ani", "ani", MicroCode.wordOperand, MicroCode.ani),
-            new MicroCode.OneInstruction(0xe7, "rst", "rst 4", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xe7, "rst", "rst 4", MicroCode.noOperand, MicroCode.rst),
             new MicroCode.OneInstruction(0xe8, "rpe", "rpe", MicroCode.noOperand, MicroCode.rpe),
             new MicroCode.OneInstruction(0xe9, "pchl", "pchl", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xea, "jpe", "jpe", MicroCode.wordOperand, MicroCode.jpe),
@@ -259,7 +259,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xec, "cpe", "cpe", MicroCode.wordOperand, MicroCode.cpe),
             new MicroCode.OneInstruction(0xed, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xee, "xri", "xri", MicroCode.noOperand, MicroCode.xri),
-            new MicroCode.OneInstruction(0xef, "rst", "rst 5", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xef, "rst", "rst 5", MicroCode.noOperand, MicroCode.rst),
 
             new MicroCode.OneInstruction(0xf0, "rp", "rp", MicroCode.noOperand, MicroCode.rp),
             new MicroCode.OneInstruction(0xf1, "pop", "pop psw", MicroCode.noOperand, MicroCode.pop),
@@ -268,7 +268,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xf4, "cp", "cp", MicroCode.wordOperand, MicroCode.cp),
             new MicroCode.OneInstruction(0xf5, "push", "push psw", MicroCode.noOperand, MicroCode.push),
             new MicroCode.OneInstruction(0xf6, "ori", "ori", MicroCode.byteOperand, MicroCode.ori),
-            new MicroCode.OneInstruction(0xf7, "rst", "rst 6", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xf7, "rst", "rst 6", MicroCode.noOperand, MicroCode.rst),
             new MicroCode.OneInstruction(0xf8, "rm", "rm", MicroCode.noOperand, MicroCode.rm),
             new MicroCode.OneInstruction(0xf9, "sphl", "sphl", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xfa, "jm", "jm", MicroCode.wordOperand, MicroCode.jm),
@@ -276,7 +276,7 @@ public class MicrocodeTable {
             new MicroCode.OneInstruction(0xfc, "cm", "cm", MicroCode.wordOperand, MicroCode.cm),
             new MicroCode.OneInstruction(0xfd, "", "invalid", MicroCode.noOperand, MicroCode.nop),
             new MicroCode.OneInstruction(0xfe, "cpi", "cpi", MicroCode.byteOperand, MicroCode.cpi),
-            new MicroCode.OneInstruction(0xff, "rst", "rst 7", MicroCode.noOperand, MicroCode.nop),
+            new MicroCode.OneInstruction(0xff, "rst", "rst 7", MicroCode.noOperand, MicroCode.rst),
     };
 
 }

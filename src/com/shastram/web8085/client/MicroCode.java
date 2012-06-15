@@ -95,7 +95,7 @@ public abstract class MicroCode {
         if (Config.printInstructions) {
             String s = ix.longName;
             DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
-            logger.info("Executing " + s + " " + (debugInfo != null ? "Line=" + debugInfo.line : ""));
+            logger.info("Executing " + s + " ip=" + exe.ip + " " + (debugInfo != null ? "Line=" + debugInfo.line : ""));
         }
         m.execute(exe, ix);
     }
@@ -715,15 +715,14 @@ public abstract class MicroCode {
     public static MicroCode call = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
-            doCall(exe);
+            exe.nextIp();
+            doCall(exe, exe.getMemAtIp16bit());
         }
     };
 
-    protected void doCall(Exe exe) {
-        exe.nextIp();
-        int location = exe.getMemAtIp16bit();
+    protected void doCall(Exe exe, int address) {
         push16BitToStack(exe, exe.getIp());
-        exe.setIp(location);
+        exe.setIp(address);
     }
 
     public static MicroCode cc = new MicroCode() {
@@ -784,7 +783,9 @@ public abstract class MicroCode {
 
     protected void doCallOnFlag(Exe exe, boolean flag) {
         if (flag) {
-            doCall(exe);
+            exe.nextIp();
+            int address = exe.getMemAtIp16bit();
+            doCall(exe, address);
         } else {
             exe.nextIp2(2);
         }
@@ -840,8 +841,6 @@ public abstract class MicroCode {
             int code = exe.getMemAtIp();
             exe.nextIp();
             int value = exe.getMemAtIp16bit();
-            int low = value & 0xff;
-            int high = (value & 0xff00) >> 8;
             switch (code) {
             case 0x1:
                 exe.setBC(value);
@@ -861,6 +860,13 @@ public abstract class MicroCode {
         }
     };
 
+    public static MicroCode rst = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			int address = exe.getOpcode() - 0xC7;
+			doCall(exe, address);
+		}
+    };
     /**
      * XCHG Exchange H & L with D & E
      */
@@ -1131,7 +1137,7 @@ public abstract class MicroCode {
     public static void selfTest() {
         for (int i = 0; i < MicrocodeTable.table.length; ++i) {
             OneInstruction ix = MicrocodeTable.table[i];
-            logger.info(ix.shortName + " code=" + ix.microCode);
+            //logger.info(ix.shortName + " code=" + ix.microCode);
         }
     }
 }

@@ -9,7 +9,6 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -80,7 +79,6 @@ public class MainWindow extends Composite {
     VerticalPanel stackWindow;
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
-    private final NumberFormat formatter = NumberFormat.getFormat("0000");
 
     private HashMap<String, HorizontalPanel> registerValueMap;
     private int memoryStart = 0;
@@ -165,7 +163,7 @@ public class MainWindow extends Composite {
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
             HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
-            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
+            addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
             TextBox valueBox = (TextBox) hp.getWidget(1);
             DebugLineInfo debugInfo = exe.getDebugInfo(addr);
             if (addr == exe.ip) {
@@ -291,11 +289,11 @@ public class MainWindow extends Composite {
         int addr = start;
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
-            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
+            addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
             HorizontalPanel hp = (HorizontalPanel) memoryWindow.getWidget(i);
             for (int j = 0; j < hp.getWidgetCount(); ++j) {
                 TextBox valueTextbox = (TextBox) hp.getWidget(j);
-                String newValue = toHex2Digits(exe.getMemory(addr));
+                String newValue = Utils.toHex2Digits(exe.getMemory(addr));
                 updateTextboxValue(newValue, valueTextbox, highlight);
                 if (addr == exe.ip) {
                     updateFollowMemoryHighlight(addrBox, valueTextbox);
@@ -315,10 +313,10 @@ public class MainWindow extends Composite {
         int addr = exe.getSP();
         for (int i = 0; i < stackWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) stackWindowAddress.getWidget(i);
-            addrBox.setText(" " + toHex4Digits(addr) + ":  ");
+            addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
             HorizontalPanel hp = (HorizontalPanel) stackWindow.getWidget(i);
             TextBox valueTextbox = (TextBox) hp.getWidget(0);
-            String newValue = toHex4Digits(exe.getMemory(addr));
+            String newValue = Utils.toHex4Digits(exe.getMemory(addr));
             updateTextboxValue(newValue, valueTextbox, highlight);
             if (addr == exe.sp) {
                 updateFollowMemoryHighlight(addrBox, valueTextbox);
@@ -435,17 +433,8 @@ public class MainWindow extends Composite {
     }
 
     private void updateTextboxValue(int v, TextBox textBox) {
-        String newValue = toHex2Digits(v);
+        String newValue = Utils.toHex2Digits(v);
         updateTextboxValue(newValue, textBox, true);
-    }
-
-    private String toHex2Digits(int i) {
-        String str = Integer.toHexString(i);
-        if (str.length() == 1) {
-            str = "0" + str;
-        }
-        str = str.toUpperCase();
-        return str;
     }
 
     @UiHandler("loadArithmeticButton")
@@ -455,16 +444,5 @@ public class MainWindow extends Composite {
                 " stc\n" +
                 " aci 57h\n" +
                 " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
-    }
-
-    public String toHex4Digits(int value) {
-        String[] zeroPrefixStr = new String[] { "", "0", "00", "000", "0000" };
-        value = value & 0xffff;
-        String str = Integer.toHexString(value);
-        int zeroPrefix = 4 - str.length();
-        if (zeroPrefix > 0) {
-            str = zeroPrefixStr[zeroPrefix] + str;
-        }
-        return str;
     }
 }

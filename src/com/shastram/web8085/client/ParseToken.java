@@ -4,13 +4,14 @@ import com.shastram.web8085.client.Parser.PerInstructionToken;
 
 public class ParseToken {
     private Parser.PerInstructionToken ix;
-    private Type type;
+    private TokenType type;
     private String token;
     private int lineNumber;
     private int startColumn;
     private int endColumn;
     private String firstToken;
     private int ip;
+	private String[] tokenParts;
 
     public ParseToken(Parser.PerInstructionToken instruction,
             String firstToken,
@@ -25,26 +26,27 @@ public class ParseToken {
         this.setStartColumn(startColumn);
         this.endColumn = endColumn;
         // TODO: Maybe there is a better way to differentiate between asserts and instructions?
-        type = instruction.name.equalsIgnoreCase("assert") ? Type.ASSERT : Type.INSTRUCTION;
+        type = instruction.name.equalsIgnoreCase("assert") ? TokenType.ASSERT : TokenType.INSTRUCTION;
     }
 
-    public ParseToken(Type type, String token) {
+    public ParseToken(TokenType type, String token) {
         this.type = type;
         this.token = token;
     }
 
-    public ParseToken(int lineNumber, Type type, int ip, String firstToken, String[] allTokens) {
+    public ParseToken(int lineNumber, TokenType type, int ip, String firstToken, String[] allTokens) {
         this.lineNumber = lineNumber;
         this.firstToken = firstToken;
         this.ip = ip;
         this.type = type;
+        this.tokenParts = allTokens;
     }
 
-    public Type getType() {
+    public TokenType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(TokenType type) {
         this.type = type;
     }
 
@@ -87,4 +89,8 @@ public class ParseToken {
     public int getIp() {
         return ip;
     }
+
+	public String[] getTokenParts() {
+		return tokenParts;
+	}
 }

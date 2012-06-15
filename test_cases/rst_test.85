@@ -1,0 +1,19 @@
+##################################
+# rst RST 0 - RST 7.  Works like a call instruction which
+# jumps to specified location.
+.org 0
+rst 1
+.org 8h
+rst 2
+.org 10h
+rst 3
+.org 18h
+rst 4
+.org 20h
+rst 5
+.org 28h
+rst 6
+.org 30h
+rst 7
+.org 38h
+#rst 0

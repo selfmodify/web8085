@@ -322,6 +322,17 @@ public abstract class OperandParser {
         }
     };
 
+    public static OperandParser rstOperand = new OperandParser() {
+        @Override
+        public void parse(Parser parser, PerInstructionToken i, String numStr) throws Exception {
+        	int num = parseNumber(numStr);
+        	if(num < 0 || num > 7) {
+        		throw new ParserException("Reset operand must be between 0 and 7");
+        	}
+        	i.code = i.baseCode + num * 8;
+        }
+    };
+
     private static Operand getOperand(String operands) throws Exception {
         Operand operand = registerMap.get(operands.trim());
         if (operand == null) {
@@ -340,7 +351,7 @@ public abstract class OperandParser {
      * @throws NumberFormatException
      *             if it cannot be parsed.
      */
-    public static int parseNumber(String str) throws Exception {
+    public static int parseNumber(String str) throws ParserException {
         int num = 0;
         str = str.trim();
         int base = 10;

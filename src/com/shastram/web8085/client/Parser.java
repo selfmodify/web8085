@@ -329,6 +329,8 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.PUSH, 0xC5, OperandParser.pushOperand));
         map.put("pop",
                 new PerInstructionToken(Parser.Mnemonic.POP, 0xC1, OperandParser.popOperand));
+        map.put("rst",
+                new PerInstructionToken(Parser.Mnemonic.RST, 0xC7, OperandParser.rstOperand));
         return map;
     }
 
@@ -380,12 +382,12 @@ public class Parser {
         int commentStart = line.indexOf('#');
         int len = line.length();
         if (commentStart == 0 || len == 0) {
-            return new ParseToken(Type.COMMENT, line);
+            return new ParseToken(TokenType.COMMENT, line);
         }
         if (commentStart > 1) {
             line = line.substring(0, commentStart);
         }
-        String[] parts = line.split("[\t ]", 2);
+        String[] parts = line.split("[\t ]+", 2);
         String firstToken = parts[0].trim();
         PerInstructionToken ix = instructions.get(firstToken);
         if (ix == null) {
@@ -393,12 +395,15 @@ public class Parser {
             if (ch == '\u00a0') {
                 // workaround for some strange character showing up when compiling
                 // from web ui.
-                return new ParseToken(Type.COMMENT, line);
+                return new ParseToken(TokenType.COMMENT, line);
+            }
+            if (firstToken.equalsIgnoreCase(".org")) {
+                return new ParseToken(lineNumber, TokenType.ORG, ip, firstToken, parts);
             }
             if (firstToken.endsWith(":")) {
-                return new ParseToken(lineNumber, Type.LABEL, ip, firstToken, parts);
+                return new ParseToken(lineNumber, TokenType.LABEL, ip, firstToken, parts);
             }
-            return new ParseToken(Type.SYNTAX_ERROR, line);
+            return new ParseToken(TokenType.SYNTAX_ERROR, line);
         }
         ix.parseOperands(this, parts.length > 1 ? parts[1] : null, ip);
         int endColumn = startColumn + line.length();
