@@ -275,6 +275,10 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.BREAK, 0x10, OperandParser.breakOperand));
         map.put("stc",
                 new PerInstructionToken(Parser.Mnemonic.STC, 0x37, OperandParser.noOperand));
+        map.put("ei",
+                new PerInstructionToken(Parser.Mnemonic.EI, 0xFB, OperandParser.noOperand));
+        map.put("di",
+                new PerInstructionToken(Parser.Mnemonic.DI, 0xF3, OperandParser.noOperand));
         map.put("mov",
                 new PerInstructionToken(Parser.Mnemonic.MOV, 0x40,
                         new OperandParser() {

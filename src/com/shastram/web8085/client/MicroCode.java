@@ -867,6 +867,35 @@ public abstract class MicroCode {
 			doCall(exe, address);
 		}
     };
+
+    public static MicroCode ei = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			exe.nextIp();
+		}
+    };
+    
+    public static MicroCode di = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			exe.nextIp();
+		}
+    };
+    
+    public static MicroCode in = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			exe.nextIp();
+		}
+    };
+    
+    public static MicroCode out = new MicroCode() {
+		@Override
+		public void execute(Exe exe, OneInstruction i) throws Exception {
+			exe.nextIp();
+		}
+    };
+    
     /**
      * XCHG Exchange H & L with D & E
      */
