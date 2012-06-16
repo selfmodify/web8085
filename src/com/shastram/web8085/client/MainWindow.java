@@ -315,6 +315,7 @@ public class MainWindow extends Composite {
 
     private void fillStackWindow(boolean highlight) {
         int addr = exe.getSP();
+        removeFollowMemoryHighlight(prevStackHighlightAddress, prevStackHighlightValue);
         for (int i = 0; i < stackWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) stackWindowAddress.getWidget(i);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
