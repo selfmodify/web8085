@@ -335,6 +335,10 @@ public class Parser {
                 new PerInstructionToken(Parser.Mnemonic.POP, 0xC1, OperandParser.popOperand));
         map.put("rst",
                 new PerInstructionToken(Parser.Mnemonic.RST, 0xC7, OperandParser.rstOperand));
+        map.put("out",
+                new PerInstructionToken(Parser.Mnemonic.OUT, 0xD3, OperandParser.immediateByteOperand));
+        map.put("in",
+                new PerInstructionToken(Parser.Mnemonic.IN, 0xDB, OperandParser.immediateByteOperand));
         return map;
     }
 

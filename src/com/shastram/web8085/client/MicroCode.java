@@ -885,14 +885,14 @@ public abstract class MicroCode {
     public static MicroCode in = new MicroCode() {
 		@Override
 		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp();
+			exe.nextIp2(2);
 		}
     };
     
     public static MicroCode out = new MicroCode() {
 		@Override
 		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp();
+			exe.nextIp2(2);
 		}
     };
     

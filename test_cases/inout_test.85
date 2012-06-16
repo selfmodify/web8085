@@ -1,0 +1,7 @@
+##################################
+# IN - The contents of the port are read into the accumulator
+in 67
+
+##################################
+# OUT - The contents of the accumulator are copied to the output port.
+out 56
