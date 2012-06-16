@@ -89,3 +89,10 @@
 	font-size: 150%;
 	width: 140px;
 }
+
+.currentAddressHighlight {
+	background: lightblue;
+	font-weight: bold;
+	font-style: italic;
+	color: red;
+}

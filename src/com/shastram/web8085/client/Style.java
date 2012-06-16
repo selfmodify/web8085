@@ -19,6 +19,8 @@ public class Style extends Composite {
         String memoryWindowHighlight();
 
         String currentInstructionHighlight();
+        
+        String currentAddressHighlight();
 
         String registerTextBox();
 

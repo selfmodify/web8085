@@ -1,5 +1,6 @@
 package com.shastram.web8085.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.shastram.web8085.client.MicroCode.OneInstruction;
 
 public class MainWindow extends Composite {
 
@@ -86,9 +88,9 @@ public class MainWindow extends Composite {
 
     private HashMap<String, HorizontalPanel> flagValueMap;
 
-    private TextBox prevHighlightAddress;
+    private ArrayList<TextBox> prevHighlightAddress = new ArrayList<TextBox>();
 
-    private TextBox prevHighlightValue;
+    private ArrayList<TextBox> prevHighlightValue = new ArrayList<TextBox>();
 
     private TextBox prevStackHighlightAddress;
 
@@ -291,6 +293,7 @@ public class MainWindow extends Composite {
         removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
         int start = memoryStart;
         int addr = start;
+        int withinInstruction = 0; // Used to highlight instruction longer than 1 byte
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
@@ -300,13 +303,23 @@ public class MainWindow extends Composite {
                 String newValue = Utils.toHex2Digits(exe.getMemory(addr));
                 updateTextboxValue(newValue, valueTextbox, highlight);
                 if (addr == exe.ip) {
-                    updateFollowMemoryHighlight(addrBox, valueTextbox);
-                    prevHighlightAddress = addrBox;
-                    prevHighlightValue = valueTextbox;
+                    prevHighlightAddress.add(addrBox);
+                    prevHighlightValue.add(valueTextbox);
+                    int code = exe.getMemAtIp();
+                    if(code >=0 && code < MicrocodeTable.table.length) {
+                    	OneInstruction oneInstruction = MicrocodeTable.table[code];
+                        withinInstruction = oneInstruction.length;
+                    }
+                } else if (withinInstruction > 0) {
+                    prevHighlightValue.add(valueTextbox);
+                }
+                if(withinInstruction > 0) {
+                	--withinInstruction;
                 }
                 ++addr;
             }
         }
+        updateFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
     }
 
     private void fillMemoryWindow(boolean highlight) {
@@ -334,16 +347,36 @@ public class MainWindow extends Composite {
 
     private void updateFollowMemoryHighlight(TextBox addrBox, TextBox value) {
         value.addStyleName(Style.style.css.currentInstructionHighlight());
-        addrBox.addStyleName(Style.style.css.currentInstructionHighlight());
+        addrBox.addStyleName(Style.style.css.currentAddressHighlight());
+    }
+
+    private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox, ArrayList<TextBox> values) {
+        for(TextBox t: addrBox) {
+        	t.addStyleName(Style.style.css.currentAddressHighlight());
+        }
+        for(TextBox t: values) {
+            t.addStyleName(Style.style.css.currentInstructionHighlight());
+        }
     }
 
     public void removeFollowMemoryHighlight(TextBox prevAddr, TextBox prevValue) {
         if (prevAddr != null) {
-            prevAddr.removeStyleName(Style.style.css.currentInstructionHighlight());
+            prevAddr.removeStyleName(Style.style.css.currentAddressHighlight());
         }
         if (prevValue != null) {
             prevValue.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
+    }
+
+    public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr, ArrayList<TextBox> prevValues) {
+        for(TextBox t: prevAddr) {
+            t.removeStyleName(Style.style.css.currentAddressHighlight());
+        }
+        for(TextBox t: prevValues) {
+            t.removeStyleName(Style.style.css.currentInstructionHighlight());
+        }
+        prevValues.clear();
+        prevAddr.clear();
     }
 
     @UiHandler("compile")
