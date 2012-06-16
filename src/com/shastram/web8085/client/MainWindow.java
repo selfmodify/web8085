@@ -90,6 +90,10 @@ public class MainWindow extends Composite {
 
     private TextBox prevHighlightValue;
 
+    private TextBox prevStackHighlightAddress;
+
+    private TextBox prevStackHighlightValue;
+    
     private TextBox prevHighlightDisassemblyAddress;
 
     private TextBox prevHighlightDisassemblyValue;
@@ -320,8 +324,8 @@ public class MainWindow extends Composite {
             updateTextboxValue(newValue, valueTextbox, highlight);
             if (addr == exe.sp) {
                 updateFollowMemoryHighlight(addrBox, valueTextbox);
-                prevHighlightAddress = addrBox;
-                prevHighlightValue = valueTextbox;
+                prevStackHighlightAddress = addrBox;
+                prevStackHighlightValue = valueTextbox;
             }
             ++addr;
         }
@@ -349,6 +353,7 @@ public class MainWindow extends Composite {
             exe.reset();
             errorWindow.setText("Finished parsing");
             exe.reset();
+            clearHighlights();
             refreshRegistersAndFlags();
             fillMemoryWindow(false);
             fillDisassemblyWindow();
@@ -360,7 +365,16 @@ public class MainWindow extends Composite {
         }
     }
 
-    @UiHandler("stepButton")
+    /**
+     * Clear highlight of the various boxes
+     */
+    private void clearHighlights() {
+    	errorWindow.setText("");
+        removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
+	}
+
+	@UiHandler("stepButton")
     public void stepButtonHandler(ClickEvent e) {
         try {
             exe.step();
