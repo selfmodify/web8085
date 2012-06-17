@@ -86,13 +86,13 @@ public class Exe {
 
     public void insert(ParseToken token) throws ParserException {
         PerInstructionToken i = token.getIx();
-        addDebugInfo(token);
         switch (token.getType()) {
         case INSTRUCTION:
             if (i.code == -1) {
                 throw new ParserException("Internal error: Invalid microcode " + i.code + " set at line="
                         + token.getLineNumber());
             }
+            addDebugInfo(token);
             if (i.hasImmediate()) {
                 if (i.len == 3) {
                     insertCodeAnd16bit(i.code, i.getImmediate());
@@ -105,10 +105,12 @@ public class Exe {
             break;
         case ASSERT:
             if (!Config.ignoreAsserts) {
+                addDebugInfo(token);
                 insert(i.code);
             }
             break;
         case LABEL:
+            addDebugInfo(token);
             insertLabel(token);
             break;
         case ORG:

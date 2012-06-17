@@ -68,6 +68,7 @@ public class Test {
                 "mov_tests.85",
                 "lxi_tests.85",
         };
+        //tests = new String[] { "rst_test.85" }; 
         MicroCode.selfTest();
         for (String s : tests) {
             testFile(s);
