@@ -644,7 +644,7 @@ public class Exe {
         return value;
     }
 
-    private int normalizeMemoryAddress(int addr) {
+    public static int normalizeMemoryAddress(int addr) {
         return (addr % 65536) & 0xffff;
     }
 

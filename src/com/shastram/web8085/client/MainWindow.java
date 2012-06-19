@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -79,6 +81,13 @@ public class MainWindow extends Composite {
 
     @UiField
     VerticalPanel stackWindow;
+    
+    @UiField
+    MenuBar menuBar;
+    
+    @UiField
+    MenuItem fileMenuItem;
+    
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
 
@@ -125,7 +134,8 @@ public class MainWindow extends Composite {
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 if (memoryStart > 0) {
-                    --memoryStart;
+                    memoryStart -= NUM_MEMORY_ADDRESS_PER_ROW;
+                    memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
             }
@@ -135,7 +145,8 @@ public class MainWindow extends Composite {
             @Override
             public void onMouseUp(MouseUpEvent event) {
                 if (memoryStart < 65536) {
-                    ++memoryStart;
+                    memoryStart += NUM_MEMORY_ADDRESS_PER_ROW;
+                    memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
             }
