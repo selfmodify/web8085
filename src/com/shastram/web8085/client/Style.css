@@ -1,69 +1,68 @@
 .memoryAddressTextBox {
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
-    font-family: courier;
-    width: 60px;
-    font-weight: bold;
-    font-size: 125%;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	font-family: courier;
+	width: 60px;
+	font-weight: bold;
+	font-size: 125%;
 }
 
 .memoryTextBox {
 	padding: 0px;
 	margin: 0px;
 	border: 0px;
-    font-family: courier;
-    width: 30px;
-    font-weight: bold;
-    font-size: 125%;
+	font-family: courier;
+	width: 30px;
+	font-weight: bold;
+	font-size: 125%;
 }
 
 .disassemblyTextBox {
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
-    font-family: courier;
-    width: 120px;
-    font-weight: bold;
-    font-size: 125%;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	font-family: courier;
+	width: 120px;
+	font-weight: bold;
+	font-size: 125%;
 }
 
 .bigLabel {
-    font-weight: bold;
-    color: purple;
+	font-weight: bold;
+	color: purple;
 }
 
 .registerTextBox {
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
-    font-family: courier;
-    width: 40px;
-    font-weight: bold;
-    font-size: 125%;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	font-family: courier;
+	width: 40px;
+	font-weight: bold;
+	font-size: 125%;
 }
 
 .memoryWindow {
 	border: 1px inset gray;
 	font-family: monospace;
 	font-weight: bold;
-    font-size: 125%;
+	font-size: 125%;
 }
 
 .stackWindow {
-    border: 1px inset gray;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 125%;
+	border: 1px inset gray;
+	font-family: monospace;
+	font-weight: bold;
+	font-size: 125%;
 }
 
 .registerWindow {
-    border: 1px inset gray;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 125%;
+	border: 1px inset gray;
+	font-family: monospace;
+	font-weight: bold;
+	font-size: 125%;
 }
-
 
 .memoryWindowHighlight {
 	color: red;
@@ -76,8 +75,8 @@
 }
 
 .sourceCodeWindow {
-	font-family: monospace;	
-    font-size: 150%;
+	font-family: monospace;
+	font-size: 150%;
 }
 
 .border {
@@ -95,4 +94,13 @@
 	font-weight: bold;
 	font-style: italic;
 	color: red;
+}
+
+.scrollButton {
+	font-size: 150%;
+	font-weight: bold;
+}
+
+.menubarItem {
+	font-size: 140%;
 }

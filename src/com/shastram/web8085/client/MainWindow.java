@@ -67,8 +67,8 @@ public class MainWindow extends Composite {
     @UiField
     Button memoryScrollDown;
 
-    @UiField
-    CheckBox memoryFollowIp;
+//    @UiField
+//    CheckBox memoryFollowIp;
 
     @UiField
     Button loadArithmeticButton;
@@ -133,8 +133,8 @@ public class MainWindow extends Composite {
         memoryScrollDown.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                if (memoryStart > 0) {
-                    memoryStart -= NUM_MEMORY_ADDRESS_PER_ROW;
+                if (memoryStart < 65536) {
+                    memoryStart += NUM_MEMORY_ADDRESS_PER_ROW;
                     memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
@@ -144,8 +144,8 @@ public class MainWindow extends Composite {
         memoryScrollUp.addMouseUpHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
-                if (memoryStart < 65536) {
-                    memoryStart += NUM_MEMORY_ADDRESS_PER_ROW;
+                if (memoryStart > 0) {
+                    memoryStart -= NUM_MEMORY_ADDRESS_PER_ROW;
                     memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
@@ -334,7 +334,7 @@ public class MainWindow extends Composite {
     }
 
     private void fillMemoryWindow(boolean highlight) {
-        fillMemoryWindow(highlight, memoryFollowIp.getValue());
+        fillMemoryWindow(highlight, true); //memoryFollowIp.getValue());
     }
 
     private void fillStackWindow(boolean highlight) {
