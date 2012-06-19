@@ -14,7 +14,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -67,8 +66,8 @@ public class MainWindow extends Composite {
     @UiField
     Button memoryScrollDown;
 
-//    @UiField
-//    CheckBox memoryFollowIp;
+    //@UiField
+    //CheckBox memoryFollowIp;
 
     @UiField
     Button loadArithmeticButton;
@@ -81,13 +80,13 @@ public class MainWindow extends Composite {
 
     @UiField
     VerticalPanel stackWindow;
-    
+
     @UiField
     MenuBar menuBar;
-    
+
     @UiField
     MenuItem fileMenuItem;
-    
+
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
 
@@ -97,14 +96,14 @@ public class MainWindow extends Composite {
 
     private HashMap<String, HorizontalPanel> flagValueMap;
 
-    private ArrayList<TextBox> prevHighlightAddress = new ArrayList<TextBox>();
+    private final ArrayList<TextBox> prevHighlightAddress = new ArrayList<TextBox>();
 
-    private ArrayList<TextBox> prevHighlightValue = new ArrayList<TextBox>();
+    private final ArrayList<TextBox> prevHighlightValue = new ArrayList<TextBox>();
 
     private TextBox prevStackHighlightAddress;
 
     private TextBox prevStackHighlightValue;
-    
+
     private TextBox prevHighlightDisassemblyAddress;
 
     private TextBox prevHighlightDisassemblyValue;
@@ -135,7 +134,7 @@ public class MainWindow extends Composite {
             public void onMouseDown(MouseDownEvent event) {
                 if (memoryStart < 65536) {
                     memoryStart += NUM_MEMORY_ADDRESS_PER_ROW;
-                    memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
+                    memoryStart = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
             }
@@ -146,7 +145,7 @@ public class MainWindow extends Composite {
             public void onMouseUp(MouseUpEvent event) {
                 if (memoryStart > 0) {
                     memoryStart -= NUM_MEMORY_ADDRESS_PER_ROW;
-                    memoryStart  = Exe.normalizeMemoryAddress(memoryStart);
+                    memoryStart = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
             }
@@ -317,15 +316,15 @@ public class MainWindow extends Composite {
                     prevHighlightAddress.add(addrBox);
                     prevHighlightValue.add(valueTextbox);
                     int code = exe.getMemAtIp();
-                    if(code >=0 && code < MicrocodeTable.table.length) {
-                    	OneInstruction oneInstruction = MicrocodeTable.table[code];
+                    if (code >= 0 && code < MicrocodeTable.table.length) {
+                        OneInstruction oneInstruction = MicrocodeTable.table[code];
                         withinInstruction = oneInstruction.length;
                     }
                 } else if (withinInstruction > 0) {
                     prevHighlightValue.add(valueTextbox);
                 }
-                if(withinInstruction > 0) {
-                	--withinInstruction;
+                if (withinInstruction > 0) {
+                    --withinInstruction;
                 }
                 ++addr;
             }
@@ -334,7 +333,7 @@ public class MainWindow extends Composite {
     }
 
     private void fillMemoryWindow(boolean highlight) {
-        fillMemoryWindow(highlight, true); //memoryFollowIp.getValue());
+        fillMemoryWindow(highlight, true /*memoryFollowIp.getValue()*/);
     }
 
     private void fillStackWindow(boolean highlight) {
@@ -362,10 +361,10 @@ public class MainWindow extends Composite {
     }
 
     private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox, ArrayList<TextBox> values) {
-        for(TextBox t: addrBox) {
-        	t.addStyleName(Style.style.css.currentAddressHighlight());
+        for (TextBox t : addrBox) {
+            t.addStyleName(Style.style.css.currentAddressHighlight());
         }
-        for(TextBox t: values) {
+        for (TextBox t : values) {
             t.addStyleName(Style.style.css.currentInstructionHighlight());
         }
     }
@@ -380,10 +379,10 @@ public class MainWindow extends Composite {
     }
 
     public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr, ArrayList<TextBox> prevValues) {
-        for(TextBox t: prevAddr) {
+        for (TextBox t : prevAddr) {
             t.removeStyleName(Style.style.css.currentAddressHighlight());
         }
-        for(TextBox t: prevValues) {
+        for (TextBox t : prevValues) {
             t.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
         prevValues.clear();
@@ -414,12 +413,12 @@ public class MainWindow extends Composite {
      * Clear highlight of the various boxes
      */
     private void clearHighlights() {
-    	errorWindow.setText("");
+        errorWindow.setText("");
         removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
         removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
-	}
+    }
 
-	@UiHandler("stepButton")
+    @UiHandler("stepButton")
     public void stepButtonHandler(ClickEvent e) {
         try {
             exe.step();

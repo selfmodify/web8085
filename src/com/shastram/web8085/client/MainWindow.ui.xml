@@ -1,6 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:style field="css" src="Style.css" />
     
   <g:VerticalPanel spacing="15">
@@ -12,8 +11,7 @@
       <g:HorizontalPanel>
         <g:VerticalPanel spacing="1">
           <g:Label addStyleNames="{css.bigLabel}">Enter code here</g:Label>
-          <g:TextArea ui:field="sourceCode" width="400px"
-            height="200px" addStyleNames="{css.sourceCodeWindow}"></g:TextArea>
+          <g:TextArea ui:field="sourceCode" width="400px" height="200px" addStyleNames="{css.sourceCodeWindow}"></g:TextArea>
         </g:VerticalPanel>
       </g:HorizontalPanel>
       <g:VerticalPanel>
@@ -21,100 +19,90 @@
         <g:Label height="20px"></g:Label>
       </g:VerticalPanel>
 
-      <g:VerticalPanel addStyleNames="{css.border}"
-        spacing="8">
+      <g:VerticalPanel addStyleNames="{css.border}" spacing="8">
         <g:HorizontalPanel width="100%">
           <g:HorizontalPanel>
             <g:VerticalPanel>
               <g:HorizontalPanel>
-                <g:Label addStyleNames="{css.bigLabel}">Memory Window</g:Label>
+                <g:VerticalPanel>
+                  <g:HorizontalPanel>
+                    <g:Label addStyleNames="{css.bigLabel}">Memory Window</g:Label>
+                    <g:Label width="15px"></g:Label>
+                    <!-- <g:CheckBox ui:field="memoryFollowIp" checked="true">Follow Ip</g:CheckBox> -->
+                  </g:HorizontalPanel>
+                  <g:Button width="100%" addStyleNames="{css.scrollButton}" ui:field="memoryScrollUp">Up</g:Button>
+                  <g:HorizontalPanel addStyleNames="{css.memoryWindow}" horizontalAlignment="ALIGN_CENTER"
+                    width="100%">
+                    <g:VerticalPanel ui:field="memoryWindowAddress" spacing="0"></g:VerticalPanel>
+                    <g:VerticalPanel ui:field="memoryWindow" spacing="0"></g:VerticalPanel>
+                  </g:HorizontalPanel>
+                  <g:Button width="100%" addStyleNames="{css.scrollButton}" ui:field="memoryScrollDown">Down</g:Button>
+                </g:VerticalPanel>
                 <g:Label width="15px"></g:Label>
-                <!-- 
-                <g:CheckBox ui:field="memoryFollowIp"
-                  checked="true">Follow
-                  Ip</g:CheckBox>
-                   -->
-              </g:HorizontalPanel>
-              <g:Button width="100%" addStyleNames="{css.scrollButton}" ui:field="memoryScrollUp">Up</g:Button>
-              <g:HorizontalPanel addStyleNames="{css.memoryWindow}"
-                horizontalAlignment="ALIGN_CENTER" width="100%">
-                <g:VerticalPanel ui:field="memoryWindowAddress"
-                  spacing="0"></g:VerticalPanel>
-                <g:VerticalPanel ui:field="memoryWindow"
-                  spacing="0"></g:VerticalPanel>
-              </g:HorizontalPanel>
-              <g:Button width="100%"  addStyleNames="{css.scrollButton}" ui:field="memoryScrollDown">Down</g:Button>
-            </g:VerticalPanel>
-            <g:Label width="15px"></g:Label>
-            <g:VerticalPanel>
-              <g:Label addStyleNames="{css.bigLabel}">Stack</g:Label>
-              <g:HorizontalPanel addStyleNames="{css.stackWindow}"
-                horizontalAlignment="ALIGN_CENTER" width="100%">
-                <g:VerticalPanel ui:field="stackWindowAddress"
-                  spacing="0"></g:VerticalPanel>
-                <g:VerticalPanel ui:field="stackWindow"
-                  spacing="0"></g:VerticalPanel>
+                <g:VerticalPanel>
+                  <g:Label addStyleNames="{css.bigLabel}">Stack</g:Label>
+                  <g:HorizontalPanel addStyleNames="{css.stackWindow}" horizontalAlignment="ALIGN_CENTER"
+                    width="100%">
+                    <g:VerticalPanel ui:field="stackWindowAddress" spacing="0"></g:VerticalPanel>
+                    <g:VerticalPanel ui:field="stackWindow" spacing="0"></g:VerticalPanel>
+                  </g:HorizontalPanel>
+                </g:VerticalPanel>
               </g:HorizontalPanel>
             </g:VerticalPanel>
           </g:HorizontalPanel>
-        </g:HorizontalPanel>
+      </g:HorizontalPanel>
 
-        <g:HorizontalPanel>
+      <g:HorizontalPanel>
+        <g:VerticalPanel>
+          <!-- Disassembly -->
+          <g:Label addStyleNames="{css.bigLabel}">Disassembly</g:Label>
+          <g:VerticalPanel addStyleNames="{css.border}">
+            <g:VerticalPanel ui:field="disassemblyWindow">
+            </g:VerticalPanel>
+          </g:VerticalPanel>
+        </g:VerticalPanel>
+        <g:VerticalPanel spacing="5" width="100%" height="100%" verticalAlignment="ALIGN_MIDDLE">
+          <g:Label width="40px"></g:Label>
+          <g:Button ui:field="stepButton" addStyleNames="{css.debugButton}">Step</g:Button>
+        </g:VerticalPanel>
+      </g:HorizontalPanel>
+
+      <g:HorizontalPanel>
+        <g:VerticalPanel spacing="3">
+          <g:VerticalPanel width="100%">
+            <g:Label addStyleNames="{css.bigLabel}">Registers</g:Label>
+            <g:HorizontalPanel addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues"
+              spacing="0"></g:HorizontalPanel>
+            <g:Label height="7px"></g:Label>
+            <g:HorizontalPanel width="200px" addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues2"
+              spacing="0"></g:HorizontalPanel>
+          </g:VerticalPanel>
+
+          <g:Label height="5px"></g:Label>
           <g:VerticalPanel>
-            <!-- Disassembly -->
-            <g:Label addStyleNames="{css.bigLabel}">Disassembly</g:Label>
-            <g:VerticalPanel addStyleNames="{css.border}">
-              <g:VerticalPanel ui:field="disassemblyWindow">
-              </g:VerticalPanel>
-            </g:VerticalPanel>
+            <g:Label addStyleNames="{css.bigLabel}">Flags</g:Label>
+            <g:HorizontalPanel addStyleNames="{css.registerWindow}" ui:field="flagValues" spacing="0"></g:HorizontalPanel>
           </g:VerticalPanel>
-          <g:VerticalPanel spacing="5" width="100%"
-            height="100%" verticalAlignment="ALIGN_MIDDLE">
-            <g:Label width="40px"></g:Label>
-            <g:Button ui:field="stepButton" addStyleNames="{css.debugButton}">Step</g:Button>
-          </g:VerticalPanel>
-        </g:HorizontalPanel>
+        </g:VerticalPanel>
+      </g:HorizontalPanel>
+    </g:VerticalPanel>
 
-        <g:HorizontalPanel>
-          <g:VerticalPanel spacing="3">
-            <g:VerticalPanel width="100%">
-              <g:Label addStyleNames="{css.bigLabel}">Registers</g:Label>
-              <g:HorizontalPanel addStyleNames="{css.memoryWindow}"
-                ui:field="registerWindowValues" spacing="0"></g:HorizontalPanel>
-              <g:Label height="7px"></g:Label>
-              <g:HorizontalPanel width="200px"
-                addStyleNames="{css.memoryWindow}" ui:field="registerWindowValues2"
-                spacing="0"></g:HorizontalPanel>
-            </g:VerticalPanel>
-
-            <g:Label height="5px"></g:Label>
-            <g:VerticalPanel>
-              <g:Label addStyleNames="{css.bigLabel}">Flags</g:Label>
-              <g:HorizontalPanel addStyleNames="{css.registerWindow}"
-                ui:field="flagValues" spacing="0"></g:HorizontalPanel>
-            </g:VerticalPanel>
-          </g:VerticalPanel>
-        </g:HorizontalPanel>
-      </g:VerticalPanel>
-
+    <g:VerticalPanel width="100%">
+      <g:HTMLPanel>
+        <HR></HR>
+      </g:HTMLPanel>
+      <g:Label addStyleNames="{css.bigLabel}">Output</g:Label>
+      <g:TextArea ui:field="errorWindow" width="100%" height="80px"></g:TextArea>
       <g:VerticalPanel width="100%">
         <g:HTMLPanel>
           <HR></HR>
         </g:HTMLPanel>
-        <g:Label addStyleNames="{css.bigLabel}">Output</g:Label>
-        <g:TextArea ui:field="errorWindow" width="100%"
-          height="80px"></g:TextArea>
-        <g:VerticalPanel width="100%">
-          <g:HTMLPanel>
-            <HR></HR>
-          </g:HTMLPanel>
-          <g:Label>Load example code by cliking buttons</g:Label>
-          <g:HorizontalPanel>
-            <g:Button ui:field="loadArithmeticButton"
-              addStyleNames="{css.debugButton}">Arithmetic</g:Button>
-          </g:HorizontalPanel>
-        </g:VerticalPanel>
+        <g:Label>Load example code by cliking buttons</g:Label>
+        <g:HorizontalPanel>
+          <g:Button ui:field="loadArithmeticButton" addStyleNames="{css.debugButton}">Arithmetic</g:Button>
+        </g:HorizontalPanel>
       </g:VerticalPanel>
     </g:VerticalPanel>
   </g:VerticalPanel>
+</g:VerticalPanel>
 </ui:UiBinder> 
