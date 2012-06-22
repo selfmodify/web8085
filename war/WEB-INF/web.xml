@@ -10,4 +10,14 @@
 		<welcome-file>Simulator.html</welcome-file>
 	</welcome-file-list>
 
+<!-- Servlets -->
+  <servlet>
+    <servlet-name>simulator</servlet-name>
+    <servlet-class>com.shastram.web8085.server.Web8085ServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>simulator</servlet-name>
+    <url-pattern>/simulator/rpc</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -2,6 +2,7 @@ package com.shastram.web8085.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -13,6 +14,8 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -85,7 +88,12 @@ public class MainWindow extends Composite {
     MenuBar menuBar;
 
     @UiField
-    MenuItem fileMenuItem;
+    MenuItem examplesMenuItem;
+
+    @UiField
+    MenuBar exampleItems;
+	public static  Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
+	
 
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
@@ -150,9 +158,33 @@ public class MainWindow extends Composite {
                 }
             }
         });
+        getExampleCodeList();
     }
 
-    private void createDisassemblyWindowItems(int maxRows) {
+    private void getExampleCodeList() {
+    	 final Command command = new Command() {
+				@Override
+				public void execute() {
+				}
+			};
+    	rpcService.getExampleNames(new AsyncCallback<List<String>>() {
+			@Override
+			public void onSuccess(List<String> result) {
+				for(String name: result) {
+					MenuItem item = new MenuItem(name, command);
+					item.setTitle(name);
+					item.setText(name);
+					exampleItems.addItem(item);
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+		});
+	}
+
+	private void createDisassemblyWindowItems(int maxRows) {
         disassemblyWindow.clear();
         for (int i = 0; i < maxRows; ++i) {
             HorizontalPanel hp = new HorizontalPanel();

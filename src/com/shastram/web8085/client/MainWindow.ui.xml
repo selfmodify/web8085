@@ -4,8 +4,9 @@
     
   <g:VerticalPanel spacing="15">
     <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
-      <g:MenuItem ui:field="fileMenuItem">File</g:MenuItem>
-      <g:MenuItem>Save</g:MenuItem>
+        <g:MenuItem ui:field="examplesMenuItem" text="Examples">
+            <g:MenuBar vertical="true" ui:field="exampleItems"></g:MenuBar>
+        </g:MenuItem>
     </g:MenuBar>
     <g:VerticalPanel>
       <g:HorizontalPanel>

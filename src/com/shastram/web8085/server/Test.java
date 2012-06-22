@@ -50,27 +50,32 @@ public class Test {
         }
     }
 
+    private static String[] testNames = {
+            //"temp_test.85",
+    		"inout_test.85",
+    		"interrupt_test.85",
+    		"rst_test.85",
+            "stack_test.85",
+            "branch_test.85",
+            "complement_test.85",
+            "rotate_test.85",
+            "logical_test.85",
+            "compare_test.85",
+            "arithmetic_tests.85",
+            "load_store.85",
+            "mov_tests.85",
+            "lxi_tests.85",
+    };
+
+    public static String[] getTestNames() {
+    	return testNames;
+    }
+
     @org.junit.Test
     public void testAll() throws IOException {
-        String[] tests = {
-                //"temp_test.85",
-        		"inout_test.85",
-        		"interrupt_test.85",
-        		"rst_test.85",
-                "stack_test.85",
-                "branch_test.85",
-                "complement_test.85",
-                "rotate_test.85",
-                "logical_test.85",
-                "compare_test.85",
-                "arithmetic_tests.85",
-                "load_store.85",
-                "mov_tests.85",
-                "lxi_tests.85",
-        };
         //tests = new String[] { "rst_test.85" }; 
         MicroCode.selfTest();
-        for (String s : tests) {
+        for (String s : testNames) {
             testFile(s);
         }
         Log.info("Finished All tests");
