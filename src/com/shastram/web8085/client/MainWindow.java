@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.shastram.web8085.client.MicroCode.OneInstruction;
+import com.shastram.web8085.client.ui.ExamplesLoadCommand;
 
 public class MainWindow extends Composite {
 
@@ -162,16 +163,12 @@ public class MainWindow extends Composite {
     }
 
     private void getExampleCodeList() {
-    	 final Command command = new Command() {
-				@Override
-				public void execute() {
-				}
-			};
     	rpcService.getExampleNames(new AsyncCallback<List<String>>() {
 			@Override
 			public void onSuccess(List<String> result) {
 				for(String name: result) {
-					MenuItem item = new MenuItem(name, command);
+					MenuItem item = new MenuItem(name, (MenuBar)null);
+					item.setCommand(new ExamplesLoadCommand(item));
 					item.setTitle(name);
 					item.setText(name);
 					exampleItems.addItem(item);
