@@ -27,8 +27,8 @@ public abstract class MicroCode {
         private final InstructionToString toStr;
         private final MicroCode microCode;
 
-        public OneInstruction(int opcode, String shortName, String longName, InstructionToString toStr,
-                MicroCode microCode) {
+        public OneInstruction(int opcode, String shortName, String longName,
+                InstructionToString toStr, MicroCode microCode) {
             this.shortName = shortName;
             this.longName = longName;
             this.opcode = opcode;
@@ -80,22 +80,24 @@ public abstract class MicroCode {
     static WordOperand wordOperand = new WordOperand();
 
     public static String toString(int opcode, int op1) {
-        String str = opcode >= 0 && opcode < MicrocodeTable.table.length ? MicrocodeTable.table[opcode].toString(op1)
-                : "";
+        String str = opcode >= 0 && opcode < MicrocodeTable.table.length ? MicrocodeTable.table[opcode]
+                .toString(op1) : "";
         return str;
     }
 
     public static void execute(Exe exe) throws Exception {
         int opcode = exe.getMemAtIp();
         if (opcode < 0 || opcode >= MicrocodeTable.table.length) {
-            throw new Exception("Invalid opcode " + opcode + " at ip " + exe.getIp());
+            throw new Exception("Invalid opcode " + opcode + " at ip "
+                    + exe.getIp());
         }
         OneInstruction ix = MicrocodeTable.table[opcode];
         MicroCode m = ix.microCode;
         if (Config.printInstructions) {
             String s = ix.longName;
             DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
-            logger.info("Executing " + s + " ip=" + exe.ip + " " + (debugInfo != null ? "Line=" + debugInfo.line : ""));
+            logger.info("Executing " + s + " ip=" + exe.ip + " "
+                    + (debugInfo != null ? "Line=" + debugInfo.line : ""));
         }
         m.execute(exe, ix);
     }
@@ -220,11 +222,8 @@ public abstract class MicroCode {
             try {
                 assertInternal(exe, i);
             } catch (Exception e) {
-                String msg =
-                        "Assert failed at "
-                                + exe.getContext()
-                                + ":" + exe.getDebugInfo(ip).line
-                                + ": " + e.getMessage();
+                String msg = "Assert failed at " + exe.getContext() + ":"
+                        + exe.getDebugInfo(ip).line + ": " + e.getMessage();
                 throw new Exception(msg);
             }
         }
@@ -396,7 +395,8 @@ public abstract class MicroCode {
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp(); // one for the immediate operand
             int op1 = exe.getMemAtIp();
-            int finalValue = doSubtract(exe, op1, exe.getCarry(), true, exe.getA(), true);
+            int finalValue = doSubtract(exe, op1, exe.getCarry(), true,
+                    exe.getA(), true);
             exe.setA(finalValue);
         }
     };
@@ -613,14 +613,16 @@ public abstract class MicroCode {
         }
     };
 
-    // The contents of a memory location, specified by a 16-bit address in the operand
+    // The contents of a memory location, specified by a 16-bit address in the
+    // operand
     // are copied to the accumulator
     public static MicroCode lda = new MicroCode() {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
             int addr = exe.getMemAtIp16bit();
-            // set the value of the accumulator with the value of memory at 'addr'
+            // set the value of the accumulator with the value of memory at
+            // 'addr'
             exe.setA(exe.getMemory(addr));
         }
     };
@@ -631,7 +633,8 @@ public abstract class MicroCode {
             int code = exe.getMemAtIp();
             exe.nextIp();
             int addr = code == 0x0A ? exe.getBC() : exe.getDE();
-            // set the value of the accumulator with the value of memory at 'addr'
+            // set the value of the accumulator with the value of memory at
+            // 'addr'
             exe.setA(exe.getMemory(addr));
         }
     };
@@ -830,7 +833,8 @@ public abstract class MicroCode {
             int code = exe.getMemAtIp();
             exe.nextIp();
             int addr = code == 0x02 ? exe.getBC() : exe.getDE();
-            // set the value of the accumulator with the value of memory at 'addr'
+            // set the value of the accumulator with the value of memory at
+            // 'addr'
             exe.setMemoryByte(addr, (byte) exe.getA());
         }
     };
@@ -855,47 +859,48 @@ public abstract class MicroCode {
                 exe.setSP(value);
                 break;
             default:
-                throw new Exception("Invalid microcode " + code + " interpreted as lxi.");
+                throw new Exception("Invalid microcode " + code
+                        + " interpreted as lxi.");
             }
         }
     };
 
     public static MicroCode rst = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			int address = exe.getOpcode() - 0xC7;
-			doCall(exe, address);
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            int address = exe.getOpcode() - 0xC7;
+            doCall(exe, address);
+        }
     };
 
     public static MicroCode ei = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp();
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+        }
     };
-    
+
     public static MicroCode di = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp();
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp();
+        }
     };
-    
+
     public static MicroCode in = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp2(2);
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp2(2);
+        }
     };
-    
+
     public static MicroCode out = new MicroCode() {
-		@Override
-		public void execute(Exe exe, OneInstruction i) throws Exception {
-			exe.nextIp2(2);
-		}
+        @Override
+        public void execute(Exe exe, OneInstruction i) throws Exception {
+            exe.nextIp2(2);
+        }
     };
-    
+
     /**
      * XCHG Exchange H & L with D & E
      */
@@ -931,7 +936,8 @@ public abstract class MicroCode {
         doAdd(exe, op1, (short) 0, true);
     }
 
-    private static void assertInternal(Exe exe, OneInstruction i) throws Exception {
+    private static void assertInternal(Exe exe, OneInstruction i)
+            throws Exception {
         int ip = exe.getIp();
         String line = exe.getAsertionAt(ip);
         // split the assertions into its parts
@@ -943,7 +949,7 @@ public abstract class MicroCode {
         String[] parts = line.split(",");
         for (String s : parts) {
             // get the first assertion
-            String assertion1 = s.trim().toLowerCase(); //.replaceAll(",", "");
+            String assertion1 = s.trim().toLowerCase(); // .replaceAll(",", "");
             // get the expression
             String[] p = assertion1.split("=", 2);
             if (p.length < 2) {
@@ -972,9 +978,10 @@ public abstract class MicroCode {
                 String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
                 int addr = OperandParser.parseNumber(n);
                 int value = exe.getMemory(addr);
-                assertCompare(exe, num, value, "Expected memory at address [" + Integer.toHexString(addr) + "h] = ");
+                assertCompare(exe, num, value, "Expected memory at address ["
+                        + Integer.toHexString(addr) + "h] = ");
             } else {
-                // try to parse it as a register. 
+                // try to parse it as a register.
                 op = OperandParser.parseRegisterForAssert(lhs);
                 String msg = "Expected " + op.toString() + "=";
                 int got = exe.getRegOrMem(op);
@@ -987,9 +994,11 @@ public abstract class MicroCode {
         exe.nextIp();
     }
 
-    private static void assertCompare(Exe exe, int expected, int got, String msg) throws Exception {
+    private static void assertCompare(Exe exe, int expected, int got, String msg)
+            throws Exception {
         if (expected != got) {
-            exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got=" + Integer.toHexString(got) + "h");
+            exe.assertionFailed(msg + Integer.toHexString(expected) + "h Got="
+                    + Integer.toHexString(got) + "h");
         }
     }
 
@@ -1019,7 +1028,8 @@ public abstract class MicroCode {
      *            : Which register should be set? Typically this is the
      *            accumulator but it can be other reg/mem in case of inr
      */
-    private static void doAdd(Exe exe, int v, int carry, boolean setCarry, int regOrMem) {
+    private static void doAdd(Exe exe, int v, int carry, boolean setCarry,
+            int regOrMem) {
         int regOrMemValue = exe.getRegOrMem(regOrMem);
         carry = carry & 0x1;
         int other = v + carry;
@@ -1086,7 +1096,8 @@ public abstract class MicroCode {
      *            - The value of the carry 0/1
      */
     private static void doSubtractAndSetRegisterA(Exe exe, int other, int carry) {
-        int finalValue = doSubtract(exe, other, carry, true /* set carry */, exe.getA(), true);
+        int finalValue = doSubtract(exe, other, carry, true /* set carry */,
+                exe.getA(), true);
         exe.setA(0xff & finalValue);
     }
 
@@ -1107,8 +1118,8 @@ public abstract class MicroCode {
      *            - Should the aux carry be set based on the result.
      * @return: ( 2's complement of (v + carry)) + op1
      */
-    private static int doSubtract(Exe exe, int v, int carry, boolean setCarry, int regOrMemValue,
-            boolean setAuxCarry) {
+    private static int doSubtract(Exe exe, int v, int carry, boolean setCarry,
+            int regOrMemValue, boolean setAuxCarry) {
         // 2's complement
         carry = carry & 0x1;
         v = (v & 0xff) + carry;
@@ -1165,8 +1176,8 @@ public abstract class MicroCode {
 
     public static void selfTest() {
         for (int i = 0; i < MicrocodeTable.table.length; ++i) {
-            OneInstruction ix = MicrocodeTable.table[i];
-            //logger.info(ix.shortName + " code=" + ix.microCode);
+            //OneInstruction ix = MicrocodeTable.table[i];
+            // logger.info(ix.shortName + " code=" + ix.microCode);
         }
     }
 }

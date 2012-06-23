@@ -41,7 +41,7 @@ public class Exe {
     private String context;
 
     public void insert(int opcode, int op1, int op2) {
-        //TODO: Change ip++ to use incrIp
+        // TODO: Change ip++ to use incrIp
         setMemoryByte(ip, (byte) opcode);
         incrIp();
         setMemoryByte(ip, (byte) op1);
@@ -51,7 +51,7 @@ public class Exe {
     }
 
     public void insert(int opcode, int op1) {
-        //TODO: Change ip++ to use incrIp
+        // TODO: Change ip++ to use incrIp
         setMemoryByte(ip, (byte) opcode);
         incrIp();
         setMemoryByte(ip, (byte) op1);
@@ -89,8 +89,8 @@ public class Exe {
         switch (token.getType()) {
         case INSTRUCTION:
             if (i.code == -1) {
-                throw new ParserException("Internal error: Invalid microcode " + i.code + " set at line="
-                        + token.getLineNumber());
+                throw new ParserException("Internal error: Invalid microcode "
+                        + i.code + " set at line=" + token.getLineNumber());
             }
             addDebugInfo(token);
             if (i.hasImmediate()) {
@@ -117,7 +117,8 @@ public class Exe {
             changeIp(token);
             break;
         case SYNTAX_ERROR: {
-            String msg = "Syntax error parsing at line " + token.getLineNumber() + " : " + token.getToken();
+            String msg = "Syntax error parsing at line "
+                    + token.getLineNumber() + " : " + token.getToken();
             logger.log(Level.SEVERE, msg);
             throw new ParserException(msg);
         }
@@ -125,21 +126,22 @@ public class Exe {
     }
 
     private void changeIp(ParseToken token) throws ParserException {
-    	String[] parts = token.getTokenParts();
-    	if (parts.length < 2) {
-    		throw new ParserException(".org needs a numeric parameter");
-    	}
-    	int location = OperandParser.parseNumber(parts[1]);
-    	setIp(location);
-	}
+        String[] parts = token.getTokenParts();
+        if (parts.length < 2) {
+            throw new ParserException(".org needs a numeric parameter");
+        }
+        int location = OperandParser.parseNumber(parts[1]);
+        setIp(location);
+    }
 
-	private void insertLabel(ParseToken token) throws ParserException {
-        //TODO: Separate parser from exe
-        String tokenName = token.getFirstToken().trim().replaceAll(":$", "").toLowerCase();
+    private void insertLabel(ParseToken token) throws ParserException {
+        // TODO: Separate parser from exe
+        String tokenName = token.getFirstToken().trim().replaceAll(":$", "")
+                .toLowerCase();
         ParseToken oldToken = labelMap.get(tokenName);
         if (oldToken != null) {
-            throw new ParserException("Label '" + token.getFirstToken() + "' already defined at line="
-                    + token.getLineNumber());
+            throw new ParserException("Label '" + token.getFirstToken()
+                    + "' already defined at line=" + token.getLineNumber());
         }
         labelMap.put(tokenName, token);
     }
@@ -147,10 +149,7 @@ public class Exe {
     private void addDebugInfo(ParseToken token) {
         PerInstructionToken ix = token.getIx();
         DebugLineInfo info = new DebugLineInfo(token.getToken(),
-                token.getLineNumber(),
-                0,
-                0,
-                ix == null ? 0 : ix.len);
+                token.getLineNumber(), 0, 0, ix == null ? 0 : ix.len);
         debugInfo.put(ip, info);
     }
 
@@ -192,7 +191,8 @@ public class Exe {
         case 7:
             return getA();
         default:
-            throw new IllegalStateException("Invalid register index in get " + i);
+            throw new IllegalStateException("Invalid register index in get "
+                    + i);
         }
     }
 
@@ -238,7 +238,8 @@ public class Exe {
             setA(value);
             break;
         default:
-            throw new IllegalStateException("Invalid register index in set " + regOrMem);
+            throw new IllegalStateException("Invalid register index in set "
+                    + regOrMem);
         }
     }
 
@@ -431,9 +432,8 @@ public class Exe {
             logger.info("Finished compilation ---------- " + context);
             reset();
         } catch (Exception e) {
-            throw new ParserException("Parse error: Line "
-                    + p.getLineNumber() + " " + e.getMessage()
-                    + " Source: " + p.currentLine());
+            throw new ParserException("Parse error: Line " + p.getLineNumber()
+                    + " " + e.getMessage() + " Source: " + p.currentLine());
         }
     }
 
@@ -443,7 +443,8 @@ public class Exe {
             ParseToken parseToken = getParseTokenForLabel(labelName);
             if (parseToken == null) {
                 String debugStr = getDebugInfoStr(ip);
-                throw new ParserException("Token '" + labelName + "' does not exist at ip=" + ip + " " + debugStr);
+                throw new ParserException("Token '" + labelName
+                        + "' does not exist at ip=" + ip + " " + debugStr);
             }
             int patchAddress = parseToken.getIp();
             int address = normalizeMemoryAddress(ip + 1);
@@ -462,17 +463,16 @@ public class Exe {
 
     public void showDialog(String msg) {
         DebugLineInfo info = getDebugInfo(ip);
-        String str = msg + " ip=" + ip
-                + info == null ? "" : " (Source line=" + info.line + ") ";
+        String str = msg + " ip=" + ip + info == null ? "" : " (Source line="
+                + info.line + ") ";
         logger.info(str);
         nextIp();
     }
 
     public void assertionFailed(String reason) throws Exception {
         DebugLineInfo info = getDebugInfo(ip);
-        String str = "Assertion failed at ip=" + ip
-                + info == null ? "" : " (Source line=" + info.line + ") "
-                + ", " + reason;
+        String str = "Assertion failed at ip=" + ip + info == null ? ""
+                : " (Source line=" + info.line + ") " + ", " + reason;
         logger.warning(str);
         throw new Exception(str);
     }
@@ -534,8 +534,8 @@ public class Exe {
      * @return
      */
     public String getRegisterValues() {
-        String str = " ip=" + ip + " a=" + getA() + " b=" + b + " c=" + c + " d=" + d + " e=" + e + " h=" + h + " l="
-                + l;
+        String str = " ip=" + ip + " a=" + getA() + " b=" + b + " c=" + c
+                + " d=" + d + " e=" + e + " h=" + h + " l=" + l;
         return str;
     }
 
@@ -655,8 +655,7 @@ public class Exe {
 
     public String getDebugInfoStr(int ip) {
         DebugLineInfo info = getDebugInfo(ip);
-        String str =
-                info == null ? "" : " (Source line=" + info.line + ") ";
+        String str = info == null ? "" : " (Source line=" + info.line + ") ";
         return str;
     }
 
@@ -702,7 +701,8 @@ public class Exe {
             setSP(value);
             break;
         default:
-            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+            throw new IllegalStateException("Invalid register pair specified "
+                    + op.toString());
         }
     }
 
@@ -728,7 +728,8 @@ public class Exe {
             setSP(value);
             break;
         default:
-            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+            throw new IllegalStateException("Invalid register pair specified "
+                    + op.toString());
         }
     }
 
@@ -780,7 +781,8 @@ public class Exe {
         case PSW:
             return getPSW();
         default:
-            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+            throw new IllegalStateException("Invalid register pair specified "
+                    + op.toString());
         }
     }
 
@@ -815,7 +817,8 @@ public class Exe {
             setPSW(value);
             break;
         default:
-            throw new IllegalStateException("Invalid register pair specified " + op.toString());
+            throw new IllegalStateException("Invalid register pair specified "
+                    + op.toString());
         }
     }
 

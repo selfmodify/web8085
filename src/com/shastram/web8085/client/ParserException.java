@@ -5,14 +5,14 @@ public class ParserException extends Exception {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 478421858191213908L;
+    private static final long serialVersionUID = 478421858191213908L;
 
-	public ParserException(String string) {
+    public ParserException(String string) {
         super(string);
     }
 
-	public ParserException(String msg, Exception e) {
-		super(msg, e);
-	}
+    public ParserException(String msg, Exception e) {
+        super(msg, e);
+    }
 
 }

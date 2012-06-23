@@ -36,7 +36,8 @@ public class MainWindow extends Composite implements Observer {
 
     private static final int NUM_MEMORY_ADDRESS_PER_ROW = 8;
 
-    private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
+    private static MainWindowUiBinder uiBinder = GWT
+            .create(MainWindowUiBinder.class);
 
     interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
     }
@@ -73,8 +74,8 @@ public class MainWindow extends Composite implements Observer {
     @UiField
     Button memoryScrollDown;
 
-    //@UiField
-    //CheckBox memoryFollowIp;
+    // @UiField
+    // CheckBox memoryFollowIp;
 
     @UiField
     Button loadArithmeticButton;
@@ -96,11 +97,11 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Label optionalFileName;
-    
+
     @UiField
     MenuBar exampleItems;
-	public static  Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
-	
+    public static Web8085ServiceAsync rpcService = GWT
+            .create(Web8085Service.class);
 
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
@@ -166,40 +167,42 @@ public class MainWindow extends Composite implements Observer {
             }
         });
         getExampleCodeList();
-        SignalSlot.instance.addObserver(SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        SignalSlot.instance.addObserver(
+                SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
     }
 
     private void getExampleCodeList() {
-    	rpcService.getExampleNames(new AsyncCallback<List<String>>() {
-			@Override
-			public void onSuccess(List<String> result) {
-				for(final String name: result) {
-					MenuItem item = new MenuItem(name, (MenuBar)null);
-					item.setCommand(new ExamplesLoadCommand(item) {
-						@Override
-						public void execute() {
-							this.loadRemoteExample(name);
-						}
-					});
-					item.setTitle(name);
-					item.setText(name);
-					exampleItems.addItem(item);
-				}
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-			}
-		});
-	}
+        rpcService.getExampleNames(new AsyncCallback<List<String>>() {
+            @Override
+            public void onSuccess(List<String> result) {
+                for (final String name : result) {
+                    MenuItem item = new MenuItem(name, (MenuBar) null);
+                    item.setCommand(new ExamplesLoadCommand(item) {
+                        @Override
+                        public void execute() {
+                            this.loadRemoteExample(name);
+                        }
+                    });
+                    item.setTitle(name);
+                    item.setText(name);
+                    exampleItems.addItem(item);
+                }
+            }
 
-	private void createDisassemblyWindowItems(int maxRows) {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+        });
+    }
+
+    private void createDisassemblyWindowItems(int maxRows) {
         disassemblyWindow.clear();
         for (int i = 0; i < maxRows; ++i) {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             hp.add(addr);
-            TextBox value = createValueTextbox(Style.style.css.disassemblyTextBox());
+            TextBox value = createValueTextbox(Style.style.css
+                    .disassemblyTextBox());
             hp.add(value);
             disassemblyWindow.add(hp);
         }
@@ -208,17 +211,19 @@ public class MainWindow extends Composite implements Observer {
     private void fillDisassemblyWindow() {
         boolean followIp = true;
         if (followIp) {
-            boolean changeMemoryStart =
-                    exe.ip < disassemblyMemoryStart ||
-                            exe.ip >= disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
+            boolean changeMemoryStart = exe.ip < disassemblyMemoryStart
+                    || exe.ip >= disassemblyMemoryStart
+                            + disassemblyWindow.getWidgetCount();
             if (changeMemoryStart) {
                 disassemblyMemoryStart = exe.ip;
             }
         }
-        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress,
+                prevHighlightDisassemblyValue);
         int addr = disassemblyMemoryStart;
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
-            HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
+            HorizontalPanel hp = (HorizontalPanel) disassemblyWindow
+                    .getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
             TextBox valueBox = (TextBox) hp.getWidget(1);
@@ -248,7 +253,8 @@ public class MainWindow extends Composite implements Observer {
         addLabelValuePairToPanel(names2, registerWindowValues2);
     }
 
-    public void addLabelValuePairToPanel(String[] names, HorizontalPanel parentPanel) {
+    public void addLabelValuePairToPanel(String[] names,
+            HorizontalPanel parentPanel) {
         for (String n : names) {
             TextBox name = createRegisterValueTextbox();
             name.setText(n);
@@ -293,7 +299,8 @@ public class MainWindow extends Composite implements Observer {
             TextBox addr = createMemoryAddressTextbox();
             memoryWindowAddress.add(addr);
             for (int j = 0; j < NUM_MEMORY_ADDRESS_PER_ROW; ++j) {
-                TextBox value = createValueTextbox(Style.style.css.memoryTextBox());
+                TextBox value = createValueTextbox(Style.style.css
+                        .memoryTextBox());
                 hp.add(value);
             }
             memoryWindow.add(hp);
@@ -307,7 +314,8 @@ public class MainWindow extends Composite implements Observer {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             stackWindowAddress.add(addr);
-            TextBox value = createValueTextbox(Style.style.css.memoryAddressTextBox());
+            TextBox value = createValueTextbox(Style.style.css
+                    .memoryAddressTextBox());
             hp.add(value);
             stackWindow.add(hp);
         }
@@ -334,9 +342,9 @@ public class MainWindow extends Composite implements Observer {
 
     private void fillMemoryWindow(boolean highlight, boolean followIp) {
         if (followIp) {
-            boolean changeMemoryStart =
-                    exe.ip < memoryStart ||
-                            exe.ip >= memoryStart + memoryWindow.getWidgetCount() * NUM_MEMORY_ADDRESS_PER_ROW;
+            boolean changeMemoryStart = exe.ip < memoryStart
+                    || exe.ip >= memoryStart + memoryWindow.getWidgetCount()
+                            * NUM_MEMORY_ADDRESS_PER_ROW;
             if (changeMemoryStart) {
                 memoryStart = exe.ip;
             }
@@ -344,7 +352,8 @@ public class MainWindow extends Composite implements Observer {
         removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
         int start = memoryStart;
         int addr = start;
-        int withinInstruction = 0; // Used to highlight instruction longer than 1 byte
+        int withinInstruction = 0; // Used to highlight instruction longer than
+                                   // 1 byte
         for (int i = 0; i < memoryWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) memoryWindowAddress.getWidget(i);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
@@ -374,12 +383,13 @@ public class MainWindow extends Composite implements Observer {
     }
 
     private void fillMemoryWindow(boolean highlight) {
-        fillMemoryWindow(highlight, true /*memoryFollowIp.getValue()*/);
+        fillMemoryWindow(highlight, true /* memoryFollowIp.getValue() */);
     }
 
     private void fillStackWindow(boolean highlight) {
         int addr = exe.getSP();
-        removeFollowMemoryHighlight(prevStackHighlightAddress, prevStackHighlightValue);
+        removeFollowMemoryHighlight(prevStackHighlightAddress,
+                prevStackHighlightValue);
         for (int i = 0; i < stackWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) stackWindowAddress.getWidget(i);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
@@ -401,7 +411,8 @@ public class MainWindow extends Composite implements Observer {
         addrBox.addStyleName(Style.style.css.currentAddressHighlight());
     }
 
-    private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox, ArrayList<TextBox> values) {
+    private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox,
+            ArrayList<TextBox> values) {
         for (TextBox t : addrBox) {
             t.addStyleName(Style.style.css.currentAddressHighlight());
         }
@@ -415,11 +426,13 @@ public class MainWindow extends Composite implements Observer {
             prevAddr.removeStyleName(Style.style.css.currentAddressHighlight());
         }
         if (prevValue != null) {
-            prevValue.removeStyleName(Style.style.css.currentInstructionHighlight());
+            prevValue.removeStyleName(Style.style.css
+                    .currentInstructionHighlight());
         }
     }
 
-    public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr, ArrayList<TextBox> prevValues) {
+    public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr,
+            ArrayList<TextBox> prevValues) {
         for (TextBox t : prevAddr) {
             t.removeStyleName(Style.style.css.currentAddressHighlight());
         }
@@ -443,7 +456,8 @@ public class MainWindow extends Composite implements Observer {
             fillMemoryWindow(false);
             fillDisassemblyWindow();
             fillStackWindow(false);
-            // refresh the register and memory window to remove the red highlight
+            // refresh the register and memory window to remove the red
+            // highlight
             refreshRegistersAndFlags();
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
@@ -456,7 +470,8 @@ public class MainWindow extends Composite implements Observer {
     private void clearHighlights() {
         errorWindow.setText("");
         removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
-        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress,
+                prevHighlightDisassemblyValue);
     }
 
     @UiHandler("stepButton")
@@ -468,7 +483,8 @@ public class MainWindow extends Composite implements Observer {
             } else {
                 DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
                 if (debugInfo != null) {
-                    errorWindow.setText("Next instruction, Line: " + debugInfo.line + " " + debugInfo.getToken());
+                    errorWindow.setText("Next instruction, Line: "
+                            + debugInfo.line + " " + debugInfo.getToken());
                 }
             }
         } catch (Exception e1) {
@@ -514,7 +530,8 @@ public class MainWindow extends Composite implements Observer {
         return str;
     }
 
-    private void updateTextboxValue(String newValue, TextBox textBox, boolean highlight) {
+    private void updateTextboxValue(String newValue, TextBox textBox,
+            boolean highlight) {
         String oldValue = textBox.getText().trim();
         textBox.setText(newValue);
         if (!oldValue.equals(newValue) && highlight) {
@@ -538,20 +555,18 @@ public class MainWindow extends Composite implements Observer {
 
     @UiHandler("loadArithmeticButton")
     void loadArithmeticButtonHandler(ClickEvent e) {
-        sourceCode.setText("# adi - Add Immediate Data to Accumulator\n" +
-                " mvi a,26h\n" +
-                " stc\n" +
-                " aci 57h\n" +
-                " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
+        sourceCode.setText("# adi - Add Immediate Data to Accumulator\n"
+                + " mvi a,26h\n" + " stc\n" + " aci 57h\n"
+                + " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
     }
 
-	@Override
-	public void update(SignalData data) {
-		if (data.signal == Signals.EXAMPLE_SOURCE_CODE_AVAILABLE) {
-		    String name = (String)data.mapData.get("name");
-            String code = (String)data.mapData.get("code");
-			sourceCode.setText(code);
-			optionalFileName.setText("  : " + name);
-		}
-	}
+    @Override
+    public void update(SignalData data) {
+        if (data.signal == Signals.EXAMPLE_SOURCE_CODE_AVAILABLE) {
+            String name = (String) data.mapData.get("name");
+            String code = (String) data.mapData.get("code");
+            sourceCode.setText(code);
+            optionalFileName.setText("  : " + name);
+        }
+    }
 }

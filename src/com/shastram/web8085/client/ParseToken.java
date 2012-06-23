@@ -11,13 +11,10 @@ public class ParseToken {
     private int endColumn;
     private String firstToken;
     private int ip;
-	private String[] tokenParts;
+    private String[] tokenParts;
 
     public ParseToken(Parser.PerInstructionToken instruction,
-            String firstToken,
-            String lineStr,
-            int lineNumber,
-            int startColumn,
+            String firstToken, String lineStr, int lineNumber, int startColumn,
             int endColumn) {
         this.ix = instruction;
         this.firstToken = firstToken;
@@ -25,8 +22,10 @@ public class ParseToken {
         this.setLineNumber(lineNumber);
         this.setStartColumn(startColumn);
         this.endColumn = endColumn;
-        // TODO: Maybe there is a better way to differentiate between asserts and instructions?
-        type = instruction.name.equalsIgnoreCase("assert") ? TokenType.ASSERT : TokenType.INSTRUCTION;
+        // TODO: Maybe there is a better way to differentiate between asserts
+        // and instructions?
+        type = instruction.name.equalsIgnoreCase("assert") ? TokenType.ASSERT
+                : TokenType.INSTRUCTION;
     }
 
     public ParseToken(TokenType type, String token) {
@@ -34,7 +33,8 @@ public class ParseToken {
         this.token = token;
     }
 
-    public ParseToken(int lineNumber, TokenType type, int ip, String firstToken, String[] allTokens) {
+    public ParseToken(int lineNumber, TokenType type, int ip,
+            String firstToken, String[] allTokens) {
         this.lineNumber = lineNumber;
         this.firstToken = firstToken;
         this.ip = ip;
@@ -90,7 +90,7 @@ public class ParseToken {
         return ip;
     }
 
-	public String[] getTokenParts() {
-		return tokenParts;
-	}
+    public String[] getTokenParts() {
+        return tokenParts;
+    }
 }
