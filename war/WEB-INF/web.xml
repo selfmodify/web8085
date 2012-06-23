@@ -18,6 +18,6 @@
 
   <servlet-mapping>
     <servlet-name>simulator</servlet-name>
-    <url-pattern>/simulator/rpc</url-pattern>
+    <url-pattern>/com.shastram.web8085.Simulator/rpc</url-pattern>
   </servlet-mapping>
 </web-app>
