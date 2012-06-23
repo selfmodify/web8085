@@ -14,5 +14,16 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("rpc")
 public interface Web8085Service extends RemoteService {
 	
-	List<String> getExampleNames(); 
+	/**
+	 * Get the names of all the examples
+	 * @return
+	 */
+	List<String> getExampleNames();
+	
+	/**
+	 * Get the source code of one example
+	 * @param name
+	 * @return
+	 */
+	String getExampleSourceCode(String name);
 }

@@ -8,4 +8,6 @@ public interface Web8085ServiceAsync {
 
 	void getExampleNames(AsyncCallback<List<String>> callback);
 
+	void getExampleSourceCode(String name, AsyncCallback<String> callback);
+
 }

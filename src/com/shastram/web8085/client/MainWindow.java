@@ -14,7 +14,6 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -27,9 +26,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.shastram.web8085.client.MicroCode.OneInstruction;
+import com.shastram.web8085.client.pattern.Observer;
+import com.shastram.web8085.client.pattern.SignalSlot;
+import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
+import com.shastram.web8085.client.pattern.SignalSlot.Signals;
 import com.shastram.web8085.client.ui.ExamplesLoadCommand;
 
-public class MainWindow extends Composite {
+public class MainWindow extends Composite implements Observer {
 
     private static final int NUM_MEMORY_ADDRESS_PER_ROW = 8;
 
@@ -91,6 +94,9 @@ public class MainWindow extends Composite {
     @UiField
     MenuItem examplesMenuItem;
 
+    @UiField
+    Label optionalFileName;
+    
     @UiField
     MenuBar exampleItems;
 	public static  Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
@@ -160,15 +166,21 @@ public class MainWindow extends Composite {
             }
         });
         getExampleCodeList();
+        SignalSlot.instance.addObserver(SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
     }
 
     private void getExampleCodeList() {
     	rpcService.getExampleNames(new AsyncCallback<List<String>>() {
 			@Override
 			public void onSuccess(List<String> result) {
-				for(String name: result) {
+				for(final String name: result) {
 					MenuItem item = new MenuItem(name, (MenuBar)null);
-					item.setCommand(new ExamplesLoadCommand(item));
+					item.setCommand(new ExamplesLoadCommand(item) {
+						@Override
+						public void execute() {
+							this.loadRemoteExample(name);
+						}
+					});
 					item.setTitle(name);
 					item.setText(name);
 					exampleItems.addItem(item);
@@ -532,4 +544,14 @@ public class MainWindow extends Composite {
                 " aci 57h\n" +
                 " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
     }
+
+	@Override
+	public void update(SignalData data) {
+		if (data.signal == Signals.EXAMPLE_SOURCE_CODE_AVAILABLE) {
+		    String name = (String)data.mapData.get("name");
+            String code = (String)data.mapData.get("code");
+			sourceCode.setText(code);
+			optionalFileName.setText("  : " + name);
+		}
+	}
 }

@@ -33,6 +33,11 @@
 	color: purple;
 }
 
+.bigFileNameLabel {
+    font-weight: bold;
+    color: blue;
+}
+
 .registerTextBox {
 	padding: 0px;
 	margin: 0px;

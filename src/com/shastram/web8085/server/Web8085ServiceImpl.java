@@ -1,5 +1,8 @@
 package com.shastram.web8085.server;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +20,12 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements Web8085S
 	public List<String> getExampleNames() {
 		List<String> list = Arrays.asList(Test.getTestNames());
 		return list;
+	}
+
+	@Override
+	public String getExampleSourceCode(String name) {
+		//InputStream systemResourceAsStream = ClassLoader.getSystemResourceAsStream(name);
+		return "";
 	}
 
 }
