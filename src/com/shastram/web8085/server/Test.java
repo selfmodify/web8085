@@ -1,7 +1,6 @@
 package com.shastram.web8085.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,6 +19,7 @@ public class Test {
 
     private static Logger logger = Logger.getLogger(Test.class.getName());
 
+    @SuppressWarnings("unused")
     @Ignore
     public void testArithmetic() throws Exception {
         String testArithmetic = "arithmetic_tests.85";
@@ -32,8 +32,6 @@ public class Test {
 
     public void testFile(String testName) throws FileNotFoundException,
             IOException {
-        File f2 = new File(".");
-        String path = f2.getAbsolutePath();
         String fullTestcaseName = "src/com/shastram/web8085/public/test_cases/" + testName;
         BufferedReader in = new BufferedReader(new FileReader(fullTestcaseName));
         String line;

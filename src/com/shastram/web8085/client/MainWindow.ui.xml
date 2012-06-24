@@ -102,10 +102,6 @@
         <g:HTMLPanel>
           <HR></HR>
         </g:HTMLPanel>
-        <g:Label>Load example code by cliking buttons</g:Label>
-        <g:HorizontalPanel>
-          <g:Button ui:field="loadArithmeticButton" addStyleNames="{css.debugButton}">Arithmetic</g:Button>
-        </g:HorizontalPanel>
       </g:VerticalPanel>
     </g:VerticalPanel>
   </g:VerticalPanel>

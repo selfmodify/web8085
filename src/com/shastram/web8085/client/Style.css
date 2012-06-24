@@ -107,10 +107,14 @@
 }
 
 .menubarItem {
-	font-size: 140%;
+	font-size: 180%;
 }
 
 .mainLabel {
 	font-size: 150%;
 	font-weight: bold;
+}
+
+.exampleMenuItems {
+	font-size: 170%;
 }

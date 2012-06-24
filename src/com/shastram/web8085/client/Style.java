@@ -25,6 +25,8 @@ public class Style extends Composite {
         String registerTextBox();
 
         String disassemblyTextBox();
+
+        String exampleMenuItems();
     }
 
     @UiField

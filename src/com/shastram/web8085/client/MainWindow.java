@@ -78,9 +78,6 @@ public class MainWindow extends Composite implements Observer {
     // CheckBox memoryFollowIp;
 
     @UiField
-    Button loadArithmeticButton;
-
-    @UiField
     VerticalPanel disassemblyWindow;
 
     @UiField
@@ -177,6 +174,7 @@ public class MainWindow extends Composite implements Observer {
             public void onSuccess(List<String> result) {
                 for (final String name : result) {
                     MenuItem item = new MenuItem(name, (MenuBar) null);
+                    item.addStyleName(Style.style.css.exampleMenuItems());
                     item.setCommand(new ExamplesLoadCommand(item) {
                         @Override
                         public void execute() {
@@ -186,6 +184,7 @@ public class MainWindow extends Composite implements Observer {
                     item.setTitle(name);
                     item.setText(name);
                     exampleItems.addItem(item);
+                    exampleItems.addSeparator();
                 }
             }
 
@@ -551,13 +550,6 @@ public class MainWindow extends Composite implements Observer {
     private void updateTextboxValue(int v, TextBox textBox) {
         String newValue = Utils.toHex2Digits(v);
         updateTextboxValue(newValue, textBox, true);
-    }
-
-    @UiHandler("loadArithmeticButton")
-    void loadArithmeticButtonHandler(ClickEvent e) {
-        sourceCode.setText("# adi - Add Immediate Data to Accumulator\n"
-                + " mvi a,26h\n" + " stc\n" + " aci 57h\n"
-                + " .assert a=7eh, s=0, z=0, ac=0, p=1, cy=0\n");
     }
 
     @Override
