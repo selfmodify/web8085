@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
-public class HelpWindow extends Composite implements HasText {
+public class HelpWindow extends Composite {
 
     private static HelpWindowUiBinder uiBinder = GWT
             .create(HelpWindowUiBinder.class);
@@ -22,26 +22,4 @@ public class HelpWindow extends Composite implements HasText {
     public HelpWindow() {
         initWidget(uiBinder.createAndBindUi(this));
     }
-
-    @UiField
-    Button button;
-
-    public HelpWindow(String firstName) {
-        initWidget(uiBinder.createAndBindUi(this));
-        button.setText(firstName);
-    }
-
-    @UiHandler("button")
-    void onClick(ClickEvent e) {
-        Window.alert("Hello!");
-    }
-
-    public void setText(String text) {
-        button.setText(text);
-    }
-
-    public String getText() {
-        return button.getText();
-    }
-
 }
