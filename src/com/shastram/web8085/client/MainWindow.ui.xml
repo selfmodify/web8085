@@ -124,6 +124,7 @@
            <!-- END Editor/Simulator Window -->
     </g:VerticalPanel>
     <g:VerticalPanel>
+        <g:Label addStyleNames="{css.helpTitle}">HELP!</g:Label>
         <my:HelpWindow></my:HelpWindow>
     </g:VerticalPanel>
   </g:HorizontalPanel>

@@ -444,6 +444,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiHandler("compile")
     public void compileHandler(ClickEvent e) {
+        long begin = System.currentTimeMillis();
         String text = sourceCode.getText();
         try {
             exe.compileCode(text, "");
@@ -458,6 +459,8 @@ public class MainWindow extends Composite implements Observer {
             // refresh the register and memory window to remove the red
             // highlight
             refreshRegistersAndFlags();
+            long diff = ((System.currentTimeMillis() - begin));
+            errorWindow.setText("Finished compilation in "  + diff + " milli seconds");
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }

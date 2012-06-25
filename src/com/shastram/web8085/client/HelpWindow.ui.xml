@@ -1,16 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
   xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <ui:style>
-    .important {
-    	font-weight: bold;
-    }
-  </ui:style>
+  <ui:style field="css" src="Style.css" />
   <g:VerticalPanel width="300px" spacing="5">
     <g:DisclosurePanel width="95%">
       <g:header>Data Transfer</g:header>
       <g:VerticalPanel width="100%">
-<g:Label>mov</g:Label>
+<g:Label addStyleNames="{css.instructionTitle}">mov</g:Label>
 <g:HTMLPanel>
 <pre>
  Move, Copy from source to destination 
@@ -55,8 +51,8 @@
  Result       :-    Regs/Mem                           Flags
                      B = 9FH
 </pre>
-<HR></HR>
-<g:Label>mvi</g:Label>
+<HR color="#333399"></HR>
+<g:Label addStyleNames="{css.instructionTitle}">mvi</g:Label>
 <pre>
  Mvi, Move immediate 8-bit 
 
@@ -83,8 +79,31 @@
 
  Result       :-    Regs/Mem                           Flags
                      B = 92H
+</pre>
+<pre>
+<HR color="#333399"></HR>
+<g:Label addStyleNames="{css.instructionTitle}">lhld</g:Label>
 
+ Lhld, Load H and L registers direct 
 
+  Opcode       Operand       Bytes   M-Cycles   T-States   Hex code
+   LHLD     16-bit address       3       5          16          2A
+
+ Description:-   The  instruction  copies  the  contents of the memory
+ location  pointed  out by the 16-bit address in register L and copies
+ the contents of the next memory location in register H.  The contents
+ of source memory locations are not altered.
+
+ Flag:-  No flags are affected.
+ Example:-
+ Initial state:-    Regs/Mem                           Flags
+                     [2050H] = 9FH
+                     BC      = 2050H
+
+ Instruction  :-    LDAX B
+
+ Result       :-    Regs/Mem                           Flags
+                     A  =  9FH
 </pre>
 </g:HTMLPanel>
         </g:VerticalPanel>

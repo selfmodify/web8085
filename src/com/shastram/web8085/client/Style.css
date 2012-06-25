@@ -118,3 +118,15 @@
 .exampleMenuItems {
 	font-size: 170%;
 }
+
+.instructionTitle {
+	color: blue;
+	font-size: 130%;
+	font-weight: bold;
+	font-style: courier-new;
+}
+
+.helpTitle {
+    font-size: 150%;	
+
+}
