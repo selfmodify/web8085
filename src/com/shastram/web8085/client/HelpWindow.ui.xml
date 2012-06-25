@@ -6,11 +6,88 @@
     	font-weight: bold;
     }
   </ui:style>
-  <g:HTMLPanel>
-    <g:DisclosurePanel>
-        <g:header>Instructions by Group</g:header>
-        <g:VerticalPanel>
+  <g:VerticalPanel width="300px" spacing="5">
+    <g:DisclosurePanel width="95%">
+      <g:header>Data Transfer</g:header>
+      <g:VerticalPanel width="100%">
+<g:Label>mov</g:Label>
+<g:HTMLPanel>
+<pre>
+ Move, Copy from source to destination 
+
+  Opcode       Operand       Bytes   M-Cycles   T-States   Hex code
+   MOV          Rd,Rs            1       1          4
+   MOV          Mem,Rs           1       2          7
+   MOV          Rd,Mem           1       2          7
+
+ Description:-   This  instruction  copies  the contents of the source
+ into  the  destination  register, the contents of the source register
+ are not altered.   If one of the operands is a memory location, it is
+ specified by the contetns of HL registers.
+
+ Flag:-  No flags are affected.
+
+                              Source location
+                       B   C   D   E   H   L   M   A
+                    =================================
+                  B | 40  41  42  43  44  45  46  47 
+                  C | 48  49  4A  4B  4C  4D  4E  4F 
+  Destination     D | 50  51  52  53  54  55  56  57 
+                  E | 58  59  5A  5B  5C  5D  5E  5F 
+  Location        H | 60  61  62  63  64  65  66  67 
+                  L | 68  69  6A  6B  6C  6D  6E  6F 
+                  M | 70  71  72  73  74  75  --  77 
+                  A | 78  79  7A  7B  7C  7D  7E  4F 
+
+ Example:-
+ Initial state:-    Regs/Mem                           Flags
+                     B = 34H
+ Instruction  :-    MOV A,B
+
+ Result       :-    Regs/Mem                           Flags
+                     A = 34H
+ Example:-
+ Initial state:-    Regs/Mem                           Flags
+                     HL     = 2050H
+                     [2050] = 9FH
+ Instruction  :-    MOV B,M
+
+ Result       :-    Regs/Mem                           Flags
+                     B = 9FH
+</pre>
+<HR></HR>
+<g:Label>mvi</g:Label>
+<pre>
+ Mvi, Move immediate 8-bit 
+
+  Opcode       Operand       Bytes   M-Cycles   T-States   Hex code
+   MVI         Reg, Data         2       2           7    Reg   Hex 
+               Mem, Data         2       3          10     B    06  
+                                                           C    0E  
+                                                           D    16  
+                                                           E    1E  
+                                                           H    26  
+                                                           L    2E  
+                                                           M    36  
+                                                           A    3E  
+
+ Description:-   The  8-bit data is stored in the destination register
+ or memory.   If  the operand is a memory location, it is specified by
+ the contents of HL registers.
+
+ Flag:-  No flags are affected.
+ Example:-
+ Initial state:-    Regs/Mem                           Flags
+
+ Instruction  :-    MVI B,92H
+
+ Result       :-    Regs/Mem                           Flags
+                     B = 92H
+
+
+</pre>
+</g:HTMLPanel>
         </g:VerticalPanel>
     </g:DisclosurePanel>
-  </g:HTMLPanel>
-</ui:UiBinder> 
+  </g:VerticalPanel>
+</ui:UiBinder>
