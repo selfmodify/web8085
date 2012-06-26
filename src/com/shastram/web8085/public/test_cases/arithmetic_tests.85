@@ -1,3 +1,4 @@
+; Test all arithmetic instructions
 ##################################
 # add - add to accumulator
 mvi a,47h

@@ -312,7 +312,7 @@ public class Parser {
     public ParseToken parseLine(String line, int ip, int startColumn)
             throws Exception {
         line = line.trim().toLowerCase();
-        int commentStart = line.indexOf('#');
+        int commentStart = commentTokenPosition(line);
         int len = line.length();
         if (commentStart == 0 || len == 0) {
             return new ParseToken(TokenType.COMMENT, line);
@@ -346,6 +346,14 @@ public class Parser {
         ParseToken t = new ParseToken(ix, firstToken, line, lineNumber,
                 startColumn, endColumn);
         return t;
+    }
+
+    private int commentTokenPosition(String line) {
+        int start = line.indexOf('#');
+        if (start == -1) {
+            start = line.indexOf(';');
+        }
+        return start;
     }
 
     public void reset() {
