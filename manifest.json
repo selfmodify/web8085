@@ -1,11 +1,11 @@
 {
     "name" : "Web8085",
-    "version" : "1.0",
+    "version" : "1.1",
     "description" : "Web based 8085 microprocessor simulator",
     "container" : "GOOGLE_DRIVE",
-    "api_console_project_id" : "879227652726.apps.googleusercontent.com",
+    "api_console_project_id" : "879227652726",
     "icons": {
-      "128": "icon_128.png"
+      "128": "processor-icon.png"
     },
     "app" : {
       "launch" : {
