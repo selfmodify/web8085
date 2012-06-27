@@ -12,6 +12,8 @@
         Microprocessor Simulator</g:Label>
         <g:HTMLPanel>
             <a href="mailto:kumar__v@hotmail.com">Email me with questions and suggestions</a>
+            <br></br>
+            <a href="/terms-of-service.html">Read the terms of service before using this app.</a>
         </g:HTMLPanel>
       <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
         <g:MenuItem ui:field="examplesMenuItem" text="Examples">
