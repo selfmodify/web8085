@@ -1,0 +1,644 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>PING Systems - intel 8085 microprocessor Simulator</title>
+  <style type="text/css">
+<!--
+body 		{ background-attachment: fixed; background-image: url(images/main_background_transparent.jpg); background-repeat: no-repeat; background-position: 65px 135px; }
+-->
+  <!--
+       A:link {text-decoration: none;}
+       A:visited {text-decoration: none;}
+  -->
+  </style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h5 align="center"><font color="#0000A0" size="4" face="Verdana"><em><strong>System
+calls</strong></em></font></h5>
+
+<table border="0" cellpadding="2" width="100%">
+    <tr>
+        <td><a href="#Reset"><font color="#3399FF" 
+		size="2" face="Verdana"><strong>Reset</strong></font></a></td>
+        <td><a href="#Generate tone"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Generate tone</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Blank display"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Blank display</strong></font></a></td>
+        <td><a href="#Delay routine"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Delay routine</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Display dot"><font color="#3399FF" size="2"
+        face="Verdana"><strong>Display dot</strong></font></a></td>
+        <td><a href="#A/D Conversion"><font color="#3399FF"
+        size="2" face="Verdana"><strong>A/D Conversion</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Display data"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Display data</strong></font></a></td>
+        <td><a href="#Display HL data"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Display HL data</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Display the Message &quot;Err&quot;"><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        the Message &quot;Err&quot;</strong></font></a></td>
+        <td><a href="#Data from keyboard"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Data from keyboard</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Read from Keyboard"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Read from keyboard</strong></font></a></td>
+        <td><a href="#Code conversion"><font color="#3399FF"
+        size="2" face="Verdana"><strong>Code conversion</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Display data using memory pointer"><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        data using memory pointer</strong></font></a></td>
+        <td><a href="#Calculate length of a block"><font
+        color="#3399FF" size="2" face="Verdana"><strong>Length of
+        block</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Serial Input from COM1/COM2"><font
+        color="#3399FF" size="2" face="Verdana"><strong>Serial
+        Input from COM1/COM2</strong></font></a></td>
+        <td><a href="#Print data"><font color="#3399FF" size="2"
+        face="Verdana"><strong>Print Data</strong></font></a></td>
+    </tr>
+    <tr>
+        <td><a href="#Serial Output to COM1/COM2"><font
+        color="#3399FF" size="2" face="Verdana"><strong>Serial
+        Output to COM1/COM2</strong></font></a></td>
+        <td><a href="#Print CRLF"><font color="#3399FF" size="2"
+        face="Verdana"><strong>Print CRLF</strong></font></a></td>
+    </tr>
+</table>
+
+<p><font size="2" face="Verdana"><strong>Note</strong></font></p>
+
+<p><font size="2" face="Verdana">None of the registers are
+affected in a system call. However in a conventional
+microprocessor kit, registers are affected in almost all systems
+call. It is the responsibility of the programmer to save them and
+then restore them after the system call.</font></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<dl>
+
+    <dd><a href="../Examples/reset.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Reset"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Reset</strong></font><font
+        size="2" face="Verdana"> </font></dd>
+    <dd><font size="2" face="Verdana">This function resets the
+        Microprocessor kit<br>
+        <br>
+        Input : A = 00<br>
+        CALL 0005<br>
+        Output : None<br>
+        <br>
+        Note :- This system call is ignored</font></dd>
+    <dd>&nbsp; </dd>
+    <dd><blockquote>
+            <dl>
+                <dd><font size="2" face="Verdana">mvi a,0</font> </dd>
+                <dd><font size="2" face="Verdana">call 0x5</font>
+                </dd>
+            </dl>
+        </blockquote>
+    </dd>
+</dl>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/blank_display.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Blank display"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Blank
+        display</strong></font><font size="2" face="Verdana"><br>
+        This function blanks the 7 segment display<br>
+        <br>
+        Input : A = 01<br>
+        C = 00,01,02,03<br>
+        CALL 05</font> </dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">if c=00, the Address
+            field display is blanked</font> </li>
+        <li><font size="2" face="Verdana">if c=01, the data field
+            display is blanked</font> </li>
+        <li><font size="2" face="Verdana">if c=02, the status
+            field display is blanked</font> </li>
+        <li><font size="2" face="Verdana">if c=03, all the digits
+            of display is blanked</font> </li>
+    </ul>
+</blockquote>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/display_dot.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Display dot"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        dot </strong></font></dd>
+    <dd><font size="2" face="Verdana">This function displays the
+        DOT in any of the digit depending<br>
+        on the C register content<br>
+        <br>
+        Input : A = 02<br>
+        C = 00,01,02,03<br>
+        CALL 0005</font> </dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">if c=00, dot will be
+            displayed in the right most of the data field</font> </li>
+        <li><font size="2" face="Verdana">if c=01, dot will be
+            displayed in the right most of the address field</font>
+        </li>
+        <li><font size="2" face="Verdana">if c=02, dot will be
+            displayed in the right most of the upper two digits
+            of the address field</font> </li>
+        <li><font size="2" face="Verdana">if c=03, dot will be
+            displayed in the right most digit of the status field</font>
+        </li>
+    </ul>
+</blockquote>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/display_data.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Display data"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        data</strong></font></dd>
+    <dd><font size="2" face="Verdana">This function display the
+        data, which are in the memory addressed<br>
+        by HL register Using 'C' register, data can be displayed
+        in any<br>
+        area of the 7 segment Display<br>
+        <br>
+        Input : A = 03<br>
+        C = 00 to 0A<br>
+        CALL 0005</font></dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">if c=00, the data from
+            the memory pointed by the HL register will be
+            displayed in the first digit of the display. The
+            first digit corresponds to the leftmost 7 segment
+            display</font> </li>
+        <li><font size="2" face="Verdana">if c=08, 2 digit data
+            will be displayed in the data field, two digits will
+            be taken from memory pointed by (HL) and (HL+1).</font>
+        </li>
+        <li><font size="2" face="Verdana">if c=09, 4 digit data
+            will be displayed in the address field.</font> </li>
+        <li><font size="2" face="Verdana">if c=0A, 2 digit data
+            will be displayed in the status field.</font> </li>
+        <li><font size="2" face="Verdana">if c=0B, 8 digit data
+            will be displayed in all the eight 7 segment display.
+            The following Alphanumeric can be displayed in the 7
+            segment display of the machine Data format for 7
+            segment Display Alphanumeric to be displayed
+            Corresponding data to be loaded in memory<br>
+            <br>
+            </font><table border="1" cellpadding="0"
+            cellspacing="0">
+                <tr>
+                    <td><font size="2" face="Verdana">1</font></td>
+                    <td><font size="2" face="Verdana">1</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">2</font></td>
+                    <td><font size="2" face="Verdana">2</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">3</font></td>
+                    <td><font size="2" face="Verdana">3</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">4</font></td>
+                    <td><font size="2" face="Verdana">4</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">5</font></td>
+                    <td><font size="2" face="Verdana">5</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">6</font></td>
+                    <td><font size="2" face="Verdana">6</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">7</font></td>
+                    <td><font size="2" face="Verdana">7</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">8</font></td>
+                    <td><font size="2" face="Verdana">8</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">9</font></td>
+                    <td><font size="2" face="Verdana">9</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">A</font></td>
+                    <td><font size="2" face="Verdana">A</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">B</font></td>
+                    <td><font size="2" face="Verdana">B</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">C</font></td>
+                    <td><font size="2" face="Verdana">C</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">D</font></td>
+                    <td><font size="2" face="Verdana">D</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">E</font></td>
+                    <td><font size="2" face="Verdana">E</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">F</font></td>
+                    <td><font size="2" face="Verdana">F</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">Blank</font></td>
+                    <td><font size="2" face="Verdana">10</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">Dot</font></td>
+                    <td><font size="2" face="Verdana">11</font></td>
+                </tr>
+                <tr>
+                    <td><font size="2" face="Verdana">Hyphen
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
+                    <td><font size="2" face="Verdana">12</font></td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<dl>
+    <dd><a href="../Examples/display_err.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Display the Message &quot;Err&quot;"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        the Message &quot;Err&quot;</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">This function will display
+        &quot;Err&quot; in the display and blank the<br>
+        remaining led's<br>
+        <br>
+        Input : A = 04<br>
+        CALL 0005</font> </dd>
+    <dd>&nbsp;</dd>
+    <dd>&nbsp; </dd>
+    <dd><a href="../Examples/read_from_keyboard.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Read from Keyboard"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Read from
+        Keyboard</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">This function will read a
+        key and return the key code in<br>
+        A register<br>
+        <br>
+        Input : A = 05<br>
+        CALL 0005<br>
+        <br>
+        Output : A = code of the key</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/code_conversion.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="Code conversion"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Code
+        conversion</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Hex to ASCII &amp; ASCII to
+        Hex code conversion <br>
+        <br>
+        When Reg 'C' is 00 this function converts a hex value to
+        it equivalent ASCII value The 8 bit hex data will be
+        converted to 2 ASCII values<br>
+        Input : A = 06<br>
+        C = 00<br>
+        L = hex value<br>
+        Output : DE register will have the ASCII values<br>
+        D - Higher byte,<br>
+        L - Lower byte<br>
+        Result : DE will have the ASCII value<br>
+        <br>
+        <br>
+        <br>
+        When Reg 'C' is 01 this function converts two ASCII
+        values to its equivalent 8 bit Hex value</font> </dd>
+    <dd><font size="2" face="Verdana">Input : A = 06<br>
+        C = 01<br>
+        H = Higher byte ASCII value<br>
+        L = Lower byte ASCII value<br>
+        Output : A contains the hex value<br>
+        Result : A will be returned with the 8 bit<br>
+        hex value</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/calculate_len.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="Calculate length of a block"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Calculate
+        length of a block</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">This function calculates
+        the length of a block of memory<br>
+        <br>
+        Input : A = 07<br>
+        HL = Starting address of the memory<br>
+        BC = End address of the memory<br>
+        CALL 0005<br>
+        <br>
+        Output : DE contains the block size<br>
+        <br>
+        Note :- if HL&gt;BC, then a Bad system call error message
+        will<br>
+        be generated</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/generate_tone.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Generate tone"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Generate
+        tone</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">This function generates a
+        tone for driving a speaker<br>
+        <br>
+        Input : A = 08<br>
+        C = 00,01<br>
+        CALL 0005<br>
+        <br>
+        Result : Generates a constant frequency for the speaker<br>
+        for a time period of 8 millisecond<br>
+        <br>
+        When C=00, it generates 1 KHz<br>
+        When C=01, it generates 2 KHz</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/delay_routine.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="Delay routine"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Delay
+        routine</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Input : A = 09<br>
+        HL = Delay value<br>
+        CALL 0005<br>
+        <br>
+        Result : The delay time is equal to the value of 7 * HL
+        milliseconds.<br>
+        <br>
+        <br>
+        Note :- In the microprocessor kit the delay value is
+        calculated<br>
+        in microseconds</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/a_d_conversion.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="A/D Conversion"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>A/D
+        Conversion</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Note :- This function has
+        not been implmented<br>
+        A call to this function will simply be ignored<br>
+        <br>
+        <br>
+        Input : A = 0A<br>
+        C = Channel number<br>
+        CALL 0005<br>
+        <br>
+        Output : Digital value in A register</font> </dd>
+</dl>
+
+<dl>
+    <dd>&nbsp;</dd>
+    <dd><a href="../Examples/display_hl_data.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Display HL data"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        HL data</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Input : A = 0B<br>
+        C = 00,01,02<br>
+        HL = Data to be displayed<br>
+        CALL 0005</font> </dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, contents of
+            L are displayed in the status field</font> </li>
+        <li><font size="2" face="Verdana">When C=01, contents of
+            H and L are displayed in the Address field</font> </li>
+        <li><font size="2" face="Verdana">When C=02, contents of
+            L are displayed in the Data field</font> </li>
+    </ul>
+</blockquote>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/read_from_keyboard.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="Data from keyboard"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Data from
+        keyboard</strong></font></dd>
+    <dd><font size="2" face="Verdana">Input : A = 0C<br>
+        C = 00,01<br>
+        CALL 0005<br>
+        <br>
+        Output : HL - contains the data got from keyboard<br>
+        </font></dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, 4 keys are
+            read and stored as 16 bit data in HL. The data read,
+            is also displayed in the address field</font> </li>
+        <li><font size="2" face="Verdana">When C=01, 2 keys are
+            read and stored as 8 bit data in L. The data read, is
+            also displayed in the data field</font> </li>
+    </ul>
+</blockquote>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/display_data_using_mem_ptr.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Display data using memory pointer"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Display
+        data using memory pointer</strong></font></dd>
+    <dd><font size="2" face="Verdana">Input : A = 0D<br>
+        C = 00,01,02,03<br>
+        HL = Memory pointer<br>
+        CALL 0005<br>
+        </font></dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, displays
+            data in Status field</font> </li>
+        <li><font size="2" face="Verdana">When C=01, displays
+            data in Address field</font> </li>
+        <li><font size="2" face="Verdana">When C=02, displays
+            data in Data field</font> </li>
+        <li><font size="2" face="Verdana">When C=03, displays
+            data in all 8 digits<br>
+            <br>
+            HL - points to the address whose contents are the 7
+            segment display codes for the data to be displayed
+            the 7 segment display format in accordance with the
+            data bys is as:</font> </li>
+    </ul>
+    <blockquote>
+        <table border="1" cellspacing="0">
+            <tr>
+                <td><font size="2" face="Verdana">Data bus</font></td>
+                <td><font size="2" face="Verdana">D7</font></td>
+                <td><font size="2" face="Verdana">D6</font></td>
+                <td><font size="2" face="Verdana">D5</font></td>
+                <td><font size="2" face="Verdana">D4</font></td>
+                <td><font size="2" face="Verdana">D3</font></td>
+                <td><font size="2" face="Verdana">D2</font></td>
+                <td><font size="2" face="Verdana">D1</font></td>
+                <td><font size="2" face="Verdana">D0</font></td>
+            </tr>
+            <tr>
+                <td><font size="2" face="Verdana">7 Segment code</font></td>
+                <td><font size="2" face="Verdana">d</font></td>
+                <td><font size="2" face="Verdana">c</font></td>
+                <td><font size="2" face="Verdana">b</font></td>
+                <td><font size="2" face="Verdana">a</font></td>
+                <td><font size="2" face="Verdana">dot</font></td>
+                <td><font size="2" face="Verdana">g</font></td>
+                <td><font size="2" face="Verdana">e</font></td>
+                <td><font size="2" face="Verdana">f</font></td>
+            </tr>
+        </table>
+    </blockquote>
+    <p><img src="images/seven_segment.gif" width="420" height="275"><font
+    size="2" face="Verdana"><br>
+    Note :- A zero in the corresponding segment will make that<br>
+    segment glow</font></p>
+</blockquote>
+
+<blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/serial_input_output_from_com1_com2.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Serial Input from COM1/COM2"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Serial
+        Input from COM1/COM2</strong></font></dd>
+    <dd><font size="2" face="Verdana">Input : A = 0E<br>
+        C = 00,01<br>
+        B = Data from COM1/COM2<br>
+        CALL 0005<br>
+        <br>
+        Result : Serial input a single byte from<br>
+        COM1/COM2</font></dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, then serial
+            input from COM1</font> </li>
+        <li><font size="2" face="Verdana">When C=01, then serial
+            input from COM2</font> </li>
+    </ul>
+</blockquote>
+
+<dl>
+    <dd><a href="../Examples/serial_input_output_from_com1_com2.85"><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Serial Output to COM1/COM2"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Serial
+        Output to COM1/COM2</strong></font></dd>
+    <dd><font size="2" face="Verdana">Input : A = 0F<br>
+        C = 00,01<br>
+        B = Data to output serially<br>
+        CALL 0005<br>
+        <br>
+        Result : Serial out serially through<br>
+        COM1/COM2</font></dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, then serial
+            output through COM1</font> </li>
+        <li><font size="2" face="Verdana">When C=01, then serial
+            output through COM2</font> </li>
+    </ul>
+</blockquote>
+
+<dl>
+    <dd>&nbsp; </dd>
+    <dd><a ><img src="images/paper_clip.gif" alt="" border="0" align=""></a>&nbsp;&nbsp;<a name="Print data"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Print
+        data</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Input : A = 010<br>
+        C = 00,01<br>
+        B = Data to be printed<br>
+        CALL 0005</font> </dd>
+</dl>
+
+<blockquote>
+    <ul>
+        <li><font size="2" face="Verdana">When C=00, contents of
+            B are printed as an ASCII character</font> </li>
+        <li><font size="2" face="Verdana">When C=01, contents of
+            B are printed as data<br>
+            <br>
+            If the printer is not connected, then the program
+            waits for the<br>
+            time out signal and issues an appropriate warning
+            after the time<br>
+            out</font> </li>
+    </ul>
+</blockquote>
+
+<dl>
+    <dd>&nbsp; </dd>
+    <dd><a href="../Examples/print_crlf.85"><img src="images/paper_clip.gif" alt="" border="0" align=""><a name="Print CRLF"><strong></strong></a><font
+        color="#3399FF" size="2" face="Verdana"><strong>Print
+        CRLF</strong></font><strong> </strong></dd>
+    <dd><font size="2" face="Verdana">Input : A = 011<br>
+        CALL 0005<br>
+        <br>
+        Prints a Carriage and a Linefeed<br>
+        <br>
+        If the printer is not connected, then the program waits
+        for the<br>
+        time out signal and issues an appropriate warning after
+        the time<br>
+        out.<br>
+        </font></dd>
+</dl>
+</body>
+</html>
