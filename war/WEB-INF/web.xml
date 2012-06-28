@@ -20,4 +20,15 @@
     <servlet-name>simulator</servlet-name>
     <url-pattern>/com.shastram.web8085.Simulator/rpc</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>
