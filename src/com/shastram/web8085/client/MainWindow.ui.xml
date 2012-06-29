@@ -127,8 +127,8 @@
         </g:VerticalPanel>
       </g:VerticalPanel>
            <!-- END Editor/Simulator Window -->
-    </g:VerticalPanel>
-    <g:ScrollPanel height="600px">
+    </g:VerticalPanel">
+    <g:ScrollPanel height="1200px">
     <g:VerticalPanel>
         <g:Label addStyleNames="{css.helpTitle}">HELP!</g:Label>
         <my:HelpWindow></my:HelpWindow>
