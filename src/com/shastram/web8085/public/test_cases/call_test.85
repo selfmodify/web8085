@@ -1,0 +1,8 @@
+mvi a,3
+call label1
+mvi c,7
+hlt
+label1:
+mvi b,2
+ret
+
