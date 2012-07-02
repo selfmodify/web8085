@@ -61,6 +61,12 @@ public class MainWindow extends Composite implements Observer {
     Button stepButton;
 
     @UiField
+    Button stepOverButton;
+
+    @UiField
+    Button stepOutButton;
+
+    @UiField
     HorizontalPanel registerWindowValues;
 
     @UiField
@@ -480,23 +486,60 @@ public class MainWindow extends Composite implements Observer {
     public void stepButtonHandler(ClickEvent e) {
         try {
             exe.step();
-            if (exe.hltExecuted) {
-                errorWindow.setText("HLT Executed at ip=" + exe.ip);
-            } else {
-                DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
-                if (debugInfo != null) {
-                    errorWindow.setText("Next instruction, Line: "
-                            + debugInfo.line + " " + debugInfo.getToken());
+        } catch (Exception e1) {
+            errorWindow.setText(e1.getMessage());
+        } finally {
+            refreshUI();
+            refreshDebugInfo();
+        }
+    }
+
+    private void refreshDebugInfo() {
+        if (exe.hltExecuted) {
+            errorWindow.setText("HLT Executed at ip=" + exe.ip);
+        } else {
+            DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
+            if (debugInfo != null) {
+                errorWindow.setText("Next instruction, Line: "
+                        + debugInfo.line + " " + debugInfo.getToken());
+            }
+        }
+    }
+
+    private void refreshUI() {
+        refreshRegistersAndFlags();
+        fillMemoryWindow(true);
+        fillDisassemblyWindow();
+        fillStackWindow(true);
+    }
+
+    @UiHandler("stepOverButton")
+    public void stepOverButtonHandler(ClickEvent e) {
+        int prevCallLevel = exe.callLevel;
+        multiStep(prevCallLevel);
+    }
+
+    private void multiStep(int prevCallLevel) {
+        try {
+            while(!exe.hltExecuted) {
+                exe.step();
+                if (exe.returnExecuted && prevCallLevel == exe.callLevel) {
+                    break;
                 }
+                
             }
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
-            refreshRegistersAndFlags();
-            fillMemoryWindow(true);
-            fillDisassemblyWindow();
-            fillStackWindow(true);
+            refreshUI();
+            refreshDebugInfo();
         }
+    }
+
+    @UiHandler("stepOutButton")
+    public void stepOutButtonHandler(ClickEvent e) {
+        int prevCallLevel = exe.callLevel - 1;
+        multiStep(prevCallLevel);
     }
 
     public void refreshRegistersAndFlags() {

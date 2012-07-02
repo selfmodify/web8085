@@ -99,6 +99,7 @@ public abstract class MicroCode {
             logger.info("Executing " + s + " ip=" + exe.ip + " "
                     + (debugInfo != null ? "Line=" + debugInfo.line : ""));
         }
+        exe.returnExecuted = false;
         m.execute(exe, ix);
     }
 
@@ -413,10 +414,12 @@ public abstract class MicroCode {
 
     private static void doRetOnCondition(Exe exe, boolean condition) {
         if (condition) {
+            exe.returnExecuted = true;
             int value = exe.getMemoryAtSp();
             exe.incrementRegisterPair(Operand.SP);
             exe.incrementRegisterPair(Operand.SP);
             exe.setIp(value);
+            --exe.callLevel;
         } else {
             exe.nextIp();
         }
@@ -724,6 +727,12 @@ public abstract class MicroCode {
     };
 
     protected void doCall(Exe exe, int address) {
+        ++exe.callLevel;
+        push16BitToStack(exe, exe.getIp());
+        exe.setIp(address);
+    }
+
+    protected void doCallWithoutLevelChange(Exe exe, int address) {
         push16BitToStack(exe, exe.getIp());
         exe.setIp(address);
     }
@@ -869,7 +878,7 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             int address = exe.getOpcode() - 0xC7;
-            doCall(exe, address);
+            doCallWithoutLevelChange(exe, address);
         }
     };
 

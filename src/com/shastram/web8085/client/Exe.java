@@ -30,6 +30,7 @@ public class Exe {
     public boolean parity;
     public boolean carry;
 
+    public int callLevel = 0;
     /**
      * map containing the ip address to the assert instruction.
      */
@@ -39,6 +40,8 @@ public class Exe {
     public boolean hltExecuted = false;
 
     private String context;
+
+    public boolean returnExecuted = false;
 
     public void insert(int opcode, int op1, int op2) {
         // TODO: Change ip++ to use incrIp
@@ -282,6 +285,7 @@ public class Exe {
     public void reset() {
         resetRegisters();
         clearFlags();
+        labelMap.clear();
         hltExecuted = false;
         ip = 0;
     }

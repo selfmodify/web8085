@@ -101,7 +101,9 @@
               height="100%" verticalAlignment="ALIGN_MIDDLE">
               <g:Label width="40px"></g:Label>
               <g:Button ui:field="stepButton" addStyleNames="{css.debugButton}">Step</g:Button>
-            </g:VerticalPanel>
+              <g:Button ui:field="stepOverButton" addStyleNames="{css.debugButton}">Step Over</g:Button>
+              <g:Button ui:field="stepOutButton" addStyleNames="{css.debugButton}">Step Out</g:Button>
+              </g:VerticalPanel>
           </g:HorizontalPanel>
 
           <g:HorizontalPanel>
@@ -127,7 +129,7 @@
         </g:VerticalPanel>
       </g:VerticalPanel>
            <!-- END Editor/Simulator Window -->
-    </g:VerticalPanel">
+    </g:VerticalPanel>
     <g:ScrollPanel height="1200px">
     <g:VerticalPanel>
         <g:Label addStyleNames="{css.helpTitle}">HELP!</g:Label>

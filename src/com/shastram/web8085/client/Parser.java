@@ -203,6 +203,8 @@ public class Parser {
                 OperandParser.noOperand));
         map.put("di", new PerInstructionToken(Parser.Mnemonic.DI, 0xF3,
                 OperandParser.noOperand));
+        map.put("hlt", new PerInstructionToken(Parser.Mnemonic.HLT, 0x76,
+                OperandParser.noOperand));
         map.put("mov", new PerInstructionToken(Parser.Mnemonic.MOV, 0x40,
                 new OperandParser() {
                     @Override
