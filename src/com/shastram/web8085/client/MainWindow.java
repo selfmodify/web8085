@@ -539,7 +539,7 @@ public class MainWindow extends Composite implements Observer {
     private void multiStepOnTimer(final int prevCallLevel) {
         try {
             int counter = 0; // do a short sleep after some number of instructions
-            while (!exe.hltExecuted && !exe.breakNow && counter < 10) {
+            while (!exe.hltExecuted && !exe.breakNow && counter < 50) {
                 exe.step();
                 if (exe.returnExecuted && prevCallLevel == exe.callLevel) {
                     break;
@@ -555,7 +555,7 @@ public class MainWindow extends Composite implements Observer {
                     multiStepOnTimer(prevCallLevel);
                 }
             };
-            multiStepTimer.schedule(50);
+            multiStepTimer.schedule(25);
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
