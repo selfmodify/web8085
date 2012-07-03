@@ -43,6 +43,8 @@ public class Exe {
 
     public boolean returnExecuted = false;
 
+    public volatile boolean breakNow = false;
+
     public void insert(int opcode, int op1, int op2) {
         // TODO: Change ip++ to use incrIp
         setMemoryByte(ip, (byte) opcode);
@@ -288,6 +290,9 @@ public class Exe {
         labelMap.clear();
         hltExecuted = false;
         ip = 0;
+        breakNow = false;
+        callLevel = 0;
+        returnExecuted = false;
     }
 
     public void resetRegisters() {

@@ -208,7 +208,6 @@ public abstract class MicroCode {
         @Override
         public void execute(Exe exe, OneInstruction i) throws Exception {
             exe.nextIp();
-            exe.hltExecuted = true;
         }
     };
 

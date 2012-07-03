@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -103,6 +104,8 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     MenuBar exampleItems;
+
+    Timer multiStepTimer;
     public static Web8085ServiceAsync rpcService = GWT
             .create(Web8085Service.class);
 
@@ -129,7 +132,7 @@ public class MainWindow extends Composite implements Observer {
 
     private final int maxMemoryWindowRows = 5;
 
-    private final int maxDisassemblyRows = 8;
+    private final int maxDisassemblyRows = 10;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -466,7 +469,7 @@ public class MainWindow extends Composite implements Observer {
             // highlight
             refreshRegistersAndFlags();
             long diff = ((System.currentTimeMillis() - begin));
-            errorWindow.setText("Finished compilation in "  + diff + " milli seconds");
+            errorWindow.setText("Finished compilation in " + diff + " milli seconds");
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
@@ -520,14 +523,39 @@ public class MainWindow extends Composite implements Observer {
     }
 
     private void multiStep(int prevCallLevel) {
+        exe.breakNow = false;
+        if (multiStepTimer != null) {
+            multiStepTimer.cancel();
+        }
+        multiStepOnTimer(prevCallLevel);
+    }
+
+    /**
+     * Run a multi step or run (like step out, step over) operation using a
+     * timer to allow a responsive UI.
+     * 
+     * @param prevCallLevel
+     */
+    private void multiStepOnTimer(final int prevCallLevel) {
         try {
-            while(!exe.hltExecuted) {
+            int counter = 0; // do a short sleep after some number of instructions
+            while (!exe.hltExecuted && !exe.breakNow && counter < 10) {
                 exe.step();
                 if (exe.returnExecuted && prevCallLevel == exe.callLevel) {
                     break;
                 }
-                
+                ++counter;
             }
+            if (multiStepTimer != null) {
+                multiStepTimer.cancel();
+            }
+            multiStepTimer = new Timer() {
+                @Override
+                public void run() {
+                    multiStepOnTimer(prevCallLevel);
+                }
+            };
+            multiStepTimer.schedule(50);
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
@@ -540,6 +568,11 @@ public class MainWindow extends Composite implements Observer {
     public void stepOutButtonHandler(ClickEvent e) {
         int prevCallLevel = exe.callLevel - 1;
         multiStep(prevCallLevel);
+    }
+
+    @UiHandler("breakButton")
+    public void breakButtonHandler(ClickEvent e) {
+        exe.breakNow = true;
     }
 
     public void refreshRegistersAndFlags() {
