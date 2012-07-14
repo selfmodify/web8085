@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="libs/jersey-bundle-1.12.jar"/>
 	<classpathentry kind="lib" path="libs/jersey-client-1.12.jar"/>
 	<classpathentry kind="lib" path="libs/jersey-core-1.12.jar"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

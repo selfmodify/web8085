@@ -56,7 +56,6 @@ public class Exe {
     }
 
     public void insert(int opcode, int op1) {
-        // TODO: Change ip++ to use incrIp
         setMemoryByte(ip, (byte) opcode);
         incrIp();
         setMemoryByte(ip, (byte) op1);
@@ -127,6 +126,12 @@ public class Exe {
             logger.log(Level.SEVERE, msg);
             throw new ParserException(msg);
         }
+        case COMMENT:
+            break;
+        case DIRECTIVE:
+            break;
+        default:
+            break;
         }
     }
 
@@ -427,14 +432,17 @@ public class Exe {
         this.context = context;
         int startColumn = 0;
         clearMemory();
+        ParseToken token = null;
         try {
             while (p.hasNext()) {
                 String l = p.nextLine();
                 startColumn += l.length();
-                ParseToken token = p.parseLine(l, ip, startColumn);
+                token = p.parseLine(l, ip, startColumn);
                 insert(token);
             }
-            insert(0x76); // hlt
+            // artificially insert the HLT instruction
+            token = p.parseLine("hlt", ip, 0);
+            insert(token);
             // copy the assertion map from the parser
             assertOperation = p.getAssertionMap();
             patchLabelUse(p);
