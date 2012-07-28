@@ -2,13 +2,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
   xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:style field="css" src="Style.css" />
-  <g:VerticalPanel width="300px" spacing="5">
-    <g:DisclosurePanel width="95%">
+  <g:VerticalPanel>
+    <g:DisclosurePanel>
       <g:header>Data Transfer</g:header>
-      <g:VerticalPanel width="100%">
+      <g:VerticalPanel>
 <g:Label addStyleNames="{css.instructionTitle}">mov</g:Label>
 <g:HTMLPanel>
 <pre>
+                                                                         
  Move, Copy from source to destination 
 
   Opcode       Operand       Bytes   M-Cycles   T-States   Hex code
