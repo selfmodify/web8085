@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -178,9 +179,12 @@ public class MainWindow extends Composite implements Observer {
     }
 
     private void getExampleCodeList() {
+        exampleItems.clearItems();
+        exampleItems.addItem("Loading examples ...", (Command)null);
         rpcService.getExampleNames(new AsyncCallback<List<String>>() {
             @Override
             public void onSuccess(List<String> result) {
+                exampleItems.clearItems();
                 for (final String name : result) {
                     MenuItem item = new MenuItem(name, (MenuBar) null);
                     item.addStyleName(Style.style.css.exampleMenuItems());
