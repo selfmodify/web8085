@@ -32,7 +32,9 @@ import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
 import com.shastram.web8085.client.pattern.SignalSlot.Signals;
+import com.shastram.web8085.client.rpc.SaveFileData;
 import com.shastram.web8085.client.ui.ExamplesLoadCommand;
+import com.shastram.web8085.server.BoxNetService;
 
 public class MainWindow extends Composite implements Observer {
 
@@ -106,6 +108,9 @@ public class MainWindow extends Composite implements Observer {
     @UiField
     MenuBar exampleItems;
 
+    @UiField
+    MenuItem saveToBoxNet;
+
     Timer multiStepTimer;
     public static Web8085ServiceAsync rpcService = GWT
             .create(Web8085Service.class);
@@ -176,6 +181,12 @@ public class MainWindow extends Composite implements Observer {
         getExampleCodeList();
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        saveToBoxNet.setCommand(new Command() {
+            @Override
+            public void execute() {
+                saveToBoxNetHandler();
+            }
+        });
     }
 
     private void getExampleCodeList() {
@@ -643,5 +654,22 @@ public class MainWindow extends Composite implements Observer {
             sourceCode.setText(code);
             optionalFileName.setText("  : " + name);
         }
+    }
+    
+    public void saveToBoxNetHandler( ) {
+        rpcService.saveFile( new SaveFileData("test.85", sourceCode.getText()), new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                // TODO Auto-generated method stub
+                
+            }
+        });
+        logger.info("Saving to box.net");
     }
 }

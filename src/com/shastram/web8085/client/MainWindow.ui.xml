@@ -16,12 +16,14 @@
             <a href="/terms-of-service.html">Read the terms of service before using this app.</a>
             <br></br>
             <a href="/help/index.html">Help for all 8085 assembly instructions</a>
-            </g:HTMLPanel>
+         </g:HTMLPanel>
+         <g:Label>Use your box.net a</g:Label>
       <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
         <g:MenuItem ui:field="examplesMenuItem" text="Examples">
           <g:MenuBar vertical="true" ui:field="exampleItems"></g:MenuBar>
         </g:MenuItem>
-      </g:MenuBar>
+        <g:MenuItem ui:field="saveToBoxNet" text="Save"></g:MenuItem>
+        </g:MenuBar>
       <g:VerticalPanel width="100%">
         <g:HorizontalPanel width="100%">
           <g:VerticalPanel spacing="1" width="100%">

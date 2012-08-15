@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.shastram.web8085.client.rpc.SaveFileData;
 
 /**
  * RPC Service
@@ -28,4 +29,6 @@ public interface Web8085Service extends RemoteService {
      * @return
      */
     String getExampleSourceCode(String name);
+
+    String saveFile(SaveFileData saveFileData);
 }
