@@ -31,4 +31,6 @@ public interface Web8085Service extends RemoteService {
     String getExampleSourceCode(String name);
 
     String saveFile(SaveFileData saveFileData);
+
+    String getTicket() throws Exception;
 }

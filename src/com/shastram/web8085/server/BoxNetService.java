@@ -98,6 +98,7 @@ public class BoxNetService {
         private String auth_token;
         private BoxNetUser user;
     }
+
     public BoxNetService() {
     }
 

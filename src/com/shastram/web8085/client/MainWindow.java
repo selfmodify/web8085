@@ -11,11 +11,14 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,9 +35,7 @@ import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
 import com.shastram.web8085.client.pattern.SignalSlot.Signals;
-import com.shastram.web8085.client.rpc.SaveFileData;
 import com.shastram.web8085.client.ui.ExamplesLoadCommand;
-import com.shastram.web8085.server.BoxNetService;
 
 public class MainWindow extends Composite implements Observer {
 
@@ -179,6 +180,7 @@ public class MainWindow extends Composite implements Observer {
             }
         });
         getExampleCodeList();
+        UiHelper.loadSourceCodeLocally(sourceCode);
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
         saveToBoxNet.setCommand(new Command() {
@@ -656,7 +658,23 @@ public class MainWindow extends Composite implements Observer {
         }
     }
     
+    /**
+     * 1. Save the source code locally.
+     * 2. Get a ticket from the backend
+     * 3. Redirect the user to box.net
+     */
     public void saveToBoxNetHandler( ) {
+        UiHelper.saveSourceCodeLocally(sourceCode);
+        rpcService.getTicket(new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+            @Override
+            public void onSuccess(String ticket) {
+                Window.open("https://www.box.com/api/1.0/auth/" + ticket, "_self", "");
+            }
+        });
+        /*
         rpcService.saveFile( new SaveFileData("test.85", sourceCode.getText()), new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -670,6 +688,7 @@ public class MainWindow extends Composite implements Observer {
                 
             }
         });
+        */
         logger.info("Saving to box.net");
     }
 }

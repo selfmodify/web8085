@@ -12,4 +12,6 @@ public interface Web8085ServiceAsync {
     void getExampleSourceCode(String name, AsyncCallback<String> callback);
 
     void saveFile(SaveFileData saveFileData, AsyncCallback<String> callback);
+
+    void getTicket(AsyncCallback<String> callback);
 }

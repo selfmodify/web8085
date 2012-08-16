@@ -20,11 +20,6 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 6343983694137057114L;
 
     private static BoxNetService boxNetService = new BoxNetService();
-    private static ObjectMapper mapper = new ObjectMapper();
-    
-    static {
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     @Override
     public List<String> getExampleNames() {
@@ -48,6 +43,12 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
             logger.log(Level.WARNING, "Saving file to external service failed. ", e);
         }
         return null;
+    }
+
+    @Override
+    public String getTicket() throws Exception {
+        BoxNetTicketResponse newTicket = boxNetService.getNewTicket();
+        return newTicket.getTicket();
     }
 
 }
