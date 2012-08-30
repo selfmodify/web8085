@@ -1,0 +1,81 @@
+{
+    "total_count": 2,
+    "entries": [
+        {
+            "type": "file",
+            "id": "2615240421",
+            "sequence_id": "0",
+            "name": "successful file upload.png",
+            "description": null,
+            "size": 19586,
+            "path": "/Hey Hey Whats Goin On/successful file upload.png",
+            "path_id": "/316877053/2615240421",
+            "created_at": "2012-07-11T11:54:21-07:00",
+            "modified_at": "2012-07-11T11:54:21-07:00",
+            "etag": null,
+            "created_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "modified_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "owned_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "shared_link": null,
+            "parent": {
+                "type": "folder",
+                "id": "316877053",
+                "sequence_id": "0",
+                "name": "Hey Hey Whats Goin On"
+            }
+        },
+        {
+            "type": "file",
+            "id": "2615240431",
+            "sequence_id": "0",
+            "name": "a whole lot of stuff just happenedjson.png",
+            "description": null,
+            "size": 128063,
+            "path": "/Hey Hey Whats Goin On/a whole lot of stuff just happenedjson.png",
+            "path_id": "/316877053/2615240431",
+            "created_at": "2012-07-11T11:54:21-07:00",
+            "modified_at": "2012-07-11T11:54:21-07:00",
+            "sha1": null,
+            "created_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "modified_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "owned_by": {
+                "type": "user",
+                "id": "181757341",
+                "name": "sean test",
+                "login": "sean+test@box.com"
+            },
+            "shared_link": null,
+            "parent": {
+                "type": "folder",
+                "id": "316877053",
+                "sequence_id": "0",
+                "name": "Hey Hey Whats Goin On"
+            }
+        }
+    ]
+}

@@ -3,20 +3,28 @@ package com.shastram.web8085.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,6 +43,7 @@ import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
 import com.shastram.web8085.client.pattern.SignalSlot.Signals;
+import com.shastram.web8085.client.rpc.SaveFileData;
 import com.shastram.web8085.client.ui.ExamplesLoadCommand;
 
 public class MainWindow extends Composite implements Observer {
@@ -112,6 +121,9 @@ public class MainWindow extends Composite implements Observer {
     @UiField
     MenuItem saveToBoxNet;
 
+    @UiField
+    Label statusUpdateLabel;
+
     Timer multiStepTimer;
     public static Web8085ServiceAsync rpcService = GWT
             .create(Web8085Service.class);
@@ -157,6 +169,29 @@ public class MainWindow extends Composite implements Observer {
         fillStackWindow(false);
         // refresh the register and memory window to remove the red highlight
         refreshRegistersAndFlags();
+        setMemoryScrollMouseHandler();
+        getExampleCodeList();
+        UiHelper.loadSourceCodeLocally(sourceCode);
+        SignalSlot.instance.addObserver(
+                SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        saveToBoxNet.setScheduledCommand(new ScheduledCommand(){
+            @Override
+            public void execute() {
+                saveFileLocally();
+                if (UiHelper.getAuthToken() == null) {
+                    getBoxNetAuthToken();
+                } else {
+                    saveSourceCodeToBoxNet("filename.85", null, sourceCode.getText(), statusUpdateLabel);
+                }
+            }
+        });
+        if (UiHelper.saveTicketAndAuthcodeFromUrl()) {
+            // an auth code was saved, now save the file on box.net
+            saveSourceCodeToBoxNet("filename.85", null, sourceCode.getText(), statusUpdateLabel);
+        }
+    }
+
+    private void setMemoryScrollMouseHandler() {
         // mouse UP/DOWN handler
         memoryScrollDown.addMouseDownHandler(new MouseDownHandler() {
             @Override
@@ -177,16 +212,6 @@ public class MainWindow extends Composite implements Observer {
                     memoryStart = Exe.normalizeMemoryAddress(memoryStart);
                     fillMemoryWindow(false, false);
                 }
-            }
-        });
-        getExampleCodeList();
-        UiHelper.loadSourceCodeLocally(sourceCode);
-        SignalSlot.instance.addObserver(
-                SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
-        saveToBoxNet.setCommand(new Command() {
-            @Override
-            public void execute() {
-                saveToBoxNetHandler();
             }
         });
     }
@@ -658,37 +683,47 @@ public class MainWindow extends Composite implements Observer {
         }
     }
     
+    public void saveFileLocally() {
+        UiHelper.saveSourceCodeLocally(sourceCode);
+    }
     /**
      * 1. Save the source code locally.
      * 2. Get a ticket from the backend
      * 3. Redirect the user to box.net
      */
-    public void saveToBoxNetHandler( ) {
-        UiHelper.saveSourceCodeLocally(sourceCode);
+    public void getBoxNetAuthToken( ) {
+        String authToken = UiHelper.getAuthToken();
         rpcService.getTicket(new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
+                UiHelper.clearBoxNetAuthCookies();
             }
             @Override
             public void onSuccess(String ticket) {
                 Window.open("https://www.box.com/api/1.0/auth/" + ticket, "_self", "");
             }
         });
-        /*
-        rpcService.saveFile( new SaveFileData("test.85", sourceCode.getText()), new AsyncCallback<String>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                // TODO Auto-generated method stub
-                
-            }
+        logger.info("Saving to box.net");
+    }
 
+
+    /**
+     * Save the source code to box.net.
+     * @param rpcService 
+     * @param filename
+     * @param data
+     */
+    public static void saveSourceCodeToBoxNet(String fileId, String fileName, String data, final Label label) {
+        label.setText("Saving " + fileName + " ...");
+        rpcService.saveFile(new SaveFileData(UiHelper.getAuthToken(), fileName, fileId, data), new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                // TODO Auto-generated method stub
-                
+                label.setText("Successfully saved file");
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                label.setText("Failed to save file " + caught.getMessage());
             }
         });
-        */
-        logger.info("Saving to box.net");
     }
 }

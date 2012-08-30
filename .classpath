@@ -10,6 +10,9 @@
 	<classpathentry kind="lib" path="libs/jackson-annotations-2.0.5.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-2.0.5.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-databind-2.0.5.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>

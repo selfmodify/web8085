@@ -1,0 +1,24 @@
+{
+  "total_count": 1,
+  "entries": [
+    {
+      "type": "error",
+      "status": 409,
+      "code": "item_name_in_use",
+      "context_info": {
+        "conflicts": [
+          {
+            "type": "file",
+            "id": "3011590059",
+            "sequence_id": "0",
+            "etag": "a140cac86cc0376b07e3f8abf14bff49f914210c",
+            "name": "noname-1.85"
+          }
+        ]
+      },
+      "help_url": "http:\/\/developers.box.com\/docs\/#errors",
+      "message": "Item with the same name already exists",
+      "request_id": "46034979503efd7d96f3e"
+    }
+  ]
+}
