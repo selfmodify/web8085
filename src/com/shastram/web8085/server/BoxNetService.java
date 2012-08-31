@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -227,26 +229,46 @@ public class BoxNetService {
         return authResponse;
     }
 
+    public static String getFileUploadResponse(SaveFileData saveFileData) throws Exception {
+        ByteArrayBody body = new ByteArrayBody(saveFileData.getData().getBytes(), saveFileData.getFileName());
+        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entity.addPart("filename1", body);
+        entity.addPart("folder_id", new StringBody("0"));
+        String fileId = saveFileData.getFileId();
+        String url = fileId == null ?
+                "https://api.box.com/2.0/files/" + fileId + "/data" :
+                    "https://api.box.com/2.0/files/data";
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
+                + "&auth_token=" + saveFileData.getAuthToken());
+        httpPost.setEntity(entity);
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(httpPost);
+        HttpEntity responseEntity = response.getEntity();
+        String result = EntityUtils.toString(responseEntity);
+        return result;
+    }
+
     /**
      * Save file to box.net.
      * @param saveFileData
      * @return
      * @throws Exception
      */
+    @Nullable
     public static BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData) throws Exception {
-        HttpPost httpPost = new HttpPost("https://api.box.com/2.0/files/" + saveFileData.getFileId() + "/data");
-        httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
-                + "&auth_token=" + saveFileData.getAuthToken());
-        DefaultHttpClient client = new DefaultHttpClient();
-        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-        ByteArrayBody body = new ByteArrayBody(saveFileData.getData().getBytes(), saveFileData.getFileName());
-        entity.addPart("filename1", body);
-        entity.addPart("folder_id", new StringBody("0"));
-        httpPost.setEntity(entity);
-        HttpResponse response = client.execute(httpPost);
-        HttpEntity responseEntity = response.getEntity();
-        String result = EntityUtils.toString(responseEntity);
-        BoxNetFileUploadResponse boxNetResponse = jsonReader.readValue(result, BoxNetFileUploadResponse.class);
+        BoxNetFileUploadResponse boxNetResponse = null;
+        String result = getFileUploadResponse(saveFileData);
+        boxNetResponse = jsonReader.readValue(result, BoxNetFileUploadResponse.class);
+        if (boxNetResponse.entries.size() > 0) {
+            BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
+            if (entry.type.equalsIgnoreCase("error")
+                    && entry.status.equalsIgnoreCase("409")
+                    && entry.context_info.conflicts.size() > 0) {
+                BoxNetFileUploadConflicts conflicts = entry.context_info.conflicts.get(0);
+                saveFileData.setFileId(conflicts.id);
+            }
+        }
         return boxNetResponse;
     }
 
