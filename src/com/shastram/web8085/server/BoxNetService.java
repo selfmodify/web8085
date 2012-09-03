@@ -52,163 +52,15 @@ public class BoxNetService {
         return mapper;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class BoxNetFileUploadConflicts {
-        public String type;
-        public String id;
-        public BoxNetFileUploadConflicts() {
-            
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class BoxNetFileUploadContextInfo {
-        public List<BoxNetFileUploadConflicts> conflicts;
-        public BoxNetFileUploadContextInfo() {
-            
-        }
-    }
-
-    /**
-     * Box.net response for every entry of file uploaded.
-     * @author vijay
-     *
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class BoxNetFileUploadResponseEntry {
-        public String type;
-        public String id;
-        public String sequence_id;
-        public String name;
-        public String description;
-        public int size;
-        public String path;
-        public String path_id;
-        public String created_at;
-        public String modified_at;
-        public String etag;
-        public String status;
-        public String message;
-        public String code;
-        public BoxNetFileUploadContextInfo context_info;
-        public BoxNetFileUploadResponseEntry() {
-            
-        }
-    }
-    
-    /**
-     * Box.net response
-     * @author vijay
-     *
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class BoxNetFileUploadResponse {
-        public int total_count;
-        public List<BoxNetFileUploadResponseEntry> entries;
-
-        public BoxNetFileUploadResponse() {
-            
-        }
-    }
-
-    /**
-     * Box.net Ticket response. The ticket is used in the next stage to get the
-     * auth token.
-     * 
-     * @author vijay
-     * 
-     */
-    @XmlRootElement(name = "response")
-    public static class BoxNetTicketResponse {
-        private String status;
-        private String ticket;
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getTicket() {
-            return ticket;
-        }
-
-        public void setTicket(String ticket) {
-            this.ticket = ticket;
-        }
-    }
-
-    @XmlRootElement(name = "user")
-    public static class BoxNetUser {
-        private String login;
-
-        public String getLogin() {
-            return login;
-        }
-
-        public void setLogin(String login) {
-            this.login = login;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        private String email;
-    }
-
-    /**
-     * Get the auth token from box.net
-     * 
-     * @author vijay
-     * 
-     */
-    @XmlRootElement(name = "response")
-    public static class BoxNetAuthResponse {
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getAuth_token() {
-            return auth_token;
-        }
-
-        public void setAuth_token(String auth_token) {
-            this.auth_token = auth_token;
-        }
-
-        public BoxNetUser getUser() {
-            return user;
-        }
-
-        public void setUser(BoxNetUser user) {
-            this.user = user;
-        }
-
-        private String status;
-        private String auth_token;
-        private BoxNetUser user;
-    }
-
     public BoxNetService() {
     }
 
-    public BoxNetTicketResponse getNewTicket() throws Exception {
-        BoxNetTicketResponse response = null;
+    public BoxNetData.BoxNetTicketResponse getNewTicket() throws Exception {
+        BoxNetData.BoxNetTicketResponse response = null;
         URL url = new URL(newTicketUrl);
-        response = (BoxNetTicketResponse) readXml(new BufferedReader(
+        response = (BoxNetData.BoxNetTicketResponse) readXml(new BufferedReader(
                 new InputStreamReader(url.openStream())),
-                BoxNetTicketResponse.class);
+                BoxNetData.BoxNetTicketResponse.class);
         return response;
     }
 
@@ -218,18 +70,18 @@ public class BoxNetService {
     }
 
 
-    public BoxNetAuthResponse getAuthToken(BoxNetTicketResponse ticket)
+    public BoxNetData.BoxNetAuthResponse getAuthToken(BoxNetData.BoxNetTicketResponse ticket)
             throws Exception {
         String authUrl = "https://www.box.com/api/1.0/rest?action=get_auth_token&api_key="
-                + apiKey + "&ticket=" + ticket.ticket;
+                + apiKey + "&ticket=" + ticket.getTicket();
         URL url = new URL(authUrl);
-        BoxNetAuthResponse authResponse = (BoxNetAuthResponse) readXml(
+        BoxNetData.BoxNetAuthResponse authResponse = (BoxNetData.BoxNetAuthResponse) readXml(
                 new BufferedReader(new InputStreamReader(url.openStream())),
-                BoxNetAuthResponse.class);
+                BoxNetData.BoxNetAuthResponse.class);
         return authResponse;
     }
 
-    public static String getFileUploadResponse(SaveFileData saveFileData) throws Exception {
+    public String getFileUploadResponse(SaveFileData saveFileData) throws Exception {
         ByteArrayBody body = new ByteArrayBody(saveFileData.getData().getBytes(), saveFileData.getFileName());
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         entity.addPart("filename1", body);
@@ -256,35 +108,49 @@ public class BoxNetService {
      * @throws Exception
      */
     @Nullable
-    public static BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData) throws Exception {
-        BoxNetFileUploadResponse boxNetResponse = null;
-        String result = getFileUploadResponse(saveFileData);
-        boxNetResponse = jsonReader.readValue(result, BoxNetFileUploadResponse.class);
-        if (boxNetResponse.entries.size() > 0) {
-            BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
-            if (entry.type.equalsIgnoreCase("error")
-                    && entry.status.equalsIgnoreCase("409")
-                    && entry.context_info.conflicts.size() > 0) {
-                BoxNetFileUploadConflicts conflicts = entry.context_info.conflicts.get(0);
-                saveFileData.setFileId(conflicts.id);
+    public static BoxNetData.BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData, BoxNetService boxNetService)
+            throws Exception {
+        BoxNetData.BoxNetFileUploadResponse boxNetResponse = null;
+        // Try the upload twice because the first time around box.net might return
+        // 'a file with that id already exists' and then we need to hit it again with
+        // the right fileId in order to overwrite the file.
+        for (int i=0; i < 2; ++i) {
+            String result = boxNetService.getFileUploadResponse(saveFileData);
+            boxNetResponse = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponse.class);
+            if (boxNetResponse.entries.size() > 0) {
+                BoxNetData.BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
+                if (entry.type.equalsIgnoreCase("error")
+                        && entry.status.equalsIgnoreCase("409")
+                        && entry.context_info.conflicts.size() > 0) {
+                    BoxNetData.BoxNetFileUploadConflicts conflicts = entry.context_info.conflicts.get(0);
+                    // Copy the correct file id again and retry one more time.
+                    saveFileData.setFileId(conflicts.id);
+                    continue;
+                }
             }
+            // there was no error hence we bailout.
+            break;
         }
         return boxNetResponse;
     }
 
     public void testBoxNetFileUploadResponse( ) throws IOException {
         jsonReader.readValue(FileUtils.readFileToString(new File("box-net-file-response.txt")),
-                BoxNetFileUploadResponse.class);
+                BoxNetData.BoxNetFileUploadResponse.class);
     }
+    /*
     public static void main(String[] args) throws Exception {
         BoxNetService service = new BoxNetService();
         BoxNetTicketResponse ticket = service.getNewTicket();
         BoxNetAuthResponse authToken = service.getAuthToken(ticket);
         authToken.auth_token = "s7q6hkklutef9ex5jxk4z0kj7bkgcjq6";
-        BoxNetFileUploadResponse saveResult = saveFileToBoxNet(
+        BoxNetService boxNetService = new BoxNetService();
+        BoxNetFileUploadResponse saveResult =
+                boxNetService.saveFileToBoxNet(
                 new SaveFileData(authToken.auth_token, "noname-1.85",
                         "183787071",
                         "This is test data."));
         logger.info("SaveResult=" + saveResult);
     }
+    */
 }

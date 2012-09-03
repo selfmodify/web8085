@@ -16,7 +16,6 @@ import org.apache.http.message.BasicNameValuePair;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.shastram.web8085.client.Web8085Service;
 import com.shastram.web8085.client.rpc.SaveFileData;
-import com.shastram.web8085.server.BoxNetService.BoxNetTicketResponse;
 
 public class Web8085ServiceImpl extends RemoteServiceServlet implements
         Web8085Service {
@@ -60,7 +59,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public String getTicket() throws Exception {
-        BoxNetTicketResponse newTicket = boxNetService.getNewTicket();
+        BoxNetData.BoxNetTicketResponse newTicket = boxNetService.getNewTicket();
         return newTicket.getTicket();
     }
 
