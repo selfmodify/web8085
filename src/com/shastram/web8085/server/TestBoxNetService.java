@@ -3,13 +3,21 @@ package com.shastram.web8085.server;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import com.shastram.web8085.client.rpc.SaveFileData;
 
@@ -81,5 +89,26 @@ public class TestBoxNetService extends TestCase {
                         "This is test data.3"),
                         boxNetService);
         assertNotNull(saveResult);
+    }
+    
+    public void testCreateBoxNetRequestData() throws Exception {
+        SaveFileData saveFileData = new SaveFileData("s7q6hkklutef9ex5jxk4z0kj7bkgcjq6",
+                "noname-1.85",
+                "3011590059",
+                "This is test data.3");
+        ByteArrayBody body = new ByteArrayBody(saveFileData.getData().getBytes(), saveFileData.getFileName());
+        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entity.addPart("filename1", body);
+        entity.addPart("folder_id", new StringBody("0"));
+        String fileId = saveFileData.getFileId();
+        String url = fileId == null ?
+                "https://api.box.com/2.0/files/" + fileId + "/data" :
+                    "https://api.box.com/2.0/files/data";
+        String data = entity.toString();
+        System.out.println("Contenty type is| " + entity.getContentType().getValue() + "\n");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        entity.writeTo(baos);
+        System.out.println(baos.toString());
     }
 }

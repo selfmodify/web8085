@@ -14,7 +14,10 @@
 	<classpathentry kind="lib" path="libs/httpcore-4.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5-rc1.jar"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

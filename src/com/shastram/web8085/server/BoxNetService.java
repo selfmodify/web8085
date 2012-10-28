@@ -1,21 +1,21 @@
 package com.shastram.web8085.server;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -26,7 +26,6 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shastram.web8085.client.rpc.SaveFileData;
@@ -86,19 +85,27 @@ public class BoxNetService {
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         entity.addPart("filename1", body);
         entity.addPart("folder_id", new StringBody("0"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        entity.writeTo(baos);
+
         String fileId = saveFileData.getFileId();
-        String url = fileId == null ?
+        String urlString = fileId == null ?
                 "https://api.box.com/2.0/files/" + fileId + "/data" :
                     "https://api.box.com/2.0/files/data";
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
+        URL url2 = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
+        connection.setRequestProperty("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
                 + "&auth_token=" + saveFileData.getAuthToken());
-        httpPost.setEntity(entity);
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpResponse response = client.execute(httpPost);
-        HttpEntity responseEntity = response.getEntity();
-        String result = EntityUtils.toString(responseEntity);
-        return result;
+        connection.setRequestMethod("POST");
+        Header contentType = entity.getContentType();
+        connection.setRequestProperty(contentType.getName(), contentType.getValue());
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while((line = bufferedReader.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
     }
 
     /**
@@ -116,6 +123,7 @@ public class BoxNetService {
         // the right fileId in order to overwrite the file.
         for (int i=0; i < 2; ++i) {
             String result = boxNetService.getFileUploadResponse(saveFileData);
+            logger.warning(result);
             boxNetResponse = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponse.class);
             if (boxNetResponse.entries.size() > 0) {
                 BoxNetData.BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);

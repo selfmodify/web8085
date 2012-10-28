@@ -3,28 +3,18 @@ package com.shastram.web8085.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -174,7 +164,14 @@ public class MainWindow extends Composite implements Observer {
         UiHelper.loadSourceCodeLocally(sourceCode);
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
-        saveToBoxNet.setScheduledCommand(new ScheduledCommand(){
+        setSaveHandler();
+    }
+
+    /**
+     * Handles 'Save to box.net'
+     */
+    private void setSaveHandler() {
+        saveToBoxNet.setCommand(new Command(){
             @Override
             public void execute() {
                 saveFileLocally();

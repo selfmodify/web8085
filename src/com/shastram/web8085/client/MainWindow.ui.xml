@@ -22,7 +22,11 @@
         <g:MenuItem ui:field="examplesMenuItem" text="Examples">
           <g:MenuBar vertical="true" ui:field="exampleItems"></g:MenuBar>
         </g:MenuItem>
-        <g:MenuItem ui:field="saveToBoxNet" text="Save"></g:MenuItem>
+        <g:MenuItem text="File">
+            <g:MenuBar vertical="true">
+                <g:MenuItem addStyleNames="{css.menubarItem}" ui:field="saveToBoxNet">Save to Box.net</g:MenuItem>
+            </g:MenuBar>
+        </g:MenuItem>
         </g:MenuBar>
       <g:VerticalPanel width="100%">
         <g:HorizontalPanel width="100%">
