@@ -7,21 +7,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 
 import com.shastram.web8085.client.rpc.SaveFileData;
+import com.shastram.web8085.server.BoxNetData.BoxNetFileUploadResponse;
 
 public class TestBoxNetService extends TestCase {
+
+    private static Logger logger = Logger.getLogger(TestBoxNetService.class.getName());
 
     public void testBoxExchange() throws Exception {
         BoxNetService boxNet = mock(BoxNetService.class);
@@ -38,7 +39,7 @@ public class TestBoxNetService extends TestCase {
                         "This is test data.3");
         when(boxNet.getFileUploadResponse(saveFileData))
         .thenReturn(errorResponse, successResponse);
-        BoxNetData.BoxNetFileUploadResponse response = BoxNetService.saveFileToBoxNet(saveFileData, boxNet);
+        BoxNetData.BoxNetFileUploadResponse response = boxNet.saveFileToBoxNet(saveFileData);
         assertNotNull(response);
         assertTrue("At least one entry for the uploaded file must exist",
                 response.total_count > 1);
@@ -81,13 +82,14 @@ public class TestBoxNetService extends TestCase {
      */
     public void testBoxNetFileUpload() throws Exception {
         BoxNetService boxNetService = new BoxNetService();
-        BoxNetData.BoxNetFileUploadResponse saveResult =
-                BoxNetService.saveFileToBoxNet(
+        BoxNetFileUploadResponse saveResult =
+                boxNetService.saveFileToBoxNet(
                 new SaveFileData("s7q6hkklutef9ex5jxk4z0kj7bkgcjq6",
                         "noname-1.85",
                         "3011590059",
-                        "This is test data.3"),
-                        boxNetService);
+                        "This is test data.3"));
+        logger.info("Exception is : " + saveResult.exception);
+        logger.info("Data is " + saveResult.toString());
         assertNotNull(saveResult);
     }
     
@@ -110,5 +112,13 @@ public class TestBoxNetService extends TestCase {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         entity.writeTo(baos);
         System.out.println(baos.toString());
+    }
+    
+    public void testSaveToBoxNet() {
+        SaveFileData saveFileData = new SaveFileData("s7q6hkklutef9ex5jxk4z0kj7bkgcjq6",
+                "noname-1.85",
+                "3011590059",
+                "This is test data.3");
+        
     }
 }

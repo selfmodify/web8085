@@ -122,6 +122,7 @@ public class BoxNetData {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BoxNetFileUploadResponse {
         public int total_count;
+        public Exception exception;
         public List<BoxNetFileUploadResponseEntry> entries;
 
         public BoxNetFileUploadResponse() {

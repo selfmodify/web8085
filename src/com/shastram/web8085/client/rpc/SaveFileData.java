@@ -52,4 +52,8 @@ public class SaveFileData implements Serializable {
     public void setFileId(String fileId) {
         this.fileId = fileId;
     }
+    
+    public String toString() {
+        return "fileId=" + fileId + " authToken=" + authToken + " fileName=" + fileName;
+    }
 }

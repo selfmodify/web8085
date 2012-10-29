@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shastram.web8085.client.rpc.SaveFileData;
+import com.shastram.web8085.server.BoxNetData.BoxNetFileUploadResponse;
 
 /**
  * Caters to box.net service
@@ -99,6 +101,8 @@ public class BoxNetService {
         connection.setRequestMethod("POST");
         Header contentType = entity.getContentType();
         connection.setRequestProperty(contentType.getName(), contentType.getValue());
+        connection.setDoOutput(true);
+        connection.getOutputStream().write(baos.toByteArray());
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String line = null;
@@ -115,29 +119,36 @@ public class BoxNetService {
      * @throws Exception
      */
     @Nullable
-    public static BoxNetData.BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData, BoxNetService boxNetService)
-            throws Exception {
-        BoxNetData.BoxNetFileUploadResponse boxNetResponse = null;
+    public BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData) {
+        HttpPost httpPost = new HttpPost("https://api.box.com/2.0/files/data");
+        httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
+                + "&auth_token=" + saveFileData.getAuthToken());
+        BoxNetData.BoxNetFileUploadResponse boxNetResponse = new BoxNetFileUploadResponse();
         // Try the upload twice because the first time around box.net might return
         // 'a file with that id already exists' and then we need to hit it again with
         // the right fileId in order to overwrite the file.
-        for (int i=0; i < 2; ++i) {
-            String result = boxNetService.getFileUploadResponse(saveFileData);
-            logger.warning(result);
-            boxNetResponse = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponse.class);
-            if (boxNetResponse.entries.size() > 0) {
-                BoxNetData.BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
-                if (entry.type.equalsIgnoreCase("error")
-                        && entry.status.equalsIgnoreCase("409")
-                        && entry.context_info.conflicts.size() > 0) {
-                    BoxNetData.BoxNetFileUploadConflicts conflicts = entry.context_info.conflicts.get(0);
-                    // Copy the correct file id again and retry one more time.
-                    saveFileData.setFileId(conflicts.id);
-                    continue;
+        try {
+            for (int i=0; i < 2; ++i) {
+                String result = getFileUploadResponse(saveFileData);
+                logger.info("SaveFileData=" + saveFileData.toString() + " Result=" + result);
+                boxNetResponse = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponse.class);
+                if (boxNetResponse.entries.size() > 0) {
+                    BoxNetData.BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
+                    if (entry.type.equalsIgnoreCase("error")
+                            && entry.status.equalsIgnoreCase("409")
+                            && entry.context_info.conflicts.size() > 0) {
+                        BoxNetData.BoxNetFileUploadConflicts conflicts = entry.context_info.conflicts.get(0);
+                        // Copy the correct file id again and retry one more time.
+                        saveFileData.setFileId(conflicts.id);
+                        continue;
+                    }
                 }
+                // there was no error hence we bailout.
+                break;
             }
-            // there was no error hence we bailout.
-            break;
+        } catch(Exception ex) {
+            logger.log(Level.WARNING, "Saving file to external service failed. ", ex);
+            boxNetResponse.exception = ex;
         }
         return boxNetResponse;
     }

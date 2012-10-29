@@ -35,25 +35,19 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public String saveFile(SaveFileData saveFileData) {
-        try {
-            HttpPost httpPost = new HttpPost("https://api.box.com/2.0/files/data");
-            httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
-                    + "&auth_token=" + saveFileData.getAuthToken());
-            BoxNetService boxNetService = new BoxNetService();
-            BoxNetFileUploadResponse saveFileResult =
-                    BoxNetService.saveFileToBoxNet(saveFileData, boxNetService);
-            return saveFileResult.entries.get(0).id;
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Saving file to external service failed. ", e);
-        }
-        return null;
-    }
-
-    @Override
     public String getTicket() throws Exception {
         BoxNetData.BoxNetTicketResponse newTicket = boxNetService.getNewTicket();
         return newTicket.getTicket();
+    }
+
+    @Override
+    public String saveFile(SaveFileData saveFileData) {
+        BoxNetService service = new BoxNetService();
+        BoxNetFileUploadResponse response = service.saveFileToBoxNet(saveFileData);
+        String str = response.exception != null ?
+                response.exception.getMessage() :
+                    response.entries.get(0).message;
+        return str;
     }
 
 }
