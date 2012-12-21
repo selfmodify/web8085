@@ -87,12 +87,11 @@ public class TestBoxNetService extends TestCase {
                 new SaveFileData("s7q6hkklutef9ex5jxk4z0kj7bkgcjq6",
                         "noname-1.85",
                         "3011590059",
-                        "This is test data.3"));
-        logger.info("Exception is : " + saveResult.exception);
-        logger.info("Data is " + saveResult.toString());
+                        "This is test data. 4"));
+        logger.info("Response : " + saveResult.toString());
         assertNotNull(saveResult);
     }
-    
+
     public void testCreateBoxNetRequestData() throws Exception {
         SaveFileData saveFileData = new SaveFileData("s7q6hkklutef9ex5jxk4z0kj7bkgcjq6",
                 "noname-1.85",

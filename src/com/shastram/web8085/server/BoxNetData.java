@@ -128,6 +128,21 @@ public class BoxNetData {
         public BoxNetFileUploadResponse() {
             
         }
+        
+        @Override
+        public String toString() {
+            if (entries != null) {
+                StringBuilder sb = new StringBuilder();
+                for (BoxNetFileUploadResponseEntry e: entries) {
+                    sb.append(e.toString());
+                    sb.append(",\n");
+                }
+                return sb.toString();
+            } else if (exception != null) {
+                return exception.toString();
+            }
+            return "NULL BoxNetFileUploadResponse";
+        }
     }
 
     /**

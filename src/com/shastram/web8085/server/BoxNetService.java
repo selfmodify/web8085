@@ -92,7 +92,7 @@ public class BoxNetService {
 
         String fileId = saveFileData.getFileId();
         String urlString = fileId == null ?
-                "https://api.box.com/2.0/files/" + fileId + "/data" :
+                "https://api.box.com/2.0/files/" + fileId + "/content" :
                     "https://api.box.com/2.0/files/data";
         URL url2 = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
@@ -120,9 +120,6 @@ public class BoxNetService {
      */
     @Nullable
     public BoxNetFileUploadResponse saveFileToBoxNet(SaveFileData saveFileData) {
-        HttpPost httpPost = new HttpPost("https://api.box.com/2.0/files/data");
-        httpPost.addHeader("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
-                + "&auth_token=" + saveFileData.getAuthToken());
         BoxNetData.BoxNetFileUploadResponse boxNetResponse = new BoxNetFileUploadResponse();
         // Try the upload twice because the first time around box.net might return
         // 'a file with that id already exists' and then we need to hit it again with
