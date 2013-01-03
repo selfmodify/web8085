@@ -178,13 +178,13 @@ public class MainWindow extends Composite implements Observer {
                 if (UiHelper.getAuthToken() == null) {
                     getBoxNetAuthToken();
                 } else {
-                    saveSourceCodeToBoxNet("filename.85", null, sourceCode.getText(), statusUpdateLabel);
+                    saveSourceCodeToBoxNet(null ,"noname.85.txt", sourceCode.getText(), statusUpdateLabel);
                 }
             }
         });
         if (UiHelper.saveTicketAndAuthcodeFromUrl()) {
             // an auth code was saved, now save the file on box.net
-            saveSourceCodeToBoxNet("filename.85", null, sourceCode.getText(), statusUpdateLabel);
+            saveSourceCodeToBoxNet(null, "noname.85.txt", sourceCode.getText(), statusUpdateLabel);
         }
     }
 

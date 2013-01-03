@@ -2,10 +2,7 @@ package com.shastram.web8085.server;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.http.client.methods.HttpPost;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.shastram.web8085.client.Web8085Service;
@@ -49,5 +46,4 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
                     response.entries.get(0).message;
         return str;
     }
-
 }

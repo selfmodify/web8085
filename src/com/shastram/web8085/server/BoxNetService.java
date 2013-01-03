@@ -1,7 +1,6 @@
 package com.shastram.web8085.server;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -17,15 +16,10 @@ import javax.xml.bind.JAXBContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,19 +79,21 @@ public class BoxNetService {
     public String getFileUploadResponse(SaveFileData saveFileData) throws Exception {
         ByteArrayBody body = new ByteArrayBody(saveFileData.getData().getBytes(), saveFileData.getFileName());
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-        entity.addPart("filename1", body);
+        entity.addPart("filename", body);
         entity.addPart("folder_id", new StringBody("0"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         entity.writeTo(baos);
 
         String fileId = saveFileData.getFileId();
         String urlString = fileId == null ?
-                "https://api.box.com/2.0/files/" + fileId + "/content" :
-                    "https://api.box.com/2.0/files/data";
+                "https://www.box.com/api/2.0/files/content" :
+                    "https://api.box.com/2.0/files/" + fileId + "/content";
         URL url2 = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
         connection.setRequestProperty("Authorization", "BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf"
                 + "&auth_token=" + saveFileData.getAuthToken());
+        //connection.setRequestProperty("Content-Disposition", 
+        //        "form-data; name=\"filename\"; filename=\"processor-icon.png\"");
         connection.setRequestMethod("POST");
         Header contentType = entity.getContentType();
         connection.setRequestProperty(contentType.getName(), contentType.getValue());
@@ -129,7 +125,13 @@ public class BoxNetService {
                 String result = getFileUploadResponse(saveFileData);
                 logger.info("SaveFileData=" + saveFileData.toString() + " Result=" + result);
                 boxNetResponse = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponse.class);
-                if (boxNetResponse.entries.size() > 0) {
+                BoxNetData.BoxNetFileUploadResponseEntry resp = jsonReader.readValue(result, BoxNetData.BoxNetFileUploadResponseEntry.class);
+                if (resp != null && resp.type.equalsIgnoreCase("error") &&
+                        resp.context_info != null && resp.context_info.conflicts != null &&
+                        resp.context_info.conflicts.size() > 0) {
+                    saveFileData.setFileId(resp.context_info.conflicts.get(0).id);
+                    continue;
+                    /*
                     BoxNetData.BoxNetFileUploadResponseEntry entry = boxNetResponse.entries.get(0);
                     if (entry.type.equalsIgnoreCase("error")
                             && entry.status.equalsIgnoreCase("409")
@@ -139,6 +141,7 @@ public class BoxNetService {
                         saveFileData.setFileId(conflicts.id);
                         continue;
                     }
+                    */
                 }
                 // there was no error hence we bailout.
                 break;
