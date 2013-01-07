@@ -1,0 +1,5 @@
+api_key: e2ldex7lk8ydcmmnlv7s1oajh4siymqf 
+
+https://www.box.com/api/1.0/rest?action=get_ticket&api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf 
+
+curl  -v https://www.box.com/api/2.0/files/content -H "Authorization: BoxAuth api_key=e2ldex7lk8ydcmmnlv7s1oajh4siymqf&auth_token=s7q6hkklutef9ex5jxk4z0kj7bkgcjq6" -F filename=@processor-icon.png -F folder_id=0 --trace-ascii trace.txt

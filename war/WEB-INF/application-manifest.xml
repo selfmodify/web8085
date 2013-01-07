@@ -9,7 +9,7 @@
 <!-- http://code.google.com/googleapps/marketplace/manifest.html         -->
 <ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
   <Name>web8085</Name>
-  <Description>Your Application description</Description>
+  <Description>Web based 8085 Simulator</Description>
 
   <!-- Administrators and users will be sent to this URL for application support -->
   <Support>

@@ -1,0 +1,5 @@
+<response>
+<status>get_ticket_ok</status>
+<ticket>9biq490ubt94rng0p01zium2a88i8a1b</ticket>
+</response>
+
