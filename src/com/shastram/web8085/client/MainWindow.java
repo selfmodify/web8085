@@ -16,7 +16,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -33,7 +32,6 @@ import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
 import com.shastram.web8085.client.pattern.SignalSlot.Signals;
-import com.shastram.web8085.client.rpc.SaveFileData;
 import com.shastram.web8085.client.ui.ExamplesLoadCommand;
 
 public class MainWindow extends Composite implements Observer {
@@ -109,9 +107,6 @@ public class MainWindow extends Composite implements Observer {
     MenuBar exampleItems;
 
     @UiField
-    MenuItem saveToBoxNet;
-
-    @UiField
     Label statusUpdateLabel;
 
     Timer multiStepTimer;
@@ -164,28 +159,6 @@ public class MainWindow extends Composite implements Observer {
         UiHelper.loadSourceCodeLocally(sourceCode);
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
-        setSaveHandler();
-    }
-
-    /**
-     * Handles 'Save to box.net'
-     */
-    private void setSaveHandler() {
-        saveToBoxNet.setCommand(new Command(){
-            @Override
-            public void execute() {
-                saveFileLocally();
-                if (UiHelper.getAuthToken() == null) {
-                    getBoxNetAuthToken();
-                } else {
-                    saveSourceCodeToBoxNet(null ,"noname.85.txt", sourceCode.getText(), statusUpdateLabel);
-                }
-            }
-        });
-        if (UiHelper.saveTicketAndAuthcodeFromUrl()) {
-            // an auth code was saved, now save the file on box.net
-            saveSourceCodeToBoxNet(null, "noname.85.txt", sourceCode.getText(), statusUpdateLabel);
-        }
     }
 
     private void setMemoryScrollMouseHandler() {
@@ -682,45 +655,5 @@ public class MainWindow extends Composite implements Observer {
     
     public void saveFileLocally() {
         UiHelper.saveSourceCodeLocally(sourceCode);
-    }
-    /**
-     * 1. Save the source code locally.
-     * 2. Get a ticket from the backend
-     * 3. Redirect the user to box.net
-     */
-    public void getBoxNetAuthToken( ) {
-        String authToken = UiHelper.getAuthToken();
-        rpcService.getTicket(new AsyncCallback<String>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                UiHelper.clearBoxNetAuthCookies();
-            }
-            @Override
-            public void onSuccess(String ticket) {
-                Window.open("https://www.box.com/api/1.0/auth/" + ticket, "_self", "");
-            }
-        });
-        logger.info("Saving to box.net");
-    }
-
-
-    /**
-     * Save the source code to box.net.
-     * @param rpcService 
-     * @param filename
-     * @param data
-     */
-    public static void saveSourceCodeToBoxNet(String fileId, String fileName, String data, final Label label) {
-        label.setText("Saving " + fileName + " ...");
-        rpcService.saveFile(new SaveFileData(UiHelper.getAuthToken(), fileName, fileId, data), new AsyncCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                label.setText("Successfully saved file");
-            }
-            @Override
-            public void onFailure(Throwable caught) {
-                label.setText("Failed to save file " + caught.getMessage());
-            }
-        });
     }
 }
