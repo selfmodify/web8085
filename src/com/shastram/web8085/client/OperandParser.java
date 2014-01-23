@@ -301,7 +301,7 @@ public abstract class OperandParser {
                 throw new ParserException(line
                         + " is not a valid register. Expected B or D registers");
             }
-            i.code = i.baseCode + ((op == Operand.D) ? 0x0 : 0x10);
+            i.code = i.baseCode + ((op == Operand.B) ? 0x0 : 0x10);
         }
     };
 

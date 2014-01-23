@@ -187,7 +187,7 @@ public class Parser {
                 OperandParser.ldaxOrStaxOperand));
         map.put("lhld", new PerInstructionToken(Parser.Mnemonic.LHLD, 0x2A,
                 OperandParser.immediate16BitOperand));
-        map.put("shld", new PerInstructionToken(Parser.Mnemonic.SHLD, 0xDE,
+        map.put("shld", new PerInstructionToken(Parser.Mnemonic.SHLD, 0x22,
                 OperandParser.immediate16BitOperand));
         map.put("lxi", new PerInstructionToken(Parser.Mnemonic.LXI, 0x01,
                 OperandParser.lxiOperand));
