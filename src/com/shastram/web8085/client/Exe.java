@@ -579,7 +579,9 @@ public class Exe {
     }
 
     public int getDE() {
-        int value = ((d & 0xff) << 8) + ((e & 0xff) & 0xffff);
+        int d = ((this.d & 0xff) << 8) & 0xff00;
+        int e = (this.e & 0xff);
+        int value = ((d + e) & 0xffff);
         return value;
     }
 
