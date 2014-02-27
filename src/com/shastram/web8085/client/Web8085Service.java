@@ -8,8 +8,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
  * RPC Service
  * 
- * @author vijay
- * 
  */
 @RemoteServiceRelativePath("rpc")
 public interface Web8085Service extends RemoteService {
@@ -28,4 +26,6 @@ public interface Web8085Service extends RemoteService {
      * @return
      */
     String getExampleSourceCode(String name);
+
+    String saveToDrive(String src);
 }

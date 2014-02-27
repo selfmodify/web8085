@@ -17,6 +17,7 @@
           &nbsp;
           <a href="/help/index.html" target="_">8085 instructions</a>
       </g:HTMLPanel>
+      <g:Button ui:field="saveToDrive">Save To Drive</g:Button>
       <g:Label ui:field="statusUpdateLabel"></g:Label>
       <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
         <g:MenuItem ui:field="examplesMenuItem" text="Examples">

@@ -3,11 +3,26 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JDK7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-client-1.18.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-core-1.18.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-json-1.18.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-server-1.18.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-servlet-1.18.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr107cache-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-3.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -15,7 +15,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -109,9 +111,11 @@ public class MainWindow extends Composite implements Observer {
     @UiField
     Label statusUpdateLabel;
 
+    @UiField
+    Button saveToDrive;
+
     Timer multiStepTimer;
-    public static Web8085ServiceAsync rpcService = GWT
-            .create(Web8085Service.class);
+    public static Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
 
     private static Logger logger = Logger.getLogger(MainWindow.class.getName());
     private final Exe exe = new Exe();
@@ -655,5 +659,21 @@ public class MainWindow extends Composite implements Observer {
     
     public void saveFileLocally() {
         UiHelper.saveSourceCodeLocally(sourceCode);
+    }
+
+    @UiHandler("saveToDrive")
+    public void handleSaveToDriveButton(ClickEvent e) {
+        rpcService.saveToDrive("", new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                Window.Location.assign(result);
+            }
+        });
     }
 }
