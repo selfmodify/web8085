@@ -30,11 +30,18 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     @Override
     public String saveToDrive(String src) {
         this.getThreadLocalRequest().getCookies();
+        String scope = "&scope=https://www.googleapis.com/auth/drive "
+                + "https://www.googleapis.com/auth/plus.login "
+                + "https://www.googleapis.com/auth/plus.me "
+                + "https://www.googleapis.com/auth/userinfo.email "
+                + "https://www.googleapis.com/auth/userinfo.profile";
+        String approval = "&approval_prompt=force&access_type=offline";
         String url = "https://accounts.google.com/o/oauth2/auth?"
                 + "redirect_uri=http://127.0.0.1:8888/oauth2callback"
                 + "&response_type=code"
                 + "&client_id=1096071804926.apps.googleusercontent.com"
-                + "&scope=https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile&approval_prompt=force&access_type=offline";
+                + scope
+                + approval;
         return url;
     }
 }
