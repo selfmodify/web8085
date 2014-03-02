@@ -365,7 +365,8 @@ public class Exe {
         return carry;
     }
 
-    protected void setZSFlags(int value) {
+    protected void setZSFlags(int v) {
+        int value = v & 0xff;
         // set the zero bit
         if (value == 0) {
             setZero();

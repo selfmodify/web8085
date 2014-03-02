@@ -14,11 +14,9 @@ import javax.ws.rs.QueryParam;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -35,12 +33,6 @@ public class TestHandler {
     @GET
     public String get(@QueryParam("code") String code) throws IOException {
         String hostName = "http://127.0.0.1:8888";
-        String auth2Token = "code=" + code
-                + "&redirect_uri=" + hostName + "/oauth2callback"
-                + "&client_id=407408718192.apps.googleusercontent.com"
-                + "&scope="
-                + "&client_secret=_cYDS_vapkNZbxmiuvz10T7V"
-                + "&grant_type=authorization_code";
         ArrayList<NameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("code", code));
         formData.add(new BasicNameValuePair("redirect_uri", hostName + "/oauth2callback"));
@@ -49,10 +41,7 @@ public class TestHandler {
         formData.add(new BasicNameValuePair("grant_type", "authorization_code"));
         try {
             HttpPost postReq = new HttpPost("https://accounts.google.com/o/oauth2/token");
-            //postReq.setHeader("Content-Type", "application/x-www-form-urlencoded");
-            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(formData);
-            postReq.setEntity(urlEncodedFormEntity);
-            System.out.println(postReq);
+            postReq.setEntity(new UrlEncodedFormEntity(formData));
             CloseableHttpClient req = HttpClients.createDefault();
             CloseableHttpResponse response = req.execute(postReq);
             ObjectMapper mapper = new ObjectMapper();
@@ -77,12 +66,14 @@ public class TestHandler {
         fileUpload.setEntity(new StringEntity("{ \"title\": \"" + fileName + "\" }", ContentType.create("application/json", Consts.UTF_8)));
         fileUpload.setEntity(new StringEntity(data, ContentType.create("text/plain", Consts.UTF_8)));
         CloseableHttpClient req = HttpClients.createDefault();
+        fileUpload.setHeader("Content-Type", "multipart/related");
         CloseableHttpResponse response = req.execute(fileUpload);
         logger.log(Level.INFO, "Response = " + IOUtils.toString(response.getEntity().getContent()));
     }
     
     public static void main(String[] argv) throws IOException {
         TestHandler t = new TestHandler();
-        t.get("4/UG0ZXy4J9vmWV1kDqx0MBKQaPQzv.0h7sWmZuUFgVMqTmHjyTFGMOHDTuiAI");
+        //t.get("4/UG0ZXy4J9vmWV1kDqx0MBKQaPQzv.0h7sWmZuUFgVMqTmHjyTFGMOHDTuiAI");
+        t.saveFile("ya29.1.AADtN_UuT2pYgPg_pAohACaLYMaMXVsNzdsj5-oMq08tSGHwhuKH7Kj9MNUnrHc", "test.85", "ThisIsTest");
     }
 }

@@ -86,15 +86,19 @@ inr d
 ##################################
 # dcr - Decrement Specified Byte by One.  CY flag is not modified
 stc
-cmc # complement carry to zero it ou
+cmc # complement carry to zero it out
 mvi b,00
 dcr b
-.assert b=ffh, cy=0
+.assert b=ffh, cy=0, z=0
 # using dcr to decrement the contents of memory location 2085 which holds A0h
 lxi h, 2085h
 mvi m, a0h
 dcr m
-.assert [2085h]=9Fh, cy=0
+.assert [2085h]=9Fh, cy=0, z=0
+# A=0xff and then do a dcr, the Z flag should be set.
+mvi a,ffh
+dcr a
+.assert z=0
 
 ##################################
 # inx - Increment register pair(b,d,h,sp) by 1.  No flags are affected
