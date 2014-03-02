@@ -96,9 +96,9 @@ mvi m, a0h
 dcr m
 .assert [2085h]=9Fh, cy=0, z=0
 # A=0xff and then do a dcr, the Z flag should be set.
-mvi a,ffh
+mvi a,1h
 dcr a
-.assert z=0
+.assert z=1
 
 ##################################
 # inx - Increment register pair(b,d,h,sp) by 1.  No flags are affected
