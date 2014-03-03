@@ -42,7 +42,6 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
                 + "&client_id=1096071804926.apps.googleusercontent.com"
                 + scope
                 + approval;
-        //return url;
-        return "";
+        return url;
     }
 }

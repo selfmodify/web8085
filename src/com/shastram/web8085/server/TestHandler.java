@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -14,12 +15,14 @@ import javax.ws.rs.QueryParam;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Consts;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -50,7 +53,7 @@ public class TestHandler {
             HashMap<String,String> result = (HashMap<String,String>)mapper.readValue(input, HashMap.class);
             String accessToken = result.get("access_token");
             String refreshToken = result.get("refresh_token");
-            saveFile(accessToken, "test.85", "Hello World");
+            saveFile(null, accessToken, "test.85.txt", "Hello World");
         } catch (IOException e) {
             throw e;
         }
@@ -58,22 +61,31 @@ public class TestHandler {
     }
 
     @PUT
-    private void saveFile(String accessToken, String fileName, String data) throws IOException {
-        String url = "https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart";
+    private String saveFile(@Nullable String fileId, String fileName, String data, String accessToken ) throws IOException {
+        String url = "https://www.googleapis.com/upload/drive/v2/files" + (fileId == null ?
+                "?uploadType=multipart" : ("/" + fileId));
         HttpPost fileUpload = new HttpPost(url);
+        HttpEntity entity = MultipartEntityBuilder.create()
+                .addTextBody("title", "{ \"title\": \"" + fileName + "\" }", ContentType.APPLICATION_JSON)
+                .addTextBody("file", data, ContentType.create("text/plain"))
+                .build();
+        
         fileUpload.addHeader("Authorization", "Bearer " + accessToken);
         // look at https://developers.google.com/drive/web/manage-uploads#multipart for explanation.
-        fileUpload.setEntity(new StringEntity("{ \"title\": \"" + fileName + "\" }", ContentType.create("application/json", Consts.UTF_8)));
-        fileUpload.setEntity(new StringEntity(data, ContentType.create("text/plain", Consts.UTF_8)));
+        fileUpload.setEntity(entity);
         CloseableHttpClient req = HttpClients.createDefault();
-        fileUpload.setHeader("Content-Type", "multipart/related");
         CloseableHttpResponse response = req.execute(fileUpload);
-        logger.log(Level.INFO, "Response = " + IOUtils.toString(response.getEntity().getContent()));
+        ObjectMapper mapper = new ObjectMapper();
+        @SuppressWarnings("unchecked")
+        HashMap<String,String> result = (HashMap<String,String>)mapper.readValue(response.getEntity().getContent(), HashMap.class);
+        logger.log(Level.INFO, "Response = " + result);
+        String savedFileId = result.get("id");
+        return savedFileId;
     }
     
     public static void main(String[] argv) throws IOException {
         TestHandler t = new TestHandler();
         //t.get("4/UG0ZXy4J9vmWV1kDqx0MBKQaPQzv.0h7sWmZuUFgVMqTmHjyTFGMOHDTuiAI");
-        t.saveFile("ya29.1.AADtN_UuT2pYgPg_pAohACaLYMaMXVsNzdsj5-oMq08tSGHwhuKH7Kj9MNUnrHc", "test.85", "ThisIsTest");
+        t.saveFile(null, "ya29.1.AADtN_UuT2pYgPg_pAohACaLYMaMXVsNzdsj5-oMq08tSGHwhuKH7Kj9MNUnrHc", "test.85", "ThisIsTest");
     }
 }
