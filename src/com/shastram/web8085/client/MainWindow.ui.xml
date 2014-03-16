@@ -107,6 +107,7 @@
               <g:Button ui:field="stepButton" addStyleNames="{css.debugButton}">Step</g:Button>
               <g:Button ui:field="stepOverButton" addStyleNames="{css.debugButton}">Step Over</g:Button>
               <g:Button ui:field="stepOutButton" addStyleNames="{css.debugButton}">Step Out</g:Button>
+              <g:Button ui:field="runButton" addStyleNames="{css.debugButton}">Run</g:Button>
               <g:Button ui:field="breakButton" addStyleNames="{css.debugButton}">Break</g:Button>
               </g:VerticalPanel>
           </g:HorizontalPanel>

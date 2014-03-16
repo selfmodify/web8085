@@ -15,7 +15,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -69,6 +68,9 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Button stepOutButton;
+
+    @UiField
+    Button runButton;
 
     @UiField
     HorizontalPanel registerWindowValues;
@@ -140,7 +142,7 @@ public class MainWindow extends Composite implements Observer {
 
     private final int maxMemoryWindowRows = 5;
 
-    private final int maxDisassemblyRows = 10;
+    private final int maxDisassemblyRows = 12;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -550,14 +552,34 @@ public class MainWindow extends Composite implements Observer {
      * Run a multi step or run (like step out, step over) operation using a
      * timer to allow a responsive UI.
      * 
-     * @param prevCallLevel
+     * @param prevCallLevel This is used by the stepOut and Run mode.
+     *      StepOut: Every time a call instruction is executed the callLevel is incremented and a return
+     *               decrements the callLevel. When the callLevels match the the simulator breaks.
+     *      Run:     In this mode the prevCallLevel is set to -1 and it only stops when hlt is executed
+     *               or break is pressed.
      */
     private void multiStepOnTimer(final int prevCallLevel) {
         try {
             int counter = 0; // do a short sleep after some number of instructions
-            while (!exe.hltExecuted && !exe.breakNow && counter < 50) {
+            boolean reschedule = false;
+            while (true) {
                 exe.step();
-                if (exe.returnExecuted && prevCallLevel == exe.callLevel) {
+                if (counter > 20) {
+                    // Give the UI a break and reschedule the multiStep.
+                    reschedule = true;
+                    break;
+                }
+                if (exe.hltExecuted || exe.breakNow) {
+                    // hlt was executed or break was clicked.  Don't reschedule.
+                    reschedule = false;
+                    if (exe.breakNow) {
+                        errorWindow.setText("Break;");
+                    }
+                    break;
+                }
+                if (exe.returnExecuted && prevCallLevel != -1 && prevCallLevel == exe.callLevel) {
+                    // return instruction was executed during stepout.
+                    reschedule = false;
                     break;
                 }
                 ++counter;
@@ -565,13 +587,15 @@ public class MainWindow extends Composite implements Observer {
             if (multiStepTimer != null) {
                 multiStepTimer.cancel();
             }
-            multiStepTimer = new Timer() {
-                @Override
-                public void run() {
-                    multiStepOnTimer(prevCallLevel);
-                }
-            };
-            multiStepTimer.schedule(25);
+            if (reschedule) {
+                multiStepTimer = new Timer() {
+                    @Override
+                    public void run() {
+                        multiStepOnTimer(prevCallLevel);
+                    }
+                };
+                multiStepTimer.schedule(100);
+            }
         } catch (Exception e1) {
             errorWindow.setText(e1.getMessage());
         } finally {
@@ -583,6 +607,14 @@ public class MainWindow extends Composite implements Observer {
     @UiHandler("stepOutButton")
     public void stepOutButtonHandler(ClickEvent e) {
         int prevCallLevel = exe.callLevel - 1;
+        errorWindow.setText("Step out.");
+        multiStep(prevCallLevel);
+    }
+
+    @UiHandler("runButton")
+    public void runButtonHandler(ClickEvent e) {
+        int prevCallLevel = exe.callLevel - 1;
+        errorWindow.setText("Running.");
         multiStep(prevCallLevel);
     }
 
