@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Ignore;
-import org.mortbay.log.Log;
 
 import com.shastram.web8085.client.Exe;
 import com.shastram.web8085.client.MicroCode;
@@ -71,6 +69,6 @@ public class TestInstructions {
         for (String s : testNames) {
             testFile(s);
         }
-        Log.info("Finished All tests");
+        logger.info("Finished All tests");
     }
 }
