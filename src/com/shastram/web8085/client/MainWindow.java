@@ -68,7 +68,6 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Button stepOutButton;
-
     @UiField
     Button runButton;
 
@@ -77,6 +76,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     HorizontalPanel registerWindowValues2;
+    
     @UiField
     HorizontalPanel flagValues;
 
@@ -115,6 +115,12 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Button saveToDrive;
+
+    @UiField
+    TextBox gotoMemoryAddress;
+
+    @UiField
+    Button gotoMemoryAddressButton;
 
     Timer multiStepTimer;
     public static Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
@@ -707,5 +713,17 @@ public class MainWindow extends Composite implements Observer {
                 Window.Location.assign(result);
             }
         });
+    }
+
+    @UiHandler("gotoMemoryAddressButton")
+    public void handleGotoMemoryAddressButton(ClickEvent e) {
+        try {
+            int num = OperandParser.parseNumber(gotoMemoryAddress.getText());
+            memoryStart = Exe.normalizeMemoryAddress(num);
+            fillMemoryWindow(false, false);
+        } catch (ParserException e1) {
+            DialogWidget dialog = new DialogWidget("Goto Memory Address", e1.getMessage());
+            dialog.center();
+        }
     }
 }

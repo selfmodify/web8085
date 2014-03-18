@@ -15,9 +15,6 @@ public class Parser {
 
     /**
      * Per instruction tokenizer
-     * 
-     * @author vijay
-     * 
      */
     public static class PerInstructionToken {
         public int baseCode = -1;

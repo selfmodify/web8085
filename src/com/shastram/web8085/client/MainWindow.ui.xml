@@ -59,8 +59,10 @@
                 <g:HorizontalPanel>
                   <g:VerticalPanel>
                     <g:HorizontalPanel>
-                      <g:Label addStyleNames="{css.bigLabel}">Memory Window</g:Label>
-                      <g:Label width="15px"></g:Label>
+                      <g:Label addStyleNames="{css.bigLabel}">Memory</g:Label>
+                      <g:Label width="20px"></g:Label>
+                      <g:Button ui:field="gotoMemoryAddressButton">Goto Addr</g:Button>
+                      <g:TextBox ui:field="gotoMemoryAddress"></g:TextBox>
                       <!-- <g:CheckBox ui:field="memoryFollowIp" checked="true">Follow 
                         Ip</g:CheckBox> -->
                     </g:HorizontalPanel>

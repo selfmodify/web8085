@@ -372,8 +372,7 @@ public abstract class OperandParser {
      * @param str
      * @return
      * @throws Exception
-     * @throws NumberFormatException
-     *             if it cannot be parsed.
+     * @throws NumberFormatException if it cannot be parsed.
      */
     public static int parseNumber(String str) throws ParserException {
         int num = 0;
@@ -386,7 +385,7 @@ public abstract class OperandParser {
         try {
             num = Integer.parseInt(str, base);
         } catch (NumberFormatException ex) {
-            throw new ParserException(str + " is not a valid number");
+            throw new ParserException("'" + str + "' is not a valid number");
         }
         if (num < 0 || num > 65535) {
             throw new ParserException(
