@@ -722,7 +722,7 @@ public class MainWindow extends Composite implements Observer {
             memoryStart = Exe.normalizeMemoryAddress(num);
             fillMemoryWindow(false, false);
         } catch (ParserException e1) {
-            DialogWidget dialog = new DialogWidget("Goto Memory Address", e1.getMessage());
+            DialogWidget dialog = new DialogWidget("Goto Memory Address.", e1.getMessage());
             dialog.center();
         }
     }
