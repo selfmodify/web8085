@@ -7,6 +7,10 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -24,6 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -154,6 +159,7 @@ public class MainWindow extends Composite implements Observer {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
         Style.style = style;
+        sourceCode.setFocus(true);
         sourceCode.setText("mvi b,2\nmov a,b\nmov c,b");
         createMemoryWindowItems(maxMemoryWindowRows);
         createDisassemblyWindowItems(maxDisassemblyRows);
@@ -171,6 +177,21 @@ public class MainWindow extends Composite implements Observer {
         UiHelper.loadSourceCodeLocally(sourceCode);
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        sourceCode.addKeyDownHandler(new KeyDownHandler() {
+            @Override
+            public final void onKeyDown(KeyDownEvent event) {
+              if (event.getNativeKeyCode() == 9) {
+                event.preventDefault();
+                event.stopPropagation();
+                final TextArea ta = (TextArea) event.getSource();
+                final int index = ta.getCursorPos();
+                final String text = ta.getText();
+                ta.setText(text.substring(0, index) 
+                           + "\t" + text.substring(index));
+                ta.setCursorPos(index + 1);
+              }
+            }
+          });
     }
 
     private void setMemoryScrollMouseHandler() {
@@ -478,7 +499,7 @@ public class MainWindow extends Composite implements Observer {
     @UiHandler("compile")
     public void compileHandler(ClickEvent e) {
         long begin = System.currentTimeMillis();
-        String text = sourceCode.getText();
+        String text = getRawSourceText();
         try {
             exe.compileCode(text, "");
             exe.reset();
@@ -497,6 +518,10 @@ public class MainWindow extends Composite implements Observer {
         } catch (Exception ex) {
             errorWindow.setText(ex.getMessage());
         }
+    }
+
+    private String getRawSourceText() {
+        return sourceCode.getText();
     }
 
     /**
@@ -696,7 +721,7 @@ public class MainWindow extends Composite implements Observer {
     }
     
     public void saveFileLocally() {
-        UiHelper.saveSourceCodeLocally(sourceCode);
+        UiHelper.saveSourceCodeLocally(getRawSourceText());
     }
 
     @UiHandler("saveToDrive")
