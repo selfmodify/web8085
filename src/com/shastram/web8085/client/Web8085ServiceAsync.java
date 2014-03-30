@@ -11,4 +11,6 @@ public interface Web8085ServiceAsync {
     void getExampleSourceCode(String name, AsyncCallback<String> callback);
 
     void saveToDrive(String src, AsyncCallback<String> callback);
+
+    void getLoginData(LoginData d, AsyncCallback<LoginData> callback);
 }

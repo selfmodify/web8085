@@ -3,7 +3,10 @@ package com.shastram.web8085.server;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.shastram.web8085.client.LoginData;
 import com.shastram.web8085.client.Web8085Service;
 
 public class Web8085ServiceImpl extends RemoteServiceServlet implements
@@ -40,5 +43,15 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
                 + scope
                 + approval;
         return url;
+    }
+
+    @Override
+    public LoginData getLoginData(LoginData d) {
+        UserService us = UserServiceFactory.getUserService();
+        String url = "http://127.0.0.1:8888/Simulator.html?gwt.codesvr=127.0.0.1:9997";
+        String loginUrl = us.createLoginURL(url);
+        LoginData result = new LoginData(d.isProdMode());
+        result.setLoginUrl(loginUrl);
+        return result;
     }
 }

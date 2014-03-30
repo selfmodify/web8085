@@ -14,18 +14,15 @@ public interface Web8085Service extends RemoteService {
 
     /**
      * Get the names of all the examples
-     * 
-     * @return
      */
     List<String> getExampleNames();
 
     /**
      * Get the source code of one example
-     * 
-     * @param name
-     * @return
      */
     String getExampleSourceCode(String name);
 
     String saveToDrive(String src);
+
+    public LoginData getLoginData(LoginData d);
 }

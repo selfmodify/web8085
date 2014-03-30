@@ -9,8 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -28,7 +26,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -155,6 +152,8 @@ public class MainWindow extends Composite implements Observer {
 
     private final int maxDisassemblyRows = 12;
 
+    protected LoginData loginData;
+
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
@@ -192,6 +191,20 @@ public class MainWindow extends Composite implements Observer {
               }
             }
           });
+        getLoginData();
+    }
+
+    private void getLoginData() {
+        LoginData d = new LoginData(GWT.isProdMode());
+        rpcService.getLoginData(d, new AsyncCallback<LoginData>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+            @Override
+            public void onSuccess(LoginData result) {
+                loginData = result;
+            }
+        });
     }
 
     private void setMemoryScrollMouseHandler() {
