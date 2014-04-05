@@ -2,16 +2,22 @@ package com.shastram.web8085.server;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
+import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.shastram.web8085.client.FileData;
 import com.shastram.web8085.client.LoginData;
+import com.shastram.web8085.client.ServiceResponse;
 import com.shastram.web8085.client.Web8085Service;
 
 public class Web8085ServiceImpl extends RemoteServiceServlet implements
         Web8085Service {
-
+    private static Logger logger = Logger.getLogger(Web8085ServiceImpl.class.getName());
     private static final long serialVersionUID = 6343983694137057114L;
 
     @Override
@@ -53,5 +59,26 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         LoginData result = new LoginData(d.isProdMode());
         result.setLoginUrl(loginUrl);
         return result;
+    }
+
+    @Nullable
+    public User getCurrentUser() {
+        UserService userService = UserServiceFactory.getUserService();
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            logger.info("User is not logged in");
+        } else {
+            logger.info("Currently logged in user=" + currentUser.getEmail());
+        }
+        return currentUser;
+    }
+
+    @Override
+    public ServiceResponse saveFile(FileData data) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return new ServiceResponse(true/*loginRequired*/);
+        }
+        return new ServiceResponse();
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -124,6 +125,15 @@ public class MainWindow extends Composite implements Observer {
     @UiField
     Button gotoMemoryAddressButton;
 
+    @UiField
+    MenuItem fileOpen;
+ 
+    @UiField
+    MenuItem fileSave;
+
+    @UiField
+    MenuItem fileSaveAs;
+
     Timer multiStepTimer;
     public static Web8085ServiceAsync rpcService = GWT.create(Web8085Service.class);
 
@@ -153,6 +163,19 @@ public class MainWindow extends Composite implements Observer {
     private final int maxDisassemblyRows = 12;
 
     protected LoginData loginData;
+
+    private enum ActionAfterLogin {
+        NONE,
+        SAVE_FILE,
+        OPEN_FILE,
+    };
+    ActionAfterLogin actionAfterLogin = ActionAfterLogin.NONE;
+
+    private ScheduledCommand fileSaveCommand;
+
+    private ScheduledCommand fileOpenCommand;
+
+    private String fileName;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -191,7 +214,62 @@ public class MainWindow extends Composite implements Observer {
               }
             }
           });
+        createFileSaveCommand();
+        createFileOpenCommand();
         getLoginData();
+        attachFileCommands();
+    }
+
+    private void startLogin() {
+        Window.Location.assign(loginData.getLoginUrl());
+    }
+
+    private void attachFileCommands() {
+        fileSave.setScheduledCommand(fileSaveCommand);
+    }
+
+    private void createFileOpenCommand() {
+        fileOpenCommand = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                FileData fileData = new FileData("noname.txt", "Temporary data");
+                rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                    }
+                    @Override
+                    public void onSuccess(ServiceResponse result) {
+                        if (result.isLoginRequired()) {
+                            startLogin();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    private void createFileSaveCommand() {
+        fileSaveCommand = new ScheduledCommand(){
+            @Override
+            public void execute() {
+                FileData fileData = new FileData("noname.txt", getSourceCode());
+                rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                    }
+                    @Override
+                    public void onSuccess(ServiceResponse result) {
+                        if (result.isLoginRequired()) {
+                            startLogin();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    private String getSourceCode() {
+        return sourceCode.getText();
     }
 
     private void getLoginData() {
@@ -203,8 +281,30 @@ public class MainWindow extends Composite implements Observer {
             @Override
             public void onSuccess(LoginData result) {
                 loginData = result;
+                continueActionsAfterLogin();
             }
         });
+    }
+
+    /**
+     * Continue with further actions like save the file or open a file
+     * after the login is done.
+     */
+    protected void continueActionsAfterLogin() {
+        logger.info("Next action after login is " + actionAfterLogin);
+        switch(actionAfterLogin) {
+        case NONE:
+            break;
+        case OPEN_FILE:
+            fileOpenCommand.execute();
+            break;
+        case SAVE_FILE:
+            fileSaveCommand.execute();
+            break;
+        default:
+            break;
+        }
+        actionAfterLogin = ActionAfterLogin.NONE;
     }
 
     private void setMemoryScrollMouseHandler() {
@@ -726,13 +826,17 @@ public class MainWindow extends Composite implements Observer {
     @Override
     public void update(SignalData data) {
         if (data.signal == Signals.EXAMPLE_SOURCE_CODE_AVAILABLE) {
-            String name = (String) data.mapData.get("name");
+            fileName = (String) data.mapData.get("name");
             String code = (String) data.mapData.get("code");
             sourceCode.setText(code);
-            optionalFileName.setText("  : " + name);
+            optionalFileName.setText("  : " + fileName);
         }
     }
-    
+
+    public String getFileName() {
+        return fileName == null ? "noname.txt" : fileName;
+    }
+
     public void saveFileLocally() {
         UiHelper.saveSourceCodeLocally(getRawSourceText());
     }

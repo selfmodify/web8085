@@ -13,4 +13,6 @@ public interface Web8085ServiceAsync {
     void saveToDrive(String src, AsyncCallback<String> callback);
 
     void getLoginData(LoginData d, AsyncCallback<LoginData> callback);
+
+    void saveFile(FileData data, AsyncCallback<ServiceResponse> callback);
 }

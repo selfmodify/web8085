@@ -20,6 +20,13 @@
       <g:Button ui:field="saveToDrive" visible="false">Save To Drive</g:Button>
       <g:Label ui:field="statusUpdateLabel"></g:Label>
       <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
+        <g:MenuItem text="File">
+            <g:MenuBar vertical="true" ui:field="fileItemsMenu" addStyleNames="{css.menubarItem}" >
+              <g:MenuItem ui:field="fileOpen" text="Open"></g:MenuItem>
+              <g:MenuItem ui:field="fileSave" text="Save"></g:MenuItem>
+              <g:MenuItem ui:field="fileSaveAs" text="Save As"></g:MenuItem>
+            </g:MenuBar>
+        </g:MenuItem>
         <g:MenuItem ui:field="examplesMenuItem" text="Examples">
           <g:MenuBar vertical="true" ui:field="exampleItems"></g:MenuBar>
         </g:MenuItem>

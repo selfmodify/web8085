@@ -25,4 +25,6 @@ public interface Web8085Service extends RemoteService {
     String saveToDrive(String src);
 
     public LoginData getLoginData(LoginData d);
+
+    ServiceResponse saveFile(FileData data);
 }
