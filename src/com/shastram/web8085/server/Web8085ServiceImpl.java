@@ -10,10 +10,12 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.ObjectifyService;
 import com.shastram.web8085.client.FileData;
 import com.shastram.web8085.client.LoginData;
 import com.shastram.web8085.client.ServiceResponse;
 import com.shastram.web8085.client.Web8085Service;
+import com.shastram.web8085.server.db.ServerFileData;
 
 public class Web8085ServiceImpl extends RemoteServiceServlet implements
         Web8085Service {
@@ -74,11 +76,21 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public ServiceResponse saveFile(FileData data) {
+    public ServiceResponse saveFile(FileData clientData) {
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             return new ServiceResponse(true/*loginRequired*/);
         }
+        ServerFileData serverData = new ServerFileData(currentUser.getEmail(), clientData);
+        ServerFileData current =
+                ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
+        if (current != null) {
+            current.setData(serverData.getFileContent());
+            current.updateLastModified();
+        } else {
+            current = serverData;
+        }
+        ObjectifyService.ofy().save().entity(current).now();
         return new ServiceResponse();
     }
 }

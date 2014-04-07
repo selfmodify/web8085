@@ -1,18 +1,21 @@
 package com.shastram.web8085.client.ui;
 
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.shastram.web8085.client.ClientUtils;
 import com.shastram.web8085.client.pattern.SignalSlot;
 
-public class ExamplesLoadCommand implements Command {
+public class ExamplesLoadCommand implements ScheduledCommand {
     protected MenuItem item;
     protected String code;
+
+    public ExamplesLoadCommand() {
+    }
 
     public ExamplesLoadCommand(MenuItem item) {
         this.item = item;

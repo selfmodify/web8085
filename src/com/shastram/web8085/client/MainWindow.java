@@ -342,12 +342,12 @@ public class MainWindow extends Composite implements Observer {
                 for (final String name : result) {
                     MenuItem item = new MenuItem(name, (MenuBar) null);
                     item.addStyleName(Style.style.css.exampleMenuItems());
-                    item.setCommand(new ExamplesLoadCommand(item) {
+                    item.setScheduledCommand((new ExamplesLoadCommand(item) {
                         @Override
                         public void execute() {
                             this.loadRemoteExample(name);
                         }
-                    });
+                    }));
                     item.setTitle(name);
                     item.setText(name);
                     exampleItems.addItem(item);

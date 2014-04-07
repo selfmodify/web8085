@@ -32,4 +32,10 @@
       <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
+  <listener>
+    <listener-class>
+        com.shastram.web8085.server.ContextInitializer
+    </listener-class>
+  </listener>
+
 </web-app>
