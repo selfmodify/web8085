@@ -15,4 +15,6 @@ public interface Web8085ServiceAsync {
     void getLoginData(LoginData d, AsyncCallback<LoginData> callback);
 
     void saveFile(FileData data, AsyncCallback<ServiceResponse> callback);
+
+    void openFile(AsyncCallback<ServiceResponse> callback);
 }

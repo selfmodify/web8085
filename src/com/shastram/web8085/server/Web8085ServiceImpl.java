@@ -11,11 +11,14 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 import com.shastram.web8085.client.FileData;
 import com.shastram.web8085.client.LoginData;
 import com.shastram.web8085.client.ServiceResponse;
 import com.shastram.web8085.client.Web8085Service;
 import com.shastram.web8085.server.db.ServerFileData;
+import com.shastram.web8085.server.db.UserData;
 
 public class Web8085ServiceImpl extends RemoteServiceServlet implements
         Web8085Service {
@@ -77,10 +80,22 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public ServiceResponse saveFile(FileData clientData) {
-        User currentUser = getCurrentUser();
+        final User currentUser = getCurrentUser();
+        final UserData userData = new UserData();
         if (currentUser == null) {
             return new ServiceResponse(true/*loginRequired*/);
         }
+        ObjectifyService.ofy().transact(new VoidWork() {
+            @Override
+            public void vrun() {
+                UserData user = ObjectifyService.ofy().load().type(UserData.class).id(currentUser.getEmail()).now();
+                if (user == null) {
+                    user = new UserData(currentUser.getEmail(), currentUser.getNickname(), currentUser.getEmail());
+                    ObjectifyService.ofy().save().entity(userData).now();
+                    userData.setData(user);
+                }
+            }
+        });
         ServerFileData serverData = new ServerFileData(currentUser.getEmail(), clientData);
         ServerFileData current =
                 ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
@@ -91,6 +106,12 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
             current = serverData;
         }
         ObjectifyService.ofy().save().entity(current).now();
-        return new ServiceResponse();
+        return new ServiceResponse("Saved file " + clientData.getFilename());
+    }
+
+    @Override
+    public ServiceResponse openFile() {
+        //ObjectifyService.ofy().load().type(ServerFileData.class).
+        return null;
     }
 }

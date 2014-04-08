@@ -115,9 +115,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Label statusUpdateLabel;
-
-    @UiField
-    Button saveToDrive;
+    private Timer statusUpdateLabelTimer;
 
     @UiField
     TextBox gotoMemoryAddress;
@@ -221,7 +219,14 @@ public class MainWindow extends Composite implements Observer {
     }
 
     private void startLogin() {
-        Window.Location.assign(loginData.getLoginUrl());
+        setStatusUpdateLabel("Login Required.");
+        Timer t = new Timer() {
+            @Override
+            public void run() {
+                Window.Location.assign(loginData.getLoginUrl());
+            }
+        };
+        t.schedule(500);
     }
 
     private void attachFileCommands() {
@@ -241,6 +246,8 @@ public class MainWindow extends Composite implements Observer {
                     public void onSuccess(ServiceResponse result) {
                         if (result.isLoginRequired()) {
                             startLogin();
+                        } else {
+                            setStatusUpdateLabel(result.getMsg());
                         }
                     }
                 });
@@ -261,6 +268,8 @@ public class MainWindow extends Composite implements Observer {
                     public void onSuccess(ServiceResponse result) {
                         if (result.isLoginRequired()) {
                             startLogin();
+                        } else {
+                            setStatusUpdateLabel(result.getMsg());
                         }
                     }
                 });
@@ -841,22 +850,6 @@ public class MainWindow extends Composite implements Observer {
         UiHelper.saveSourceCodeLocally(getRawSourceText());
     }
 
-    @UiHandler("saveToDrive")
-    public void handleSaveToDriveButton(ClickEvent e) {
-        rpcService.saveToDrive("", new AsyncCallback<String>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                Window.Location.assign(result);
-            }
-        });
-    }
-
     @UiHandler("gotoMemoryAddressButton")
     public void handleGotoMemoryAddressButton(ClickEvent e) {
         try {
@@ -867,5 +860,19 @@ public class MainWindow extends Composite implements Observer {
             DialogWidget dialog = new DialogWidget("Goto Memory Address.", e1.getMessage());
             dialog.center();
         }
+    }
+
+    public void setStatusUpdateLabel(final String msg) {
+        statusUpdateLabel.setText(msg);
+        if (statusUpdateLabelTimer != null) {
+            statusUpdateLabelTimer.cancel();
+        }
+        statusUpdateLabelTimer = new Timer() {
+            @Override
+            public void run() {
+                statusUpdateLabel.setText("");
+            }
+        };
+        statusUpdateLabelTimer.schedule(1700);
     }
 }

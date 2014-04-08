@@ -6,7 +6,7 @@
   <ui:style field="css" src="Style.css" />
     
   <g:HorizontalPanel>
-    <g:VerticalPanel spacing="15" width="480px">
+    <g:VerticalPanel spacing="5" width="480px" addStyleNames="{css.mainWindow}">
      <!-- BEGIN Editor/Simulator Window -->
       <g:Label addStyleNames="{css.mainLabel}">Web based 8085
         Microprocessor Simulator</g:Label>
@@ -17,8 +17,7 @@
           &nbsp;
           <a href="/help/index.html" target="_">8085 instructions</a>
       </g:HTMLPanel>
-      <g:Button ui:field="saveToDrive" visible="false">Save To Drive</g:Button>
-      <g:Label ui:field="statusUpdateLabel"></g:Label>
+      <g:Label ui:field="statusUpdateLabel" addStyleNames="{css.statusUpdateLabel}"></g:Label>
       <g:MenuBar addStyleNames="{css.menubarItem}" ui:field="menuBar">
         <g:MenuItem text="File">
             <g:MenuBar vertical="true" ui:field="fileItemsMenu" addStyleNames="{css.menubarItem}" >

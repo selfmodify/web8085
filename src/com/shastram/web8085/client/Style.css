@@ -130,3 +130,18 @@
     font-size: 150%;	
 
 }
+
+.mainWindow {
+  width: 480px;
+  margin-left: 15px;
+}
+
+.statusUpdateLabel {
+  font-weight: bold;
+  color: blue;
+  min-height: 2em;
+}
+
+.openFileDialog {
+  width: 360px;
+}
