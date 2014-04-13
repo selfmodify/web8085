@@ -238,12 +238,14 @@ public class MainWindow extends Composite implements Observer {
         fileOpenCommand = new ScheduledCommand() {
             @Override
             public void execute() {
-                FileData fileData = new FileData("noname.txt", "Temporary data");
                 rpcService.listFiles(new AsyncCallback<ServiceResponse>() {
                     @Override
                     public void onSuccess(ServiceResponse result) {
-                        if (result != null && result.isLoginRequired()) {
+                        if (result.isLoginRequired()) {
                             startLogin();
+                        } else {
+                            OpenFilesDialog dialog = new OpenFilesDialog();
+                            dialog.showDialog(result);
                         }
                     }
                     

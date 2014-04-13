@@ -3,7 +3,9 @@
   xmlns:my="urn:import:com.shastram.web8085.client">
   <ui:style field="css" src="Style.css" />
   <g:VerticalPanel addStyleNames="{css.openFileDialog}" horizontalAlignment="ALIGN_CENTER">
-    <g:Label ui:field="msg"></g:Label>
+    <g:VerticalPanel ui:field="listOfOpenFilesPanel" addStyleNames="{css.openFileDialogFileList}">
+        
+    </g:VerticalPanel>
     <g:Button ui:field="dismissButton">Dismiss</g:Button>
   </g:VerticalPanel>
 </ui:UiBinder>

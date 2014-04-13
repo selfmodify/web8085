@@ -27,6 +27,10 @@ public class Style extends Composite {
         String disassemblyTextBox();
 
         String exampleMenuItems();
+        String openFildDialogInnerPanelAzure();
+        String openFildDialogInnerPanelNormal();
+        String openFileDialogFileName();
+        String openFileDialogFileUpdateTime();
     }
 
     @UiField

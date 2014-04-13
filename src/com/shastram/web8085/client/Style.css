@@ -144,4 +144,30 @@
 
 .openFileDialog {
   width: 360px;
+  height: 300px;
+}
+
+.openFileDialogFileName {
+  font-size: 1.5em;
+  float: left;
+}
+
+.openFileDialogFileUpdateTime {
+  font-size: 1.2em;
+  color: black;
+}
+
+.openFildDialogInnerPanelAzure {
+  /* inner horizontal panel where filename and date is displayed.  One per row. */
+  width: 100%;
+  background: azure;
+}
+
+.openFildDialogInnerPanelNormal {
+  /* inner horizontal panel where filename and date is displayed.  One per row. */
+  width: 100%;
+}
+
+.openFileDialogFileList {
+  width: 100%;
 }
