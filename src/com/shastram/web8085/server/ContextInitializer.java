@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
 
 import com.googlecode.objectify.ObjectifyService;
 import com.shastram.web8085.server.db.ServerFileData;
+import com.shastram.web8085.server.db.UserData;
 
 public class ContextInitializer implements ServletContextListener {
     private static Logger logger = Logger.getLogger(ContextInitializer.class.getName());
@@ -18,6 +19,7 @@ public class ContextInitializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0) {
         logger.info("Registering with Objectify service");
         ObjectifyService.register(ServerFileData.class);
+        ObjectifyService.register(UserData.class);
     }
 
 }

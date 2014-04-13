@@ -7,7 +7,8 @@ import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class UserData {
-    @Id String id;
+    @Id
+    private String id;
     String name;
     String emailId;
     Date created;
@@ -23,9 +24,13 @@ public class UserData {
     }
 
     public void setData(UserData user) {
-        this.id = user.id;
+        this.id = user.getId();
         this.name = user.name;
         this.created = user.created;
         this.emailId = user.emailId;
+    }
+
+    public String getId() {
+        return id;
     }
 }

@@ -16,5 +16,5 @@ public interface Web8085ServiceAsync {
 
     void saveFile(FileData data, AsyncCallback<ServiceResponse> callback);
 
-    void openFile(AsyncCallback<ServiceResponse> callback);
+    void listFiles(AsyncCallback<ServiceResponse> callback);
 }

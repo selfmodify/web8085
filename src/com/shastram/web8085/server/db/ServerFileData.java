@@ -2,17 +2,20 @@ package com.shastram.web8085.server.db;
 
 import java.util.Date;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Parent;
 import com.shastram.web8085.client.FileData;
 
 @Entity
 public class ServerFileData {
     @Id String id;
-    String fileName;
+    private String fileName;
     String data;
     Date created;
-    Date lastModified;
+    private Date lastModified;
+    @Parent Key<UserData> owner;
 
     public ServerFileData() {
         super();
@@ -23,17 +26,10 @@ public class ServerFileData {
         created = lastModified = new Date();
     }
 
-    public ServerFileData(String id, String fileName, String data) {
-        super();
-        this.id = id;
-        this.fileName = fileName;
-        this.data = data;
-        setDates();
-    }
-
     public ServerFileData(String currentUser, FileData clientData) {
         super();
         setDates();
+        this.owner = Key.create(UserData.class, currentUser);
         fileName = clientData.getFilename();
         id = currentUser + ":" + clientData.getFilename();
         data = clientData.getFiledata();
@@ -53,5 +49,21 @@ public class ServerFileData {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 }

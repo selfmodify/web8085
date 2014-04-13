@@ -1,5 +1,6 @@
 package com.shastram.web8085.server;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,7 +13,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.Query;
 import com.shastram.web8085.client.FileData;
 import com.shastram.web8085.client.LoginData;
 import com.shastram.web8085.client.ServiceResponse;
@@ -88,13 +89,14 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         ObjectifyService.ofy().transact(new VoidWork() {
             @Override
             public void vrun() {
-                UserData user = ObjectifyService.ofy().load().type(UserData.class).id(currentUser.getEmail()).now();
+                UserData user = getCurrentUserData(currentUser);
                 if (user == null) {
                     user = new UserData(currentUser.getEmail(), currentUser.getNickname(), currentUser.getEmail());
-                    ObjectifyService.ofy().save().entity(userData).now();
                     userData.setData(user);
+                    ObjectifyService.ofy().save().entity(user).now();
                 }
             }
+
         });
         ServerFileData serverData = new ServerFileData(currentUser.getEmail(), clientData);
         ServerFileData current =
@@ -109,9 +111,28 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         return new ServiceResponse("Saved file " + clientData.getFilename());
     }
 
+    private UserData getCurrentUserData(final User currentUser) {
+        if (currentUser == null) {
+            return null;
+        }
+        UserData user = ObjectifyService.ofy().load().type(UserData.class).id(currentUser.getEmail()).now();
+        return user;
+    }
+
     @Override
-    public ServiceResponse openFile() {
-        //ObjectifyService.ofy().load().type(ServerFileData.class).
-        return null;
+    public ServiceResponse listFiles() {
+        final User currentUser = getCurrentUser();
+        UserData user = getCurrentUserData(currentUser);
+        if (user == null) {
+            return new ServiceResponse(true/*loginRequired*/);
+        }
+        Query<ServerFileData> serverFileList = ObjectifyService.ofy().load().type(ServerFileData.class).ancestor(user);
+        List<ServiceResponse.FileInfo> clientFileList = new ArrayList<>();
+        for(ServerFileData f: serverFileList) {
+            clientFileList.add(new ServiceResponse.FileInfo(f.getId(), f.getFileName(), f.getLastModified().toString()));
+        }
+        ServiceResponse response = new ServiceResponse();
+        response.setFileList(clientFileList);
+        return response;
     }
 }

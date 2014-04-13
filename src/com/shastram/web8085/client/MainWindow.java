@@ -231,6 +231,7 @@ public class MainWindow extends Composite implements Observer {
 
     private void attachFileCommands() {
         fileSave.setScheduledCommand(fileSaveCommand);
+        fileOpen.setScheduledCommand(fileOpenCommand);
     }
 
     private void createFileOpenCommand() {
@@ -238,17 +239,16 @@ public class MainWindow extends Composite implements Observer {
             @Override
             public void execute() {
                 FileData fileData = new FileData("noname.txt", "Temporary data");
-                rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
+                rpcService.listFiles(new AsyncCallback<ServiceResponse>() {
                     @Override
                     public void onSuccess(ServiceResponse result) {
-                        if (result.isLoginRequired()) {
+                        if (result != null && result.isLoginRequired()) {
                             startLogin();
-                        } else {
-                            setStatusUpdateLabel(result.getMsg());
                         }
+                    }
+                    
+                    @Override
+                    public void onFailure(Throwable caught) {
                     }
                 });
             }
