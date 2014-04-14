@@ -218,7 +218,7 @@ public class MainWindow extends Composite implements Observer {
         attachFileCommands();
     }
 
-    private void startLogin() {
+    void startLogin() {
         setStatusUpdateLabel("Login Required.");
         Timer t = new Timer() {
             @Override
@@ -258,23 +258,17 @@ public class MainWindow extends Composite implements Observer {
     }
 
     private void createFileSaveCommand() {
+        final MainWindow mainWindow = this;
         fileSaveCommand = new ScheduledCommand(){
             @Override
             public void execute() {
-                FileData fileData = new FileData("noname.txt", getSourceCode());
-                rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                    @Override
-                    public void onSuccess(ServiceResponse result) {
-                        if (result.isLoginRequired()) {
-                            startLogin();
-                        } else {
-                            setStatusUpdateLabel(result.getMsg());
-                        }
-                    }
-                });
+                String fileName = getFileName();
+                SaveFileDialog d = new SaveFileDialog(fileName);
+                if (fileName.equals("Untitled.txt")) {
+                    d.saveAfterAskingFileName(mainWindow, getSourceCode());
+                } else {
+                    d.saveWithoutAsking(mainWindow, getSourceCode());
+                }
             }
         };
     }
@@ -845,7 +839,7 @@ public class MainWindow extends Composite implements Observer {
     }
 
     public String getFileName() {
-        return fileName == null ? "noname.txt" : fileName;
+        return fileName == null ? "Untitled.txt" : fileName;
     }
 
     public void saveFileLocally() {

@@ -171,3 +171,8 @@
 .openFileDialogFileList {
   width: 100%;
 }
+
+.saveFileDialog {
+  width: 360px;
+  height: 300px;
+}
