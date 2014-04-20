@@ -33,13 +33,6 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public String getExampleSourceCode(String name) {
-        // InputStream systemResourceAsStream =
-        // ClassLoader.getSystemResourceAsStream(name);
-        return "";
-    }
-
-    @Override
     public String saveToDrive(String src) {
         this.getThreadLocalRequest().getCookies();
         String scope = "&scope=https://www.googleapis.com/auth/drive "
@@ -80,12 +73,40 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public ServiceResponse saveFile(FileData clientData) {
+    public ServiceResponse saveFile(FileData clientFileData) {
         final User currentUser = getCurrentUser();
-        final UserData userData = new UserData();
         if (currentUser == null) {
             return new ServiceResponse(true/*loginRequired*/);
         }
+        @SuppressWarnings("unused")
+        UserData user = getOrCreateUser(currentUser);
+
+        ServerFileData toBeSavedFileData = new ServerFileData(currentUser.getEmail(), clientFileData);
+        ServerFileData existingFile = getFileFromDb(toBeSavedFileData);
+        if (existingFile != null) {
+            // File with this name already exist.
+            if (existingFile.getCreated().equals(toBeSavedFileData.getCreated())) {
+                // The create date of the files match hence we can overwrite the file.
+                existingFile.setData(toBeSavedFileData.getFileContent());
+                existingFile.updateLastModified();
+            } else {
+                // Tell the user that they are about to overwrite a file.
+                return ServiceResponse.aboutToOverwrite(existingFile.getCreated());
+            }
+        } else {
+            // File with this name does not already exist.
+            existingFile = toBeSavedFileData;
+        }
+        ObjectifyService.ofy().save().entity(existingFile).now();
+        return ServiceResponse.fileSaved(existingFile.getId(), existingFile.getFileName(), existingFile.getCreated());
+    }
+
+    private ServerFileData getFileFromDb(ServerFileData serverData) {
+        return ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
+    }
+
+    private UserData getOrCreateUser(final User currentUser) {
+        final UserData userData = new UserData();
         ObjectifyService.ofy().transact(new VoidWork() {
             @Override
             public void vrun() {
@@ -96,19 +117,8 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
                     ObjectifyService.ofy().save().entity(user).now();
                 }
             }
-
         });
-        ServerFileData serverData = new ServerFileData(currentUser.getEmail(), clientData);
-        ServerFileData current =
-                ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
-        if (current != null) {
-            current.setData(serverData.getFileContent());
-            current.updateLastModified();
-        } else {
-            current = serverData;
-        }
-        ObjectifyService.ofy().save().entity(current).now();
-        return new ServiceResponse("Saved file " + clientData.getFilename());
+        return userData;
     }
 
     private UserData getCurrentUserData(final User currentUser) {

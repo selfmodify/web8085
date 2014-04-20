@@ -12,8 +12,8 @@ import com.shastram.web8085.client.FileData;
 public class ServerFileData {
     @Id String id;
     private String fileName;
-    String data;
-    Date created;
+    private String data;
+    private Date created;
     private Date lastModified;
     @Parent Key<UserData> owner;
 
@@ -65,5 +65,13 @@ public class ServerFileData {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

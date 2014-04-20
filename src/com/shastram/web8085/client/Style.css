@@ -173,6 +173,20 @@
 }
 
 .saveFileDialog {
-  width: 360px;
-  height: 300px;
+  width: 300px;
+  height: 180px;
+}
+
+.saveFileDialogButtons {
+  font-size: 1.2em;
+  margin-right: 15px;
+}
+
+.dialogLabel {
+  font-size: 1.2em;
+}
+
+.dialogLabelWithMargin {
+  font-size: 1.2em;
+  margin-right: 10px;
 }

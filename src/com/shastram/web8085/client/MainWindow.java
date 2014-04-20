@@ -175,6 +175,8 @@ public class MainWindow extends Composite implements Observer {
 
     private String fileName;
 
+    private ScheduledCommand fileSaveAsCommand;
+
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
         Style style = new Style(); // create a dummy one
@@ -232,6 +234,7 @@ public class MainWindow extends Composite implements Observer {
     private void attachFileCommands() {
         fileSave.setScheduledCommand(fileSaveCommand);
         fileOpen.setScheduledCommand(fileOpenCommand);
+        fileSaveAs.setScheduledCommand(fileSaveAsCommand);
     }
 
     private void createFileOpenCommand() {
@@ -259,6 +262,7 @@ public class MainWindow extends Composite implements Observer {
 
     private void createFileSaveCommand() {
         final MainWindow mainWindow = this;
+        // Ask for file name only if the filename is 'Untitled.txt'
         fileSaveCommand = new ScheduledCommand(){
             @Override
             public void execute() {
@@ -271,9 +275,19 @@ public class MainWindow extends Composite implements Observer {
                 }
             }
         };
+
+        // Ask for file name always.
+        fileSaveAsCommand = new ScheduledCommand(){
+            @Override
+            public void execute() {
+                String fileName = getFileName();
+                SaveFileDialog d = new SaveFileDialog(fileName);
+                d.saveAfterAskingFileName(mainWindow, getSourceCode());
+            }
+        };
     }
 
-    private String getSourceCode() {
+    public String getSourceCode() {
         return sourceCode.getText();
     }
 

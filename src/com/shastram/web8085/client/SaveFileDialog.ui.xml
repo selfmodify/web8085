@@ -5,13 +5,13 @@
   
   <g:VerticalPanel addStyleNames="{css.saveFileDialog}" horizontalAlignment="ALIGN_CENTER">
     <g:HorizontalPanel>
-      <g:Label>Filename:</g:Label>
-      <g:TextBox ui:field="fileName"></g:TextBox>
+      <g:Label addStyleNames="{css.dialogLabelWithMargin}">Filename:</g:Label>
+      <g:TextBox addStyleNames="{css.dialogLabel}" ui:field="fileName"></g:TextBox>
     </g:HorizontalPanel>
-    <g:Label ui:field="status"></g:Label>
+    <g:Label addStyleNames="{css.dialogLabel}" ui:field="status"></g:Label>
     <g:HorizontalPanel>
-       <g:Button ui:field="saveButton">Save</g:Button>
-       <g:Button ui:field="dismissButton">Dismiss</g:Button>
+      <g:Button addStyleNames="{css.saveFileDialogButtons}" ui:field="saveButton">Save</g:Button>
+      <g:Button addStyleNames="{css.saveFileDialogButtons}" ui:field="dismissButton">Dismiss</g:Button>
     </g:HorizontalPanel>
   </g:VerticalPanel>
 </ui:UiBinder>

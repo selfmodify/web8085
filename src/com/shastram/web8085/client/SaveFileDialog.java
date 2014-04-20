@@ -29,6 +29,8 @@ public class SaveFileDialog extends DialogBox {
     @UiField
     Label status;
 
+    private MainWindow mainWindow;
+
     interface SaveFileDialogUiBinder extends UiBinder<Widget, SaveFileDialog> {
     }
 
@@ -42,7 +44,6 @@ public class SaveFileDialog extends DialogBox {
         this.fileName.setText(filename);
     }
 
-
     private void setProperties(String title) {
         setText(title);
         setAnimationEnabled(true);
@@ -53,22 +54,8 @@ public class SaveFileDialog extends DialogBox {
 
     @UiHandler("saveButton")
     void saveButtonHandler(ClickEvent e) {
-        
-    }
-
-    @UiHandler("dismissButton")
-    void dismissButtonHandler(ClickEvent e) {
-        this.hide();
-    }
-
-    public void saveAfterAskingFileName(MainWindow mainWindow, String sourceCode) {
-        saveWithoutAsking(mainWindow, sourceCode);
-    }
-
-    public void saveWithoutAsking(final MainWindow mainWindow, String sourceCode) {
-        FileData fileData = new FileData(fileName.getText(), sourceCode);
-        status.setText("Saving file '" + fileName.getText() + "' ...");
-        this.center();
+        // Local save button in the dialog box.
+        FileData fileData = new FileData(fileName.getText(), mainWindow.getSourceCode());
         MainWindow.rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -83,5 +70,45 @@ public class SaveFileDialog extends DialogBox {
                 }
             }
         });
+    }
+
+    @UiHandler("dismissButton")
+    void dismissButtonHandler(ClickEvent e) {
+        this.hide();
+    }
+
+    public void saveAfterAskingFileName(MainWindow mainWindow, String sourceCode) {
+        this.mainWindow = mainWindow;
+        status.setText("Specify a file name.");
+        center();
+        fileName.selectAll();
+        fileName.setFocus(true);
+    }
+
+    public void saveWithoutAsking(final MainWindow mainWindow, String sourceCode) {
+        FileData fileData = new FileData(fileName.getText(), sourceCode);
+        mainWindow.setStatusUpdateLabel("Saving file '" + fileName.getText() + "' ...");
+        final SaveFileDialog dialog = this;
+        MainWindow.rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+            @Override
+            public void onSuccess(ServiceResponse result) {
+                if (result.isLoginRequired()) {
+                    mainWindow.startLogin();
+                } else if (result.wouldHaveOverrittenFile()) {
+                    dialog.center();
+                    dialog.setStatus(result.getMsg());
+                } else {
+                    mainWindow.setStatusUpdateLabel(result.getMsg());
+                    dismissButtonHandler(null);
+                }
+            }
+        });
+    }
+
+    protected void setStatus(String msg) {
+        status.setText(msg);
     }
 }
