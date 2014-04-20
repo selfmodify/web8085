@@ -2,6 +2,7 @@ package com.shastram.web8085.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -87,7 +88,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         if (existingFile != null) {
             // File with this name already exist.
             if (clientFileData.isOverwriteExisting() ||
-                    existingFile.getCreated().equals(toBeSavedFileData.getCreated())) {
+                    existingFile.getCreated().equals(clientFileData.getFileInfo().getDateCreated())) {
                 // Free to overwrite file or
                 // the create date of the files match hence we can overwrite the file.
                 existingFile.setData(toBeSavedFileData.getFileContent());

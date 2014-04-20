@@ -33,9 +33,8 @@ public class ServerFileData {
         this.owner = currentUser;
         FileInfo fileInfo = clientData.getFileInfo();
         fileName = fileInfo.getFileName();
-        id = currentUser + "_" + fileInfo.getFileName();
+        id = currentUser + "::" + fileInfo.getFileName();
         data = clientData.getSourceCode();
-        created = fileInfo.getDateCreated();
     }
 
     public String getId() {
