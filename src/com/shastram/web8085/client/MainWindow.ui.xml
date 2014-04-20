@@ -5,7 +5,6 @@
   >
   <ui:style field="css" src="Style.css" />
     
-  <g:HorizontalPanel>
     <g:VerticalPanel spacing="5" width="480px" addStyleNames="{css.mainWindow}">
      <!-- BEGIN Editor/Simulator Window -->
       <g:Label addStyleNames="{css.mainLabel}">Web based 8085
@@ -144,11 +143,4 @@
       </g:VerticalPanel>
            <!-- END Editor/Simulator Window -->
     </g:VerticalPanel>
-    <g:ScrollPanel height="1200px" width="630px">
-    <g:VerticalPanel>
-        <g:Label addStyleNames="{css.helpTitle}">HELP!</g:Label>
-        <my:HelpWindow></my:HelpWindow>
-    </g:VerticalPanel>
-    </g:ScrollPanel>
-  </g:HorizontalPanel>
 </ui:UiBinder> 
