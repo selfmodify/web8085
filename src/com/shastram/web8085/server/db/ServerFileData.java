@@ -33,6 +33,7 @@ public class ServerFileData {
         fileName = clientData.getFilename();
         id = currentUser + "_" + clientData.getFilename();
         data = clientData.getFiledata();
+        created = clientData.getDateCreated();
     }
 
     public String getId() {

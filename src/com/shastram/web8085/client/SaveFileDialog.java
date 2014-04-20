@@ -1,5 +1,7 @@
 package com.shastram.web8085.client;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -7,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -23,24 +26,24 @@ public class SaveFileDialog extends DialogBox {
     Button dismissButton;
 
     @UiField
-    TextBox fileName;
+    TextBox fileNameTextbox;
 
     @UiField
     Label status;
 
+    @UiField
+    CheckBox overwriteExistingFile;
+
     private MainWindow mainWindow;
+
+    private Date dateCreated;
 
     interface SaveFileDialogUiBinder extends UiBinder<Widget, SaveFileDialog> {
     }
 
     public SaveFileDialog() {
         setWidget(uiBinder.createAndBindUi(this));
-    }
-
-    public SaveFileDialog(String filename) {
-        setWidget(uiBinder.createAndBindUi(this));
         setProperties("Save File.");
-        this.fileName.setText(filename);
     }
 
     private void setProperties(String title) {
@@ -54,8 +57,9 @@ public class SaveFileDialog extends DialogBox {
     @UiHandler("saveButton")
     void saveButtonHandler(ClickEvent e) {
         // Local save button in the dialog box.
-        FileData fileData = new FileData(fileName.getText(), mainWindow.getSourceCode());
-        String msg = "Saving file '" + fileName.getText() + "' ...";
+        FileData fileData = new FileData(fileNameTextbox.getText(), mainWindow.getSourceCode(), dateCreated);
+        fileData.setOverwriteExisting(overwriteExistingFile.getValue());
+        String msg = "Saving file '" + fileNameTextbox.getText() + "' ...";
         mainWindow.setStatusUpdateLabel(msg);
         setStatus(msg);
         final SaveFileDialog dialog = this;
@@ -71,6 +75,7 @@ public class SaveFileDialog extends DialogBox {
                     dialog.setStatus(result.getMsg());
                     dialog.center();
                 } else {
+                    mainWindow.updateSavedFileData(result.getSavedFileData());
                     mainWindow.setStatusUpdateLabel(result.getMsg());
                     dismissButtonHandler(null);
                 }
@@ -83,19 +88,32 @@ public class SaveFileDialog extends DialogBox {
         this.hide();
     }
 
-    public void saveAfterAskingFileName(MainWindow mainWindow, String sourceCode) {
+    public void saveAfterAskingFileName(MainWindow mainWindow) {
+        this.dateCreated = mainWindow.getDateCreatedOfFile();
         this.mainWindow = mainWindow;
         status.setText("Specify a file name.");
         center();
-        fileName.selectAll();
-        fileName.setFocus(true);
+        fileNameTextbox.selectAll();
+        fileNameTextbox.setFocus(true);
     }
 
-    public void saveWithoutAsking(final MainWindow mainWindow, String sourceCode) {
+    private void saveWithoutAsking(final MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
         saveButtonHandler(null);
     }
 
     protected void setStatus(String msg) {
         status.setText(msg);
+    }
+
+    public void doSave(MainWindow mainWindow) {
+        this.dateCreated = mainWindow.getDateCreatedOfFile();
+        String fileName = mainWindow.getFileName();
+        fileNameTextbox.setText(fileName);
+        if (fileName == null || dateCreated == null) {
+            saveAfterAskingFileName(mainWindow);
+        } else {
+            saveWithoutAsking(mainWindow);
+        }
     }
 }

@@ -6,8 +6,9 @@
   <g:VerticalPanel addStyleNames="{css.saveFileDialog}" horizontalAlignment="ALIGN_CENTER">
     <g:HorizontalPanel>
       <g:Label addStyleNames="{css.dialogLabelWithMargin}">Filename:</g:Label>
-      <g:TextBox addStyleNames="{css.dialogLabel}" ui:field="fileName"></g:TextBox>
+      <g:TextBox addStyleNames="{css.dialogLabel}" ui:field="fileNameTextbox"></g:TextBox>
     </g:HorizontalPanel>
+    <g:CheckBox ui:field="overwriteExistingFile">Overwrite existing file.</g:CheckBox>
     <g:Label addStyleNames="{css.dialogLabel}" ui:field="status"></g:Label>
     <g:HorizontalPanel>
       <g:Button addStyleNames="{css.saveFileDialogButtons}" ui:field="saveButton">Save</g:Button>

@@ -11,14 +11,16 @@ public class ServiceResponse implements Serializable {
         private static final long serialVersionUID = 1L;
         String name;
         String id;
-        String dateUpdated;
+        Date dateCreated;
+        Date dateUpdated;
 
         public FileInfo() {
         }
 
-        public FileInfo(String id, String name, String dateUpdated) {
+        public FileInfo(String id, String name, Date dateCreated, Date dateUpdated) {
             this.id = id;
             this.name = name;
+            this.dateCreated = dateCreated;
             this.dateUpdated = dateUpdated;
         }
     }
@@ -92,9 +94,9 @@ public class ServiceResponse implements Serializable {
         this.savedFileData = savedFileData;
     }
 
-    public static ServiceResponse fileSaved(String id, String fileName, Date created) {
+    public static ServiceResponse fileSaved(String id, String fileName, Date created, Date updated) {
         ServiceResponse resp = new ServiceResponse("Saved file " + fileName);
-        resp.setSavedFileData(new FileInfo(id, fileName, created.toString()));
+        resp.setSavedFileData(new FileInfo(id, fileName, created, updated));
         return resp;
     }
 }

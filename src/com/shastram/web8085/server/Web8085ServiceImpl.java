@@ -85,20 +85,22 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         ServerFileData existingFile = getFileFromDb(user, toBeSavedFileData);
         if (existingFile != null) {
             // File with this name already exist.
-            if (existingFile.getCreated().equals(toBeSavedFileData.getCreated())) {
-                // The create date of the files match hence we can overwrite the file.
+            if (clientFileData.isOverwriteExisting() ||
+                    existingFile.getCreated().equals(toBeSavedFileData.getCreated())) {
+                // Free to overwrite file or
+                // the create date of the files match hence we can overwrite the file.
                 existingFile.setData(toBeSavedFileData.getFileContent());
                 existingFile.updateLastModified();
+                toBeSavedFileData = existingFile;
             } else {
                 // Tell the user that they are about to overwrite a file.
                 return ServiceResponse.aboutToOverwrite(existingFile.getCreated());
             }
-        } else {
-            // File with this name does not already exist.
-            existingFile = toBeSavedFileData;
         }
-        ObjectifyService.ofy().save().entity(existingFile).now();
-        return ServiceResponse.fileSaved(existingFile.getId(), existingFile.getFileName(), existingFile.getCreated());
+        // Save the file.
+        ObjectifyService.ofy().save().entity(toBeSavedFileData).now();
+        return ServiceResponse.fileSaved(toBeSavedFileData.getId(), toBeSavedFileData.getFileName(),
+                toBeSavedFileData.getCreated(), toBeSavedFileData.getLastModified());
     }
 
     private ServerFileData getFileFromDb(UserData user, ServerFileData serverData) {
@@ -139,7 +141,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         List<ServerFileData> serverFileList = ObjectifyService.ofy().load().type(ServerFileData.class).filter("owner", user.getId()).list();
         List<ServiceResponse.FileInfo> clientFileList = new ArrayList<>();
         for(ServerFileData f: serverFileList) {
-            clientFileList.add(new ServiceResponse.FileInfo(f.getId(), f.getFileName(), f.getLastModified().toString()));
+            clientFileList.add(new ServiceResponse.FileInfo(f.getId(), f.getFileName(), f.getCreated(), f.getLastModified()));
         }
         ServiceResponse response = new ServiceResponse();
         response.setFileList(clientFileList);

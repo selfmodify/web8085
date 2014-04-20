@@ -57,7 +57,7 @@ public class OpenFilesDialog extends DialogBox {
             hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
             FileInfo f = result.getFileList().get(i);
             Anchor name = new Anchor(f.name);
-            Label date = new Label(f.dateUpdated);
+            Label date = new Label(f.dateUpdated.toString());
             name.addStyleName(Style.style.css.openFileDialogFileName());
             name.addStyleName(Style.style.css.openFileDialogFileUpdateTime());
             hp.add(name);

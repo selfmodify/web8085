@@ -8,7 +8,8 @@ public class FileData implements Serializable {
     private String filename;
     private String filedata;
     private Date dateCreated;
-    
+    private boolean overwriteExisting = false;
+
     public FileData() {
     }
 
@@ -33,5 +34,13 @@ public class FileData implements Serializable {
 
     public Date getDateCreated() {
         return dateCreated;
+    }
+
+    public boolean isOverwriteExisting() {
+        return overwriteExisting;
+    }
+
+    public void setOverwriteExisting(boolean overwriteExisting) {
+        this.overwriteExisting = overwriteExisting;
     }
 }

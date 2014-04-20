@@ -1,6 +1,7 @@
 package com.shastram.web8085.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -174,8 +175,6 @@ public class MainWindow extends Composite implements Observer {
 
     private ScheduledCommand fileOpenCommand;
 
-    private String fileName;
-
     private ScheduledCommand fileSaveAsCommand;
 
     private FileInfo savedFileData;
@@ -269,13 +268,8 @@ public class MainWindow extends Composite implements Observer {
         fileSaveCommand = new ScheduledCommand(){
             @Override
             public void execute() {
-                String fileName = getFileName();
-                SaveFileDialog d = new SaveFileDialog(fileName);
-                if (fileName.equals("Untitled.txt")) {
-                    d.saveAfterAskingFileName(mainWindow, getSourceCode());
-                } else {
-                    d.saveWithoutAsking(mainWindow, getSourceCode());
-                }
+                SaveFileDialog d = new SaveFileDialog();
+                d.doSave(mainWindow);
             }
         };
 
@@ -283,9 +277,8 @@ public class MainWindow extends Composite implements Observer {
         fileSaveAsCommand = new ScheduledCommand(){
             @Override
             public void execute() {
-                String fileName = getFileName();
-                SaveFileDialog d = new SaveFileDialog(fileName);
-                d.saveAfterAskingFileName(mainWindow, getSourceCode());
+                SaveFileDialog d = new SaveFileDialog();
+                d.saveAfterAskingFileName(mainWindow);
             }
         };
     }
@@ -848,15 +841,18 @@ public class MainWindow extends Composite implements Observer {
     @Override
     public void update(SignalData data) {
         if (data.signal == Signals.EXAMPLE_SOURCE_CODE_AVAILABLE) {
-            fileName = (String) data.mapData.get("name");
             String code = (String) data.mapData.get("code");
             sourceCode.setText(code);
-            optionalFileName.setText("  : " + fileName);
+            optionalFileName.setText("  : " + (String) data.mapData.get("name"));
         }
     }
 
     public String getFileName() {
-        return fileName == null ? "Untitled.txt" : fileName;
+        return savedFileData == null ? "Untitled.txt" : savedFileData.name;
+    }
+
+    public Date getDateCreatedOfFile() {
+        return savedFileData == null ? null : savedFileData.dateCreated;
     }
 
     public void saveFileLocally() {
