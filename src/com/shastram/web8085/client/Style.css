@@ -190,3 +190,16 @@
   font-size: 1.2em;
   margin-right: 10px;
 }
+
+.listFileSingleItem {
+  width: 100%;
+  font-size: 1.2em;
+}
+
+.listFileSingleItemFileName {
+  font-size: 1.3em;
+}
+
+.listFileSingleItemDateUpdate {
+  font-size: 0.8em;
+}

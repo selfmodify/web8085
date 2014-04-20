@@ -6,6 +6,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.shastram.web8085.client.FileData;
+import com.shastram.web8085.client.FileInfo;
 
 @Entity
 public class ServerFileData {
@@ -30,10 +31,11 @@ public class ServerFileData {
         super();
         setDates();
         this.owner = currentUser;
-        fileName = clientData.getFilename();
-        id = currentUser + "_" + clientData.getFilename();
-        data = clientData.getFiledata();
-        created = clientData.getDateCreated();
+        FileInfo fileInfo = clientData.getFileInfo();
+        fileName = fileInfo.getFileName();
+        id = currentUser + "_" + fileInfo.getFileName();
+        data = clientData.getSourceCode();
+        created = fileInfo.getDateCreated();
     }
 
     public String getId() {

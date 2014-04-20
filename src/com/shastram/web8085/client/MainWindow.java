@@ -33,7 +33,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.shastram.web8085.client.MicroCode.OneInstruction;
-import com.shastram.web8085.client.ServiceResponse.FileInfo;
 import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
@@ -848,11 +847,11 @@ public class MainWindow extends Composite implements Observer {
     }
 
     public String getFileName() {
-        return savedFileData == null ? "Untitled.txt" : savedFileData.name;
+        return savedFileData == null ? "Untitled.txt" : savedFileData.getFileName();
     }
 
     public Date getDateCreatedOfFile() {
-        return savedFileData == null ? null : savedFileData.dateCreated;
+        return savedFileData == null ? null : savedFileData.getDateCreated();
     }
 
     public void saveFileLocally() {

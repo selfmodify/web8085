@@ -5,35 +5,26 @@ import java.util.Date;
 
 public class FileData implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String filename;
-    private String filedata;
-    private Date dateCreated;
+    private FileInfo fileInfo;
+    private String sourceCode;
     private boolean overwriteExisting = false;
 
     public FileData() {
     }
 
     public FileData(String filename, String filedata) {
-        this.filename = filename;
-        this.filedata = filedata;
+        this.fileInfo = new FileInfo(filename);
+        this.sourceCode = filedata;
     }
 
-    public FileData(String filename, String filedata, Date dateCrated) {
-        this.filename = filename;
-        this.filedata = filedata;
-        dateCreated = dateCrated;
+    public FileData(String filename, String filedata, Date dateCreated) {
+        fileInfo = new FileInfo(filename);
+        fileInfo.setDateCreated(dateCreated);
+        this.sourceCode = filedata;
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getFiledata() {
-        return filedata;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
+    public String getSourceCode() {
+        return sourceCode;
     }
 
     public boolean isOverwriteExisting() {
@@ -42,5 +33,13 @@ public class FileData implements Serializable {
 
     public void setOverwriteExisting(boolean overwriteExisting) {
         this.overwriteExisting = overwriteExisting;
+    }
+
+    public FileInfo getFileInfo() {
+        return fileInfo;
+    }
+
+    public void setFileInfo(FileInfo fileInfo) {
+        this.fileInfo = fileInfo;
     }
 }

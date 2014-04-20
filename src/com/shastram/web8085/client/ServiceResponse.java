@@ -7,24 +7,6 @@ import java.util.List;
 
 public class ServiceResponse implements Serializable {
 
-    public static class FileInfo implements Serializable {
-        private static final long serialVersionUID = 1L;
-        String name;
-        String id;
-        Date dateCreated;
-        Date dateUpdated;
-
-        public FileInfo() {
-        }
-
-        public FileInfo(String id, String name, Date dateCreated, Date dateUpdated) {
-            this.id = id;
-            this.name = name;
-            this.dateCreated = dateCreated;
-            this.dateUpdated = dateUpdated;
-        }
-    }
-
     private static final long serialVersionUID = 1L;
     private boolean loginRequired = false;
     private boolean wouldHaveOverrittenFile = false;

@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.shastram.web8085.client.ServiceResponse.FileInfo;
 
 public class OpenFilesDialog extends DialogBox {
 
@@ -36,7 +35,6 @@ public class OpenFilesDialog extends DialogBox {
 
     private void setProperties(String title) {
         setText(title);
-        //msg.setText(text);
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
         setModal(true);
@@ -50,19 +48,13 @@ public class OpenFilesDialog extends DialogBox {
 
     public void showDialog(ServiceResponse result) {
         for(int i=0; i < result.getFileList().size(); ++i) {
-            HorizontalPanel hp = new HorizontalPanel();
-            hp.addStyleName(i % 2 == 0 ?
+            FileInfo f = result.getFileList().get(i);
+            ListFileSingleItem item = new ListFileSingleItem();
+            item.setFileInfo(f);
+            item.addStyleName(i % 2 == 0 ?
                     Style.style.css.openFildDialogInnerPanelAzure() :
                         Style.style.css.openFildDialogInnerPanelNormal());
-            hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-            FileInfo f = result.getFileList().get(i);
-            Anchor name = new Anchor(f.name);
-            Label date = new Label(f.dateUpdated.toString());
-            name.addStyleName(Style.style.css.openFileDialogFileName());
-            name.addStyleName(Style.style.css.openFileDialogFileUpdateTime());
-            hp.add(name);
-            hp.add(date);
-            listOfOpenFilesPanel.add(hp);
+            listOfOpenFilesPanel.add(item);
         }
         this.center();
     }
