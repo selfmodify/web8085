@@ -1,7 +1,6 @@
 package com.shastram.web8085.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -56,6 +55,10 @@ public class SaveFileDialog extends DialogBox {
     void saveButtonHandler(ClickEvent e) {
         // Local save button in the dialog box.
         FileData fileData = new FileData(fileName.getText(), mainWindow.getSourceCode());
+        String msg = "Saving file '" + fileName.getText() + "' ...";
+        mainWindow.setStatusUpdateLabel(msg);
+        setStatus(msg);
+        final SaveFileDialog dialog = this;
         MainWindow.rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -64,6 +67,9 @@ public class SaveFileDialog extends DialogBox {
             public void onSuccess(ServiceResponse result) {
                 if (result.isLoginRequired()) {
                     mainWindow.startLogin();
+                } else if (result.wouldHaveOverrittenFile()) {
+                    dialog.setStatus(result.getMsg());
+                    dialog.center();
                 } else {
                     mainWindow.setStatusUpdateLabel(result.getMsg());
                     dismissButtonHandler(null);
@@ -86,26 +92,7 @@ public class SaveFileDialog extends DialogBox {
     }
 
     public void saveWithoutAsking(final MainWindow mainWindow, String sourceCode) {
-        FileData fileData = new FileData(fileName.getText(), sourceCode);
-        mainWindow.setStatusUpdateLabel("Saving file '" + fileName.getText() + "' ...");
-        final SaveFileDialog dialog = this;
-        MainWindow.rpcService.saveFile(fileData, new AsyncCallback<ServiceResponse>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-            @Override
-            public void onSuccess(ServiceResponse result) {
-                if (result.isLoginRequired()) {
-                    mainWindow.startLogin();
-                } else if (result.wouldHaveOverrittenFile()) {
-                    dialog.center();
-                    dialog.setStatus(result.getMsg());
-                } else {
-                    mainWindow.setStatusUpdateLabel(result.getMsg());
-                    dismissButtonHandler(null);
-                }
-            }
-        });
+        saveButtonHandler(null);
     }
 
     protected void setStatus(String msg) {

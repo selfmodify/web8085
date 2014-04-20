@@ -79,7 +79,7 @@ public class ServiceResponse implements Serializable {
 
     public static ServiceResponse aboutToOverwrite(Date created) {
         ServiceResponse resp = new ServiceResponse();
-        resp.setMsg("File with this name already exists.  Creted on " + created.toString());
+        resp.setMsg("File with this name already exists.\nCreated on " + created.toString());
         resp.setWouldHaveOverrittenFile(true);
         return resp;
     }

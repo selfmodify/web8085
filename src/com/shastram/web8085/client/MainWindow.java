@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.shastram.web8085.client.MicroCode.OneInstruction;
+import com.shastram.web8085.client.ServiceResponse.FileInfo;
 import com.shastram.web8085.client.pattern.Observer;
 import com.shastram.web8085.client.pattern.SignalSlot;
 import com.shastram.web8085.client.pattern.SignalSlot.SignalData;
@@ -176,6 +177,8 @@ public class MainWindow extends Composite implements Observer {
     private String fileName;
 
     private ScheduledCommand fileSaveAsCommand;
+
+    private FileInfo savedFileData;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -884,5 +887,9 @@ public class MainWindow extends Composite implements Observer {
             }
         };
         statusUpdateLabelTimer.schedule(1700);
+    }
+
+    public void updateSavedFileData(FileInfo savedFileData) {
+        this.savedFileData = savedFileData;
     }
 }

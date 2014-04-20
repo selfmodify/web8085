@@ -11,6 +11,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.cmd.Query;
@@ -80,9 +81,8 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         }
         @SuppressWarnings("unused")
         UserData user = getOrCreateUser(currentUser);
-
         ServerFileData toBeSavedFileData = new ServerFileData(currentUser.getEmail(), clientFileData);
-        ServerFileData existingFile = getFileFromDb(toBeSavedFileData);
+        ServerFileData existingFile = getFileFromDb(user, toBeSavedFileData);
         if (existingFile != null) {
             // File with this name already exist.
             if (existingFile.getCreated().equals(toBeSavedFileData.getCreated())) {
@@ -101,7 +101,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         return ServiceResponse.fileSaved(existingFile.getId(), existingFile.getFileName(), existingFile.getCreated());
     }
 
-    private ServerFileData getFileFromDb(ServerFileData serverData) {
+    private ServerFileData getFileFromDb(UserData user, ServerFileData serverData) {
         return ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
     }
 
@@ -136,7 +136,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         if (user == null) {
             return new ServiceResponse(true/*loginRequired*/);
         }
-        Query<ServerFileData> serverFileList = ObjectifyService.ofy().load().type(ServerFileData.class).ancestor(user);
+        List<ServerFileData> serverFileList = ObjectifyService.ofy().load().type(ServerFileData.class).filter("owner", user.getId()).list();
         List<ServiceResponse.FileInfo> clientFileList = new ArrayList<>();
         for(ServerFileData f: serverFileList) {
             clientFileList.add(new ServiceResponse.FileInfo(f.getId(), f.getFileName(), f.getLastModified().toString()));
