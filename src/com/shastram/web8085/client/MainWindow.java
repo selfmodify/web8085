@@ -176,7 +176,9 @@ public class MainWindow extends Composite implements Observer {
 
     private ScheduledCommand fileSaveAsCommand;
 
-    private FileInfo savedFileData;
+    private FileInfo savedFileInfo;
+
+    public static MainWindow INSTANCE = null;
 
     public MainWindow() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -200,6 +202,15 @@ public class MainWindow extends Composite implements Observer {
         UiHelper.loadSourceCodeLocally(sourceCode);
         SignalSlot.instance.addObserver(
                 SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        fixTabInSourceEditBox();
+        createFileSaveCommand();
+        createFileOpenCommand();
+        getLoginData();
+        attachFileCommands();
+        INSTANCE = this;
+    }
+
+    private void fixTabInSourceEditBox() {
         sourceCode.addKeyDownHandler(new KeyDownHandler() {
             @Override
             public final void onKeyDown(KeyDownEvent event) {
@@ -215,10 +226,6 @@ public class MainWindow extends Composite implements Observer {
               }
             }
           });
-        createFileSaveCommand();
-        createFileOpenCommand();
-        getLoginData();
-        attachFileCommands();
     }
 
     void startLogin() {
@@ -248,7 +255,7 @@ public class MainWindow extends Composite implements Observer {
                         if (result.isLoginRequired()) {
                             startLogin();
                         } else {
-                            OpenFilesDialog dialog = new OpenFilesDialog();
+                            ListFilesDialog dialog = new ListFilesDialog();
                             dialog.showDialog(result);
                         }
                     }
@@ -847,11 +854,11 @@ public class MainWindow extends Composite implements Observer {
     }
 
     public String getFileName() {
-        return savedFileData == null ? "Untitled.txt" : savedFileData.getFileName();
+        return savedFileInfo == null ? "Untitled.txt" : savedFileInfo.getFileName();
     }
 
     public Date getDateCreatedOfFile() {
-        return savedFileData == null ? null : savedFileData.getDateCreated();
+        return savedFileInfo == null ? null : savedFileInfo.getDateCreated();
     }
 
     public void saveFileLocally() {
@@ -884,7 +891,13 @@ public class MainWindow extends Composite implements Observer {
         statusUpdateLabelTimer.schedule(1700);
     }
 
-    public void updateSavedFileData(FileInfo savedFileData) {
-        this.savedFileData = savedFileData;
+    public void updateSavedFileInfo(FileInfo savedFileInfo) {
+        this.savedFileInfo = savedFileInfo;
+        optionalFileName.setText(savedFileInfo.getFileName());
+    }
+
+    public void setFileData(FileData fileData) {
+        updateSavedFileInfo(fileData.getFileInfo());
+        sourceCode.setText(fileData.getSourceCode());
     }
 }

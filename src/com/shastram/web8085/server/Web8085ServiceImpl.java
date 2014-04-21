@@ -84,7 +84,7 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         @SuppressWarnings("unused")
         UserData user = getOrCreateUser(currentUser);
         ServerFileData toBeSavedFileData = new ServerFileData(currentUser.getEmail(), clientFileData);
-        ServerFileData existingFile = getFileFromDb(user, toBeSavedFileData);
+        ServerFileData existingFile = getFileFromDb(ServerFileData.createId(currentUser.getEmail(), clientFileData.getFileInfo()));
         if (existingFile != null) {
             // File with this name already exist.
             if (clientFileData.isOverwriteExisting() ||
@@ -105,8 +105,8 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
                 toBeSavedFileData.getCreated(), toBeSavedFileData.getLastModified());
     }
 
-    private ServerFileData getFileFromDb(UserData user, ServerFileData serverData) {
-        return ObjectifyService.ofy().load().type(ServerFileData.class).id(serverData.getId()).now();
+    private ServerFileData getFileFromDb(String id) {
+        return ObjectifyService.ofy().load().type(ServerFileData.class).id(id).now();
     }
 
     private UserData getOrCreateUser(final User currentUser) {
@@ -148,5 +148,24 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
         ServiceResponse response = new ServiceResponse();
         response.setFileList(clientFileList);
         return response;
+    }
+
+    @Override
+    public ServiceResponse openFile(FileInfo fileInfo) {
+        final User currentUser = getCurrentUser();
+        UserData user = getCurrentUserData(currentUser);
+        if (user == null) {
+            return new ServiceResponse(true/*loginRequired*/);
+        }
+        ServerFileData existingFile = getFileFromDb(ServerFileData.createId(currentUser.getEmail(), fileInfo));
+        if (existingFile == null) {
+            ServiceResponse.fileDoesNotExist(fileInfo);
+        }
+        if (existingFile.getOwner().equals(currentUser.getEmail())) {
+            ServiceResponse resp = new ServiceResponse( );
+            resp.setFileData(new FileData(existingFile.getFileName(), existingFile.getFileContent(), existingFile.getCreated()));
+            return resp;
+        }
+        return ServiceResponse.permissionDenied();
     }
 }

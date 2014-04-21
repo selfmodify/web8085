@@ -75,7 +75,7 @@ public class SaveFileDialog extends DialogBox {
                     dialog.setStatus(result.getMsg());
                     dialog.center();
                 } else {
-                    mainWindow.updateSavedFileData(result.getSavedFileData());
+                    mainWindow.updateSavedFileInfo(result.getFileInfo());
                     mainWindow.setStatusUpdateLabel(result.getMsg());
                     dismissButtonHandler(null);
                 }

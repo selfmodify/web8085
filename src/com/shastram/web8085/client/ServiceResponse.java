@@ -10,9 +10,11 @@ public class ServiceResponse implements Serializable {
     private static final long serialVersionUID = 1L;
     private boolean loginRequired = false;
     private boolean wouldHaveOverrittenFile = false;
+    private boolean error = false;
     private String msg;
     private List<FileInfo> fileList = new ArrayList<>();
-    private FileInfo savedFileData;
+    private FileInfo fileInfo;
+    private FileData fileData;
 
     public ServiceResponse() {
     }
@@ -68,17 +70,48 @@ public class ServiceResponse implements Serializable {
         return resp;
     }
 
-    public FileInfo getSavedFileData() {
-        return savedFileData;
+    public FileInfo getFileInfo() {
+        return fileInfo;
     }
 
-    public void setSavedFileData(FileInfo savedFileData) {
-        this.savedFileData = savedFileData;
+    public void setFileInfo(FileInfo fileInfo) {
+        this.fileInfo = fileInfo;
+    }
+
+    public boolean hasError() {
+        return error;
+    }
+
+    public void setError(String msg) {
+        this.error = true;
+        this.msg = msg;
     }
 
     public static ServiceResponse fileSaved(String id, String fileName, Date created, Date updated) {
         ServiceResponse resp = new ServiceResponse("Saved file " + fileName);
-        resp.setSavedFileData(new FileInfo(id, fileName, created, updated));
+        resp.setFileInfo(new FileInfo(id, fileName, created, updated));
         return resp;
+    }
+
+    public static ServiceResponse fileDoesNotExist(FileInfo fileInfo) {
+        return sendError("File " + fileInfo.getFileName() + " does not exist.");
+    }
+
+    public static ServiceResponse permissionDenied() {
+        return sendError("Permission denied.  File does not belong to you.");
+    }
+
+    private static ServiceResponse sendError(String msg) {
+        ServiceResponse resp = new ServiceResponse( );
+        resp.setError(msg);
+        return resp;
+    }
+
+    public FileData getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(FileData fileData) {
+        this.fileData = fileData;
     }
 }

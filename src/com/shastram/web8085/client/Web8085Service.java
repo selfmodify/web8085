@@ -24,4 +24,5 @@ public interface Web8085Service extends RemoteService {
     ServiceResponse saveFile(FileData data);
 
     ServiceResponse listFiles();
+    ServiceResponse openFile(FileInfo fileInfo);
 }

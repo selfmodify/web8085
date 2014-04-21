@@ -33,7 +33,7 @@ public class ServerFileData {
         this.owner = currentUser;
         FileInfo fileInfo = clientData.getFileInfo();
         fileName = fileInfo.getFileName();
-        id = currentUser + "::" + fileInfo.getFileName();
+        id = createId(currentUser, fileInfo);
         data = clientData.getSourceCode();
     }
 
@@ -83,5 +83,9 @@ public class ServerFileData {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public static String createId(String currentUser, FileInfo fileInfo) {
+        return currentUser + "::" + fileInfo.getFileName();
     }
 }
