@@ -33,7 +33,7 @@ public class ListFilesDialog extends DialogBox {
     private void setProperties(String title) {
         setText(title);
         setAnimationEnabled(true);
-        setAutoHideEnabled(true);
+        setAutoHideEnabled(false);
         setModal(true);
         setGlassEnabled(true);
     }

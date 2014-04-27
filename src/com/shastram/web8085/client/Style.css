@@ -132,10 +132,11 @@
 }
 
 .mainWindow {
-  width: 90%;
-  min-width: 480px;
+  width: 500px;
   margin-left: auto;
   margin-right: auto;
+  padding: 2px;
+  overflow: hidden;
 }
 
 .statusUpdateLabel {

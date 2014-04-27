@@ -109,13 +109,16 @@ public class MainWindow extends Composite implements Observer {
     MenuBar menuBar;
 
     @UiField
-    MenuItem examplesMenuItem;
-
-    @UiField
     Label optionalFileName;
 
     @UiField
     MenuBar exampleItems;
+
+    @UiField
+    MenuBar helpMenuBar;
+
+    @UiField
+    MenuItem gplusMenuItem;
 
     @UiField
     MenuItem instructionsMenuItem;
@@ -246,6 +249,14 @@ public class MainWindow extends Composite implements Observer {
             @Override
             public void execute() {
                 Window.open("/help/index.html", "_blank", "");
+            }
+        });
+        // g+ menu Item
+        helpMenuBar.insertSeparator(3);
+        gplusMenuItem.setScheduledCommand(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                Window.open("https://plus.google.com/u/0/b/116746206454647023066/+Web8085AppspotSimulator/posts", "_blank", "");
             }
         });
     }
