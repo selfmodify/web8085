@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,6 +21,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,8 +46,7 @@ public class MainWindow extends Composite implements Observer {
 
     private static final int NUM_MEMORY_ADDRESS_PER_ROW = 8;
 
-    private static MainWindowUiBinder uiBinder = GWT
-            .create(MainWindowUiBinder.class);
+    private static MainWindowUiBinder uiBinder = GWT.create(MainWindowUiBinder.class);
 
     interface MainWindowUiBinder extends UiBinder<Widget, MainWindow> {
     }
@@ -72,6 +74,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     Button stepOutButton;
+
     @UiField
     Button runButton;
 
@@ -80,7 +83,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     HorizontalPanel registerWindowValues2;
-    
+
     @UiField
     HorizontalPanel flagValues;
 
@@ -115,6 +118,25 @@ public class MainWindow extends Composite implements Observer {
     MenuBar exampleItems;
 
     @UiField
+    MenuItem instructionsMenuItem;
+
+    @UiField
+    MenuItem emailMenuItem;
+
+    // Terms of Service.
+    @UiField
+    MenuItem tosMenuItem;
+
+    @UiField
+    MenuItem signinMenuItem;
+
+    @UiField
+    MenuItem alreadySignedInMenuItem;
+
+    @UiField
+    MenuItem signoutMenuItem;
+
+    @UiField
     Label statusUpdateLabel;
     private Timer statusUpdateLabelTimer;
 
@@ -126,7 +148,7 @@ public class MainWindow extends Composite implements Observer {
 
     @UiField
     MenuItem fileOpen;
- 
+
     @UiField
     MenuItem fileSave;
 
@@ -163,13 +185,6 @@ public class MainWindow extends Composite implements Observer {
 
     protected LoginData loginData;
 
-    private enum ActionAfterLogin {
-        NONE,
-        SAVE_FILE,
-        OPEN_FILE,
-    };
-    ActionAfterLogin actionAfterLogin = ActionAfterLogin.NONE;
-
     private ScheduledCommand fileSaveCommand;
 
     private ScheduledCommand fileOpenCommand;
@@ -200,36 +215,61 @@ public class MainWindow extends Composite implements Observer {
         setMemoryScrollMouseHandler();
         getExampleCodeList();
         UiHelper.loadSourceCodeLocally(sourceCode);
-        SignalSlot.instance.addObserver(
-                SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
+        SignalSlot.instance.addObserver(SignalSlot.Signals.EXAMPLE_SOURCE_CODE_AVAILABLE, this);
         fixTabInSourceEditBox();
         createFileSaveCommand();
         createFileOpenCommand();
+        // Help menu items
+        createHelpMenuItemCommands();
         getLoginData();
         attachFileCommands();
         INSTANCE = this;
+    }
+
+    private void createHelpMenuItemCommands() {
+        // Email me.
+        emailMenuItem.setScheduledCommand(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                Window.open("mailto:kumar__v@hotmail.com?subject='8085 Simulator'", "_blank", "");
+            }
+        });
+        // Terms of Service.
+        tosMenuItem.setScheduledCommand(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                Window.open("/terms-of-service.html", "_blank", "");
+            }
+        });
+        // 8085 instructions help
+        instructionsMenuItem.setScheduledCommand(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                Window.open("/help/index.html", "_blank", "");
+            }
+        });
     }
 
     private void fixTabInSourceEditBox() {
         sourceCode.addKeyDownHandler(new KeyDownHandler() {
             @Override
             public final void onKeyDown(KeyDownEvent event) {
-              if (event.getNativeKeyCode() == 9) {
-                event.preventDefault();
-                event.stopPropagation();
-                final TextArea ta = (TextArea) event.getSource();
-                final int index = ta.getCursorPos();
-                final String text = ta.getText();
-                ta.setText(text.substring(0, index) 
-                           + "\t" + text.substring(index));
-                ta.setCursorPos(index + 1);
-              }
+                if (event.getNativeKeyCode() == 9) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    final TextArea ta = (TextArea) event.getSource();
+                    final int index = ta.getCursorPos();
+                    final String text = ta.getText();
+                    ta.setText(text.substring(0, index) + "\t" + text.substring(index));
+                    ta.setCursorPos(index + 1);
+                }
             }
-          });
+        });
     }
 
-    void startLogin() {
+    void startLogin(@Nullable String optionalNextAction) {
         setStatusUpdateLabel("Login Required.");
+        setActionAfterLogin(optionalNextAction);
         Timer t = new Timer() {
             @Override
             public void run() {
@@ -237,6 +277,10 @@ public class MainWindow extends Composite implements Observer {
             }
         };
         t.schedule(500);
+    }
+
+    String getLoggedinUser() {
+        return loginData == null  ? null : loginData.getLoggedInUser();
     }
 
     private void attachFileCommands() {
@@ -253,13 +297,13 @@ public class MainWindow extends Composite implements Observer {
                     @Override
                     public void onSuccess(ServiceResponse result) {
                         if (result.isLoginRequired()) {
-                            startLogin();
+                            startLogin("OPEN_FILE");
                         } else {
                             ListFilesDialog dialog = new ListFilesDialog();
                             dialog.showDialog(result);
                         }
                     }
-                    
+
                     @Override
                     public void onFailure(Throwable caught) {
                     }
@@ -271,7 +315,7 @@ public class MainWindow extends Composite implements Observer {
     private void createFileSaveCommand() {
         final MainWindow mainWindow = this;
         // Ask for file name only if the filename is 'Untitled.txt'
-        fileSaveCommand = new ScheduledCommand(){
+        fileSaveCommand = new ScheduledCommand() {
             @Override
             public void execute() {
                 SaveFileDialog d = new SaveFileDialog();
@@ -280,7 +324,7 @@ public class MainWindow extends Composite implements Observer {
         };
 
         // Ask for file name always.
-        fileSaveAsCommand = new ScheduledCommand(){
+        fileSaveAsCommand = new ScheduledCommand() {
             @Override
             public void execute() {
                 SaveFileDialog d = new SaveFileDialog();
@@ -299,33 +343,73 @@ public class MainWindow extends Composite implements Observer {
             @Override
             public void onFailure(Throwable caught) {
             }
+
             @Override
             public void onSuccess(LoginData result) {
-                loginData = result;
+                setLoginData(result);
                 continueActionsAfterLogin();
             }
         });
     }
 
+    protected void setLoginData(final LoginData result) {
+        loginData = result;
+        if (result == null || result.getLoggedInUser() == null) {
+            // Not signed in.
+            alreadySignedInMenuItem.setVisible(false);
+            signinMenuItem.setVisible(true);
+            signinMenuItem.setText("Signin");
+            signinMenuItem.setScheduledCommand(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    startLogin(null);
+                }
+            });
+        } else {
+            // User is signed in.
+            alreadySignedInMenuItem.setVisible(true);
+            signinMenuItem.setVisible(false);
+            alreadySignedInMenuItem.setText("↓" + result.getLoggedInUser());
+            signoutMenuItem.setScheduledCommand(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    Window.Location.assign(result.getLogoutUrl());
+                }
+            });
+        }
+    }
+
     /**
-     * Continue with further actions like save the file or open a file
-     * after the login is done.
+     * Continue with further actions like save the file or open a file after the
+     * login is done.
      */
     protected void continueActionsAfterLogin() {
-        logger.info("Next action after login is " + actionAfterLogin);
-        switch(actionAfterLogin) {
-        case NONE:
+        String cookie = Cookies.getCookie("ActionAfterLogin");
+        logger.info("Next action after login is " + cookie);
+        clearActionAfterLogin();
+        switch (cookie) {
+        case "NONE":
             break;
-        case OPEN_FILE:
+        case "OPEN_FILE":
             fileOpenCommand.execute();
             break;
-        case SAVE_FILE:
+        case "SAVE_FILE":
             fileSaveCommand.execute();
             break;
         default:
             break;
         }
-        actionAfterLogin = ActionAfterLogin.NONE;
+    }
+
+    private void setActionAfterLogin(String optionalNextAction) {
+        if (optionalNextAction == null) {
+            return;
+        }
+        Cookies.setCookie("ActionAfterLogin", optionalNextAction);
+    }
+
+    protected void clearActionAfterLogin() {
+        Cookies.setCookie("ActionAfterLogin", "NONE");
     }
 
     private void setMemoryScrollMouseHandler() {
@@ -355,7 +439,7 @@ public class MainWindow extends Composite implements Observer {
 
     private void getExampleCodeList() {
         exampleItems.clearItems();
-        exampleItems.addItem("Loading examples ...", (Command)null);
+        exampleItems.addItem("Loading examples ...", (Command) null);
         rpcService.getExampleNames(new AsyncCallback<List<String>>() {
             @Override
             public void onSuccess(List<String> result) {
@@ -388,8 +472,7 @@ public class MainWindow extends Composite implements Observer {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             hp.add(addr);
-            TextBox value = createValueTextbox(Style.style.css
-                    .disassemblyTextBox());
+            TextBox value = createValueTextbox(Style.style.css.disassemblyTextBox());
             hp.add(value);
             disassemblyWindow.add(hp);
         }
@@ -399,18 +482,15 @@ public class MainWindow extends Composite implements Observer {
         boolean followIp = true;
         if (followIp) {
             boolean changeMemoryStart = exe.ip < disassemblyMemoryStart
-                    || exe.ip >= disassemblyMemoryStart
-                            + disassemblyWindow.getWidgetCount();
+                    || exe.ip >= disassemblyMemoryStart + disassemblyWindow.getWidgetCount();
             if (changeMemoryStart) {
                 disassemblyMemoryStart = exe.ip;
             }
         }
-        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress,
-                prevHighlightDisassemblyValue);
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
         int addr = disassemblyMemoryStart;
         for (int i = 0; i < disassemblyWindow.getWidgetCount(); ++i) {
-            HorizontalPanel hp = (HorizontalPanel) disassemblyWindow
-                    .getWidget(i);
+            HorizontalPanel hp = (HorizontalPanel) disassemblyWindow.getWidget(i);
             TextBox addrBox = (TextBox) hp.getWidget(0);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
             TextBox valueBox = (TextBox) hp.getWidget(1);
@@ -440,8 +520,7 @@ public class MainWindow extends Composite implements Observer {
         addLabelValuePairToPanel(names2, registerWindowValues2);
     }
 
-    public void addLabelValuePairToPanel(String[] names,
-            HorizontalPanel parentPanel) {
+    public void addLabelValuePairToPanel(String[] names, HorizontalPanel parentPanel) {
         for (String n : names) {
             TextBox name = createRegisterValueTextbox();
             name.setText(n);
@@ -486,8 +565,7 @@ public class MainWindow extends Composite implements Observer {
             TextBox addr = createMemoryAddressTextbox();
             memoryWindowAddress.add(addr);
             for (int j = 0; j < NUM_MEMORY_ADDRESS_PER_ROW; ++j) {
-                TextBox value = createValueTextbox(Style.style.css
-                        .memoryTextBox());
+                TextBox value = createValueTextbox(Style.style.css.memoryTextBox());
                 hp.add(value);
             }
             memoryWindow.add(hp);
@@ -501,8 +579,7 @@ public class MainWindow extends Composite implements Observer {
             HorizontalPanel hp = new HorizontalPanel();
             TextBox addr = createMemoryAddressTextbox();
             stackWindowAddress.add(addr);
-            TextBox value = createValueTextbox(Style.style.css
-                    .memoryAddressTextBox());
+            TextBox value = createValueTextbox(Style.style.css.memoryAddressTextBox());
             hp.add(value);
             stackWindow.add(hp);
         }
@@ -530,8 +607,7 @@ public class MainWindow extends Composite implements Observer {
     private void fillMemoryWindow(boolean highlight, boolean followIp) {
         if (followIp) {
             boolean changeMemoryStart = exe.ip < memoryStart
-                    || exe.ip >= memoryStart + memoryWindow.getWidgetCount()
-                            * NUM_MEMORY_ADDRESS_PER_ROW;
+                    || exe.ip >= memoryStart + memoryWindow.getWidgetCount() * NUM_MEMORY_ADDRESS_PER_ROW;
             if (changeMemoryStart) {
                 memoryStart = exe.ip;
             }
@@ -575,8 +651,7 @@ public class MainWindow extends Composite implements Observer {
 
     private void fillStackWindow(boolean highlight) {
         int addr = exe.getSP();
-        removeFollowMemoryHighlight(prevStackHighlightAddress,
-                prevStackHighlightValue);
+        removeFollowMemoryHighlight(prevStackHighlightAddress, prevStackHighlightValue);
         for (int i = 0; i < stackWindow.getWidgetCount(); ++i) {
             TextBox addrBox = (TextBox) stackWindowAddress.getWidget(i);
             addrBox.setText(" " + Utils.toHex4Digits(addr) + ":  ");
@@ -598,8 +673,7 @@ public class MainWindow extends Composite implements Observer {
         addrBox.addStyleName(Style.style.css.currentAddressHighlight());
     }
 
-    private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox,
-            ArrayList<TextBox> values) {
+    private void updateFollowMemoryHighlight(ArrayList<TextBox> addrBox, ArrayList<TextBox> values) {
         for (TextBox t : addrBox) {
             t.addStyleName(Style.style.css.currentAddressHighlight());
         }
@@ -613,13 +687,11 @@ public class MainWindow extends Composite implements Observer {
             prevAddr.removeStyleName(Style.style.css.currentAddressHighlight());
         }
         if (prevValue != null) {
-            prevValue.removeStyleName(Style.style.css
-                    .currentInstructionHighlight());
+            prevValue.removeStyleName(Style.style.css.currentInstructionHighlight());
         }
     }
 
-    public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr,
-            ArrayList<TextBox> prevValues) {
+    public void removeFollowMemoryHighlight(ArrayList<TextBox> prevAddr, ArrayList<TextBox> prevValues) {
         for (TextBox t : prevAddr) {
             t.removeStyleName(Style.style.css.currentAddressHighlight());
         }
@@ -664,8 +736,7 @@ public class MainWindow extends Composite implements Observer {
     private void clearHighlights() {
         errorWindow.setText("");
         removeFollowMemoryHighlight(prevHighlightAddress, prevHighlightValue);
-        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress,
-                prevHighlightDisassemblyValue);
+        removeFollowMemoryHighlight(prevHighlightDisassemblyAddress, prevHighlightDisassemblyValue);
     }
 
     @UiHandler("stepButton")
@@ -686,8 +757,7 @@ public class MainWindow extends Composite implements Observer {
         } else {
             DebugLineInfo debugInfo = exe.getDebugInfo(exe.ip);
             if (debugInfo != null) {
-                errorWindow.setText("Next instruction, Line: "
-                        + debugInfo.line + " " + debugInfo.getToken());
+                errorWindow.setText("Next instruction, Line: " + debugInfo.line + " " + debugInfo.getToken());
             }
         }
     }
@@ -717,15 +787,18 @@ public class MainWindow extends Composite implements Observer {
      * Run a multi step or run (like step out, step over) operation using a
      * timer to allow a responsive UI.
      * 
-     * @param prevCallLevel This is used by the stepOut and Run mode.
-     *      StepOut: Every time a call instruction is executed the callLevel is incremented and a return
-     *               decrements the callLevel. When the callLevels match the the simulator breaks.
-     *      Run:     In this mode the prevCallLevel is set to -1 and it only stops when hlt is executed
-     *               or break is pressed.
+     * @param prevCallLevel
+     *            This is used by the stepOut and Run mode. StepOut: Every time
+     *            a call instruction is executed the callLevel is incremented
+     *            and a return decrements the callLevel. When the callLevels
+     *            match the the simulator breaks. Run: In this mode the
+     *            prevCallLevel is set to -1 and it only stops when hlt is
+     *            executed or break is pressed.
      */
     private void multiStepOnTimer(final int prevCallLevel) {
         try {
-            int counter = 0; // do a short sleep after some number of instructions
+            int counter = 0; // do a short sleep after some number of
+                             // instructions
             boolean reschedule = false;
             while (true) {
                 exe.step();
@@ -735,7 +808,7 @@ public class MainWindow extends Composite implements Observer {
                     break;
                 }
                 if (exe.hltExecuted || exe.breakNow) {
-                    // hlt was executed or break was clicked.  Don't reschedule.
+                    // hlt was executed or break was clicked. Don't reschedule.
                     reschedule = false;
                     if (exe.breakNow) {
                         errorWindow.setText("Break;");
@@ -821,8 +894,7 @@ public class MainWindow extends Composite implements Observer {
         return str;
     }
 
-    private void updateTextboxValue(String newValue, TextBox textBox,
-            boolean highlight) {
+    private void updateTextboxValue(String newValue, TextBox textBox, boolean highlight) {
         String oldValue = textBox.getText().trim();
         textBox.setText(newValue);
         if (!oldValue.equals(newValue) && highlight) {

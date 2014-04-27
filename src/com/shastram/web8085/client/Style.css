@@ -111,8 +111,9 @@
 }
 
 .mainLabel {
-	font-size: 150%;
+	font-size: 1.3em;
 	font-weight: bold;
+	margin-left: 10px;
 }
 
 .exampleMenuItems {
@@ -128,11 +129,10 @@
 
 .helpTitle {
     font-size: 150%;	
-
 }
 
 .mainWindow {
-  width: 80%;
+  width: 90%;
   min-width: 480px;
   margin-left: auto;
   margin-right: auto;

@@ -56,10 +56,15 @@ public class Web8085ServiceImpl extends RemoteServiceServlet implements
     @Override
     public LoginData getLoginData(LoginData d) {
         UserService us = UserServiceFactory.getUserService();
-        String url = "http://127.0.0.1:8888/Simulator.html?gwt.codesvr=127.0.0.1:9997";
+        String url = d.isProdMode() ?
+                "http://web8085.appspot.com" :
+                "http://127.0.0.1:8888/Simulator.html?gwt.codesvr=127.0.0.1:9997";
         String loginUrl = us.createLoginURL(url);
         LoginData result = new LoginData(d.isProdMode());
         result.setLoginUrl(loginUrl);
+        result.setLogoutUrl(us.createLogoutURL(url));
+        User currentUser = getCurrentUser();
+        result.setLoggedInUser(currentUser == null ? null : currentUser.getEmail());
         return result;
     }
 

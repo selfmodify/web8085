@@ -70,7 +70,7 @@ public class SaveFileDialog extends DialogBox {
             @Override
             public void onSuccess(ServiceResponse result) {
                 if (result.isLoginRequired()) {
-                    mainWindow.startLogin();
+                    mainWindow.startLogin("SAVE_FILE");
                 } else if (result.wouldHaveOverrittenFile()) {
                     dialog.setStatus(result.getMsg());
                     dialog.center();

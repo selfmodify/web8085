@@ -8,6 +8,7 @@ public class LoginData implements Serializable {
     private boolean prodMode;
     private String loginUrl;
     private String logoutUrl;
+    private String loggedInUser;
 
     public LoginData() {
     }
@@ -38,5 +39,13 @@ public class LoginData implements Serializable {
 
     public void setLogoutUrl(String logoutUrl) {
         this.logoutUrl = logoutUrl;
+    }
+
+    public String getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void setLoggedInUser(String loggedInUser) {
+        this.loggedInUser = loggedInUser;
     }
 }
