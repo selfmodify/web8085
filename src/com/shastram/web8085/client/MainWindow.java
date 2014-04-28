@@ -396,6 +396,9 @@ public class MainWindow extends Composite implements Observer {
      */
     protected void continueActionsAfterLogin() {
         String cookie = Cookies.getCookie("ActionAfterLogin");
+        if (cookie == null) {
+            return;
+        }
         logger.info("Next action after login is " + cookie);
         clearActionAfterLogin();
         switch (cookie) {
