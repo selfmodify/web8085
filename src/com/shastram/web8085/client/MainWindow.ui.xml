@@ -35,7 +35,7 @@
         <g:MenuItem ui:field="signinMenuItem" text="Sign In" visible="false">
           <!-- User is not signed in. -->
         </g:MenuItem>
-        <g:MenuItem text="" visible="false" ui:field="alreadySignedInMenuItem">
+        <g:MenuItem text="" visible="false" ui:field="alreadySignedInMenuItem" addStyleNames="{css.menubarItemSmaller}">
           <!-- User is signed in -->
           <g:MenuBar vertical="true" addStyleNames="{css.menubarItem}">
             <g:MenuItem ui:field="signoutMenuItem" text="Sign out"></g:MenuItem>

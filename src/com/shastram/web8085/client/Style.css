@@ -110,6 +110,11 @@
   font-size: 180%;
 }
 
+.menubarItemSmaller {
+  font-size: 70%;
+  color: blue;
+}
+
 .mainLabel {
   font-size: 1.3em;
   font-weight: bold;
