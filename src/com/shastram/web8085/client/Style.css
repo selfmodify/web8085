@@ -1,134 +1,134 @@
 .memoryAddressTextBox {
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-	font-family: courier;
-	width: 60px;
-	font-weight: bold;
-	font-size: 125%;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  font-family: courier;
+  width: 60px;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .memoryTextBox {
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-	font-family: courier;
-	width: 30px;
-	font-weight: bold;
-	font-size: 125%;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  font-family: courier;
+  width: 30px;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .disassemblyTextBox {
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-	font-family: courier;
-	width: 240px;
-	font-weight: bold;
-	font-size: 125%;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  font-family: courier;
+  width: 240px;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .bigLabel {
-	font-weight: bold;
-	color: purple;
+  font-weight: bold;
+  color: purple;
 }
 
 .bigFileNameLabel {
-    font-weight: bold;
-    color: blue;
+  font-weight: bold;
+  color: blue;
 }
 
 .registerTextBox {
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-	font-family: courier;
-	width: 40px;
-	font-weight: bold;
-	font-size: 125%;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  font-family: courier;
+  width: 40px;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .memoryWindow {
-	border: 1px inset gray;
-	font-family: monospace;
-	font-weight: bold;
-	font-size: 125%;
+  border: 1px inset gray;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .stackWindow {
-	border: 1px inset gray;
-	font-family: monospace;
-	font-weight: bold;
-	font-size: 125%;
+  border: 1px inset gray;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .registerWindow {
-	border: 1px inset gray;
-	font-family: monospace;
-	font-weight: bold;
-	font-size: 125%;
+  border: 1px inset gray;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 125%;
 }
 
 .memoryWindowHighlight {
-	color: red;
+  color: red;
 }
 
 .currentInstructionHighlight {
-	background: blue;
-	font-weight: bold;
-	color: white;
+  background: blue;
+  font-weight: bold;
+  color: white;
 }
 
 .sourceCodeWindow {
-	font-family: monospace;
-	font-size: 150%;
+  font-family: monospace;
+  font-size: 150%;
 }
 
 .border {
-	border: 1px solid;
+  border: 1px solid;
 }
 
 .debugButton {
-	font-weight: bold;
-	font-size: 175%;
-	width: 140px;
+  font-weight: bold;
+  font-size: 175%;
+  width: 140px;
 }
 
 .currentAddressHighlight {
-	background: lightblue;
-	font-weight: bold;
-	font-style: italic;
-	color: red;
+  background: lightblue;
+  font-weight: bold;
+  font-style: italic;
+  color: red;
 }
 
 .scrollButton {
-	font-size: 150%;
-	font-weight: bold;
+  font-size: 150%;
+  font-weight: bold;
 }
 
 .menubarItem {
-	font-size: 180%;
+  font-size: 180%;
 }
 
 .mainLabel {
-	font-size: 1.3em;
-	font-weight: bold;
-	margin-left: 10px;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-left: 10px;
 }
 
 .exampleMenuItems {
-	font-size: 170%;
+  font-size: 170%;
 }
 
 .instructionTitle {
-	color: blue;
-	font-size: 130%;
-	font-weight: bold;
-	font-style: courier-new;
+  color: blue;
+  font-size: 130%;
+  font-weight: bold;
+  font-style: courier-new;
 }
 
 .helpTitle {
-    font-size: 150%;	
+  font-size: 150%;
 }
 
 .mainWindow {

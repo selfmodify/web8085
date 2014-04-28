@@ -2,7 +2,6 @@ package com.shastram.web8085.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,10 +11,8 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.cmd.Query;
 import com.shastram.web8085.client.FileData;
 import com.shastram.web8085.client.FileInfo;
 import com.shastram.web8085.client.LoginData;
