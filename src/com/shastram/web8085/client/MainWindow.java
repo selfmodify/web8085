@@ -757,11 +757,12 @@ public class MainWindow extends Composite implements Observer {
     public void stepButtonHandler(ClickEvent e) {
         try {
             exe.step();
-        } catch (Exception e1) {
-            errorWindow.setText(e1.getMessage());
-        } finally {
             refreshUI();
             refreshDebugInfo();
+        } catch (Exception e1) {
+            refreshUI();
+            refreshDebugInfo();
+            errorWindow.setText(e1.getMessage());
         }
     }
 

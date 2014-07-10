@@ -981,6 +981,10 @@ public abstract class MicroCode {
                 assertCompare(exe, num, exe.getAuxCarry(), "Expected AuxCarry=");
             } else if ("p".equals(lhs)) {
                 assertCompare(exe, num, exe.getParity(), "Expected Parity=");
+            } else if ("ip".equals(lhs)) {
+                assertCompare(exe, num, exe.getIp(), "Expected Ip=");
+            } else if ("sp".equals(lhs)) {
+                assertCompare(exe, num, exe.getSP(), "Expected SP=");
             } else if (lhs.startsWith("[")) {
                 // parse [<memory address>]=number
                 String n = lhs.replaceAll("\\[", "").replaceAll("\\]", "");
