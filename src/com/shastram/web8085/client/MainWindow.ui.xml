@@ -58,7 +58,7 @@
         </g:VerticalPanel>
         <g:VerticalPanel width="100%">
           <g:Label addStyleNames="{css.bigLabel}">Output</g:Label>
-          <g:TextArea ui:field="errorWindow" width="100%" height="80px"></g:TextArea>
+          <g:TextArea ui:field="errorWindow" width="100%" height="80px"  addStyleNames="{css.errorWindow}"></g:TextArea>
           <g:VerticalPanel width="100%">
             <g:HTMLPanel>
               <HR></HR>
